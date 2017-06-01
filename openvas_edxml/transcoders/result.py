@@ -28,6 +28,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
     '../../../report/@id':                                                'scan-id',
     './nvt/name':                                                         'nvt-name',
     './nvt/family':                                                       'nvt-family',
+    './nvt/cvss_base':                                                    'cvss-score',
     './nvt/@oid':                                                         'nvt-oid',
     './creation_time':                                                    'time',
     './severity':                                                         'severity',
