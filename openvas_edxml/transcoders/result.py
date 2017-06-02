@@ -111,7 +111,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
   TYPE_REPORTERS_LONG = {
     'org.openvas.scan.result': (
       'On [[FULLDATETIME:time]], OpenVAS detected a possible security issue related to host '
-      '{[[host-ipv4]]}{[[host-ipv6]]}{, on [[UPPERCASE:protocol]] port [[port]]}.'
+      '{[[host-ipv4]]}{[[host-ipv6]]}{, on port [[port]]}.'
       ' The issue was found by an OpenVAS plugin from the [[nvt-family]] family, titled "[[nvt-name]]".'
       '{ OpenVAS indicates a severity of [[severity]], threat level [[threat]].}'
       '{ The CVSS base score is [[cvss-score]] (base vector [[cvss-base]]).}'
@@ -136,7 +136,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
       'host-ipv4':     NetworkBrick.OBJECT_HOST_IPV4,
       'host-ipv6':     NetworkBrick.OBJECT_HOST_IPV4,
       'port':          NetworkBrick.OBJECT_HOST_PORT,
-      'protocol':      NetworkBrick.OBJECT_PROTOCOL,
       'nvt-name':      OpenVASBrick.OBJECT_NVT_NAME,
       'nvt-family':    OpenVASBrick.OBJECT_NVT_FAMILY,
       'nvt-oid':       OpenVASBrick.OBJECT_NVT_OID,
@@ -169,7 +168,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
       'host-ipv4':     'scanned host (IPv4)',
       'host-ipv6':     'scanned host (IPv6)',
       'port':          'scanned port',
-      'protocol':      'scanning protocol',
       'nvt-name':      'plugin name',
       'nvt-family':    'plugin family',
       'nvt-oid':       'OpenVAS plugin',
@@ -241,12 +239,10 @@ class OpenVasResultTranscoder(XmlTranscoder):
     port, protocol = Event.get('port', ['/'])[0].split('/')
 
     try:
-      Event['port'] = str(int(port))
+      int(port)
     except ValueError:
       # Not a port number.
       del Event['port']
-
-    Event['protocol'] = protocol
 
     # The host may be an IPv4 or IPv6 address. Determine
     # what it is and store in the correct property.
