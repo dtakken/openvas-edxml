@@ -104,11 +104,11 @@ class OpenVasResultTranscoder(XmlTranscoder):
     'org.openvas.scan.result': ['detected vulnerability', 'detected vulnerabilities']
   }
 
-  TYPE_REPORTERS_SHORT = {
+  TYPE_SUMMARIES = {
     'org.openvas.scan.result': 'OpenVAS result: [[nvt-family]]'
   }
 
-  TYPE_REPORTERS_LONG = {
+  TYPE_STORIES = {
     'org.openvas.scan.result': (
       'On [[FULLDATETIME:time]], OpenVAS detected a possible security issue related to host '
       '{[[host-ipv4]]}{[[host-ipv6]]}{, on port [[port]]}.'

@@ -41,11 +41,11 @@ class OpenVasReportTranscoder(XmlTranscoder):
     'org.openvas.scan': ['OpenVAS scan']
   }
 
-  TYPE_REPORTERS_SHORT = {
+  TYPE_SUMMARIES = {
     'org.openvas.scan': 'OpenVAS scan named "[[name]]"'
   }
 
-  TYPE_REPORTERS_LONG = {
+  TYPE_STORIES = {
     'org.openvas.scan': (
       'On [[FULLDATETIME:time-start]] an OpenVAS vulnerability scan{ ([[name]])} was initiated, targeting '
       '[[host-count]] hosts. The scan was completed in [[DURATION:time-start,time-end]] yielding [[vuln-count]] '
