@@ -122,7 +122,7 @@ class OpenVASBrick(Brick):
 
     yield targetOntology.CreateObjectType(cls.OBJECT_XREF)\
                         .SetDescription('URL to reference material about an issue detected by OpenVAS')\
-                        .SetDataType(DataType.String())\
+                        .SetDataType(DataType.Uri())\
                         .SetDisplayName('OpenVAS cross reference')
 
   @classmethod
