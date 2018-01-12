@@ -231,9 +231,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
     del Event['description']
     del Event['tags']
 
-    # Convert time to EDXML datetime
-    Event['time'] = DataType.FormatUtcDateTime(parse(Event['time'][0]))
-
     # Ports are strings like 443/tcp. Split them
     # out in a port number and protocol.
     port, protocol = Event.get('port', ['/'])[0].split('/')

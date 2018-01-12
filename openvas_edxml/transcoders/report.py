@@ -105,9 +105,6 @@ class OpenVasReportTranscoder(XmlTranscoder):
       Event['time-end'] = Event['time-start']
       sys.stderr.write('This scan report is incomplete, its scan_end tag is empty.\n')
 
-    Event['time-start'] = DataType.FormatUtcDateTime(parse(Event.getAny('time-start')))
-    Event['time-end']   = DataType.FormatUtcDateTime(parse(Event.getAny('time-end')))
-
     # The hosts may be IPv4 or IPv6 addresses. Determine
     # what it is and store in the correct property.
     Event['host-ipv4'] = []
