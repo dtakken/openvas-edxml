@@ -3,13 +3,10 @@
 import sys
 
 from IPy import IP
-from dateutil.parser import parse
 
 from openvas_edxml.brick import OpenVASBrick
 
-from edxml.ontology import DataType
 from edxml.ontology import EventProperty
-
 from edxml.transcode.xml import XmlTranscoder
 
 from edxml_bricks.generic import GenericBrick
