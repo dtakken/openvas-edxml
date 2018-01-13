@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from lxml import etree
+
 import re
 from IPy import IP
 from dateutil.parser import parse
@@ -40,7 +42,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
     './description':                                                      'description',
     './detection/result/details/detail/value[re:test(., "^cpe:/", "i")]': 'cpe_detect',
     ('ws_normalize('
-     '  ctrl_strip('
+     '  openvas_normalize('
      '    findall(./nvt/tags, "(?:^|\|)summary=([^|]*)", %d)'
      '  )'
      ')') % re.IGNORECASE:                                                'summary',
@@ -50,7 +52,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
      '  )'
      ')') % re.IGNORECASE:                                                'cvss-base',
     ('ws_normalize('
-     '  ctrl_strip('
+     '  openvas_normalize('
      '    findall(./nvt/tags, "(?:^|\|)solution=([^|]*)", %d)'
      '  )'
      ')') % re.IGNORECASE:                                                'solution',
@@ -65,17 +67,17 @@ class OpenVasResultTranscoder(XmlTranscoder):
      '  )'
      ')') % re.IGNORECASE:                                                'xref',
     ('ws_normalize('
-     '  ctrl_strip('
+     '  openvas_normalize('
      '    findall(./nvt/tags, "(?:^|\|)insight=([^|]*)", %d)'
      '  )'
      ')') % re.IGNORECASE:                                                'insight',
     ('ws_normalize('
-     '  ctrl_strip('
+     '  openvas_normalize('
      '    findall(./nvt/tags, "(?:^|\|)affected=([^|]*)", %d)'
      '  )'
      ')') % re.IGNORECASE:                                                'affected',
     ('ws_normalize('
-     '  ctrl_strip('
+     '  openvas_normalize('
      '    findall(./nvt/tags, "(?:^|\|)impact=([^|]*)", %d)'
      '  )'
      ')') % re.IGNORECASE:                                                'impact',
@@ -204,6 +206,42 @@ class OpenVasResultTranscoder(XmlTranscoder):
       'scan-id': 'id'
     }
   }
+
+  def __init__(self):
+    super(OpenVasResultTranscoder, self).__init__()
+    ns = etree.FunctionNamespace(None)
+    ns['openvas_normalize'] = self._OpenVasNormalizeString
+
+  @staticmethod
+  def _OpenVasNormalizeString(Context, Strings):
+    """
+
+    This function is available as an XPath function named 'openvas_normalize', in
+    the global namespace. It expects either a single string or a list of
+    strings as input. It returns the input after stripping all of that typical
+    OpenVAS cruft that you can find in various XML fields, like line wrapping or
+    ASCII art list markup.
+    Example::
+
+      'openvas_normalize(string(./some/subtag))'
+
+    Args:
+        Context: lxml function context
+        Strings (Union[unicode, List[unicode]): Input strings
+
+    Returns:
+      (Union[unicode, List[unicode])
+
+    """
+    OutStrings = []
+    if Strings:
+      if not isinstance(Strings, list):
+        Strings = [Strings]
+      for String in Strings:
+        String = String.replace('\n', '\\n')
+
+        OutStrings.append(String)
+    return OutStrings if isinstance(Strings, list) else OutStrings[0]
 
   def PostProcess(self, Event):
 
