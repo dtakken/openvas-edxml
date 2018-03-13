@@ -316,7 +316,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
       # Associate OpenVAS plugins with the vulnerability concept. This models
       # the fact that OpenVAS plugin IODs are unique identifiers of a particular
       # issue.
-      Result['nvt-oid'].Identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 1)
+      Result['nvt-oid'].Identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 10)
 
       # OpenVAS plugins may refer to multiple external vulnerability identifiers,
       # like CVE numbers. So, OpenVAS plugins conceptually detect meta-vulnerabilities,
@@ -326,18 +326,18 @@ class OpenVasResultTranscoder(XmlTranscoder):
       # vulnerability concept. The NVT IOD should be the strongest identifier of
       # the vulnerability concept, CVE and BID are weaker because one CVE might be
       # referenced by multiple OpenVAS plugins.
-      Result['cve'].Identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 0.9)
-      Result['bid'].Identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 0.9)
+      Result['cve'].Identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 9)
+      Result['bid'].Identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 9)
 
       # The IP address of the host is an identifier of a computer.
-      Result['host-ipv4'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 0.7)
-      Result['host-ipv6'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 0.7)
+      Result['host-ipv4'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
+      Result['host-ipv6'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
 
       # The detected device, operating system and applications are properties
       # of a computer, but they are weak identifiers.
-      Result['application'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 0.1)
-      Result['device'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 0.1)
-      Result['os'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 0.1)
+      Result['application'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 10)
+      Result['device'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 10)
+      Result['os'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 10)
 
       # Create inter-concept relation between host IP addresses and en OpenVAS plugin,
       # indicating the the host is susceptible to the problem that the plugin detects.

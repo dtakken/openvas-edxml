@@ -91,8 +91,8 @@ class OpenVasReportTranscoder(XmlTranscoder):
       if EventTypeName == 'org.openvas.scan':
 
         # The IP address of the scanned host is an identifier of a computer.
-        EventTypeInstance['host-ipv4'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 0.7)
-        EventTypeInstance['host-ipv6'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 0.7)
+        EventTypeInstance['host-ipv4'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
+        EventTypeInstance['host-ipv6'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
 
         yield EventTypeName, EventTypeInstance
 
