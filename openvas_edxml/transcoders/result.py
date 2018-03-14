@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from urlparse import urlsplit
 from lxml import etree
 
 import re
@@ -304,6 +305,18 @@ class OpenVasResultTranscoder(XmlTranscoder):
 
     del Event['cpe_detect']
     del Event['description_cpe']
+
+    # The xrefs in OpenVAS reports often contain invalid URIs.
+    # Remove these to prevent producing invalid events.
+    valid_xrefs = []
+    for xref in Event['xref']:
+      scheme, netloc, path, qs, anchor = urlsplit(xref)
+      if scheme == '':
+        self.Warning('XREF field contains Invalid URI (omitted): %s' % xref)
+        continue
+      valid_xrefs.append(xref)
+
+    Event['xref'] = valid_xrefs
 
     yield Event
 
