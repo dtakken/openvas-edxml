@@ -326,6 +326,10 @@ class OpenVasResultTranscoder(XmlTranscoder):
       if EventTypeName == 'org.openvas.scan.result':
         Result = EventTypeInstance
 
+      # TODO: SDK does not automatically set this property to single valued
+      # when associating with parent event type. Fix that.
+      Result['scan-id']._setAttr('multivalued', False)
+
       # Associate OpenVAS plugins with the vulnerability concept. This models
       # the fact that OpenVAS plugin IODs are unique identifiers of a particular
       # issue.
