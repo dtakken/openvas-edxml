@@ -6,5 +6,5 @@ from openvas_edxml.transcoders.result import OpenVasResultTranscoder
 
 
 def registerTranscoders():
-  XmlTranscoderMediator.Register('/get_reports_response/report/report', OpenVasReportTranscoder)
-  XmlTranscoderMediator.Register('/get_reports_response/report/report/results/result', OpenVasResultTranscoder)
+    XmlTranscoderMediator.Register('/get_reports_response/report/report', OpenVasReportTranscoder)
+    XmlTranscoderMediator.Register('/get_reports_response/report/report/results/result', OpenVasResultTranscoder)
