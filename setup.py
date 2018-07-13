@@ -1,5 +1,8 @@
 from setuptools import setup, find_packages
 
+# Explicitly state a version to please flake8
+__version__ = 1.0
+# This will read __version__ from edxml/version.py
 exec(open('openvas_edxml/version.py').read())
 
 setup(

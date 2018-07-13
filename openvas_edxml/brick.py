@@ -96,7 +96,8 @@ class OpenVASBrick(Brick):
                             .SetDisplayName('OpenVAS issue summary', 'OpenVAS issue summaries')
 
         yield targetOntology.CreateObjectType(cls.OBJECT_AFFECTS)\
-                            .SetDescription('description of the scope of affected systems of an OpenVAS security issue')\
+                            .SetDescription('description of the scope of affected systems of an OpenVAS '
+                                            'security issue')\
                             .SetDataType(DataType.String())\
                             .SetDisplayName('affected systems description')
 
