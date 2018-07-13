@@ -48,92 +48,92 @@ class OpenVASBrick(Brick):
     )
 
     @classmethod
-    def generateObjectTypes(cls, targetOntology):
+    def generate_object_types(cls, target_ontology):
 
-        yield targetOntology.CreateObjectType(cls.OBJECT_NVT_OID)\
-                            .SetDescription('identifier of an OpenVAS plugin (NVT)')\
-                            .SetDataType(DataType.String(255, CaseSensitive=False, RequireUnicode=False))\
-                            .SetDisplayName('OpenVAS plugin identifier')
+        yield target_ontology.create_object_type(cls.OBJECT_NVT_OID) \
+            .set_description('identifier of an OpenVAS plugin (NVT)')\
+            .set_data_type(DataType.string(255, case_sensitive=False, require_unicode=False))\
+            .set_display_name('OpenVAS plugin identifier')
 
-        yield targetOntology.CreateObjectType(cls.OBJECT_NVT_NAME)\
-                            .SetDescription('name of an OpenVAS plugin (NVT)')\
-                            .SetDataType(DataType.String(255))\
-                            .SetDisplayName('OpenVAS plugin name')
+        yield target_ontology.create_object_type(cls.OBJECT_NVT_NAME) \
+            .set_description('name of an OpenVAS plugin (NVT)')\
+            .set_data_type(DataType.string(255))\
+            .set_display_name('OpenVAS plugin name')
 
-        yield targetOntology.CreateObjectType(cls.OBJECT_NVT_FAMILY)\
-                            .SetDescription('name of a category of OpenVAS plugins')\
-                            .SetDataType(DataType.String(255))\
-                            .SetDisplayName('OpenVAS plugin family', 'OpenVAS plugin families')
+        yield target_ontology.create_object_type(cls.OBJECT_NVT_FAMILY) \
+            .set_description('name of a category of OpenVAS plugins')\
+            .set_data_type(DataType.string(255))\
+            .set_display_name('OpenVAS plugin family', 'OpenVAS plugin families')
 
-        yield targetOntology.CreateObjectType(cls.OBJECT_SCAN_NAME)\
-                            .SetDescription('name of an OpenVAS scan')\
-                            .SetDataType(DataType.String(255))\
-                            .SetDisplayName('OpenVAS scan name')
+        yield target_ontology.create_object_type(cls.OBJECT_SCAN_NAME) \
+            .set_description('name of an OpenVAS scan')\
+            .set_data_type(DataType.string(255))\
+            .set_display_name('OpenVAS scan name')
 
-        yield targetOntology.CreateObjectType(cls.OBJECT_QOD_TYPE)\
-                            .SetDescription('OpenVAS detection reliability indicator')\
-                            .SetDataType(DataType.Enum('other', *cls.KNOWN_QOD_TYPES))\
-                            .SetDisplayName('OpenVAS QoD type')
+        yield target_ontology.create_object_type(cls.OBJECT_QOD_TYPE) \
+            .set_description('OpenVAS detection reliability indicator')\
+            .set_data_type(DataType.enum('other', *cls.KNOWN_QOD_TYPES))\
+            .set_display_name('OpenVAS QoD type')
 
-        yield targetOntology.CreateObjectType(cls.OBJECT_QOD_VALUE)\
-                            .SetDescription('OpenVAS detection reliability value, in percent')\
-                            .SetDataType(DataType.TinyInt(Signed=False))\
-                            .SetDisplayName('OpenVAS QoD value')
+        yield target_ontology.create_object_type(cls.OBJECT_QOD_VALUE) \
+            .set_description('OpenVAS detection reliability value, in percent')\
+            .set_data_type(DataType.tiny_int(signed=False))\
+            .set_display_name('OpenVAS QoD value')
 
-        yield targetOntology.CreateObjectType(cls.OBJECT_SEVERITY)\
-                            .SetDescription('severity of an OpenVAS detection result')\
-                            .SetDataType(DataType.Decimal(3, 1, Signed=False))\
-                            .SetDisplayName('OpenVAS vulnerability severity', 'OpenVAS vulnerability severities')
+        yield target_ontology.create_object_type(cls.OBJECT_SEVERITY) \
+            .set_description('severity of an OpenVAS detection result')\
+            .set_data_type(DataType.decimal(total_digits=3, fractional_digits=1, signed=False))\
+            .set_display_name('OpenVAS vulnerability severity', 'OpenVAS vulnerability severities')
 
-        yield targetOntology.CreateObjectType(cls.OBJECT_THREAT)\
-                            .SetDescription('threat level of an OpenVAS detection result')\
-                            .SetDataType(DataType.Enum('High', 'Medium', 'Low', 'Alarm', 'Log', 'Debug'))\
-                            .SetDisplayName('OpenVAS threat level')
+        yield target_ontology.create_object_type(cls.OBJECT_THREAT) \
+            .set_description('threat level of an OpenVAS detection result')\
+            .set_data_type(DataType.enum('High', 'Medium', 'Low', 'Alarm', 'Log', 'Debug'))\
+            .set_display_name('OpenVAS threat level')
 
-        yield targetOntology.CreateObjectType(cls.OBJECT_SUMMARY)\
-                            .SetDescription('summary of an issue detected by OpenVAS')\
-                            .SetDataType(DataType.String())\
-                            .SetDisplayName('OpenVAS issue summary', 'OpenVAS issue summaries')
+        yield target_ontology.create_object_type(cls.OBJECT_SUMMARY) \
+            .set_description('summary of an issue detected by OpenVAS')\
+            .set_data_type(DataType.string())\
+            .set_display_name('OpenVAS issue summary', 'OpenVAS issue summaries')
 
-        yield targetOntology.CreateObjectType(cls.OBJECT_AFFECTS)\
-                            .SetDescription('description of the scope of affected systems of an OpenVAS '
-                                            'security issue')\
-                            .SetDataType(DataType.String())\
-                            .SetDisplayName('affected systems description')
+        yield target_ontology.create_object_type(cls.OBJECT_AFFECTS) \
+            .set_description('description of the scope of affected systems of an OpenVAS '
+                             'security issue')\
+            .set_data_type(DataType.string())\
+            .set_display_name('affected systems description')
 
-        yield targetOntology.CreateObjectType(cls.OBJECT_IMPACT)\
-                            .SetDescription('description of the impact of an issue detected by OpenVAS')\
-                            .SetDataType(DataType.String())\
-                            .SetDisplayName('OpenVAS impact description')
+        yield target_ontology.create_object_type(cls.OBJECT_IMPACT) \
+            .set_description('description of the impact of an issue detected by OpenVAS')\
+            .set_data_type(DataType.string())\
+            .set_display_name('OpenVAS impact description')
 
-        yield targetOntology.CreateObjectType(cls.OBJECT_INSIGHT)\
-                            .SetDescription('technical details about an issue detected by OpenVAS')\
-                            .SetDataType(DataType.String())\
-                            .SetDisplayName('OpenVAS issue details')
+        yield target_ontology.create_object_type(cls.OBJECT_INSIGHT)\
+            .set_description('technical details about an issue detected by OpenVAS')\
+            .set_data_type(DataType.string())\
+            .set_display_name('OpenVAS issue details')
 
-        yield targetOntology.CreateObjectType(cls.OBJECT_SOLUTION)\
-                            .SetDescription('proposed solution for an issue detected by OpenVAS')\
-                            .SetDataType(DataType.String())\
-                            .SetDisplayName('OpenVAS issue solution')
+        yield target_ontology.create_object_type(cls.OBJECT_SOLUTION) \
+            .set_description('proposed solution for an issue detected by OpenVAS')\
+            .set_data_type(DataType.string())\
+            .set_display_name('OpenVAS issue solution')
 
-        yield targetOntology.CreateObjectType(cls.OBJECT_SOLUTION_TYPE)\
-                            .SetDescription('type of solution for an issue detected by OpenVAS')\
-                            .SetDataType(DataType.String(255))\
-                            .SetDisplayName('OpenVAS solution type')
+        yield target_ontology.create_object_type(cls.OBJECT_SOLUTION_TYPE)\
+            .set_description('type of solution for an issue detected by OpenVAS')\
+            .set_data_type(DataType.string(255))\
+            .set_display_name('OpenVAS solution type')
 
-        yield targetOntology.CreateObjectType(cls.OBJECT_XREF)\
-                            .SetDescription('URL to reference material about an issue detected by OpenVAS')\
-                            .SetDataType(DataType.Uri())\
-                            .SetDisplayName('OpenVAS cross reference')
+        yield target_ontology.create_object_type(cls.OBJECT_XREF) \
+            .set_description('URL to reference material about an issue detected by OpenVAS')\
+            .set_data_type(DataType.uri())\
+            .set_display_name('OpenVAS cross reference')
 
     @classmethod
-    def generateConcepts(cls, targetOntology):
+    def generate_concepts(cls, target_ontology):
 
         # This is an extension of the 'threat' concept from
         # the computer security brick.
-        yield targetOntology.CreateConcept(cls.CONCEPT_VULNERABILITY)\
-            .SetDisplayName('vulnerability', 'vulnerabilities')\
-            .SetDescription('security defect reducing a systems\'s information assurance')
+        yield target_ontology.create_concept(cls.CONCEPT_VULNERABILITY) \
+            .set_display_name('vulnerability', 'vulnerabilities') \
+            .set_description('security defect reducing a systems\'s information assurance')
 
 
-edxml.ontology.Ontology.RegisterBrick(OpenVASBrick)
+edxml.ontology.Ontology.register_brick(OpenVASBrick)

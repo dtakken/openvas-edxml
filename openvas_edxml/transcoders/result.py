@@ -208,10 +208,10 @@ class OpenVasResultTranscoder(XmlTranscoder):
     def __init__(self):
         super(OpenVasResultTranscoder, self).__init__()
         ns = etree.FunctionNamespace(None)
-        ns['openvas_normalize'] = self._OpenVasNormalizeString
+        ns['openvas_normalize'] = self._open_vas_normalize_string
 
     @staticmethod
-    def _OpenVasNormalizeString(Context, Strings):
+    def _open_vas_normalize_string(context, strings):
         """
 
         This function is available as an XPath function named 'openvas_normalize', in
@@ -224,116 +224,116 @@ class OpenVasResultTranscoder(XmlTranscoder):
           'openvas_normalize(string(./some/subtag))'
 
         Args:
-            Context: lxml function context
-            Strings (Union[unicode, List[unicode]): Input strings
+            context: lxml function context
+            strings (Union[unicode, List[unicode]): Input strings
 
         Returns:
           (Union[unicode, List[unicode])
 
         """
-        OutStrings = []
-        if Strings:
-            if not isinstance(Strings, list):
-                Strings = [Strings]
-            for String in Strings:
-                String = String.replace('\n', '\\n')
+        out_strings = []
+        if strings:
+            if not isinstance(strings, list):
+                strings = [strings]
+            for string in strings:
+                string = string.replace('\n', '\\n')
 
-                OutStrings.append(String)
-        return OutStrings if isinstance(Strings, list) else OutStrings[0]
+                out_strings.append(string)
+        return out_strings if isinstance(strings, list) else out_strings[0]
 
-    def PostProcess(self, Event):
+    def post_process(self, event):
 
-        pluginOid = Event.getAny('nvt-oid')
+        plugin_oid = event.get_any('nvt-oid')
 
-        if pluginOid == '1.3.6.1.4.1.25623.1.0.105937':
+        if plugin_oid == '1.3.6.1.4.1.25623.1.0.105937':
             # This plugin aggregates OS detection results from other
             # plugins that do not yield any results of their own. We only
             # want to get the best matching OS.
-            results = re.match(r'Best matching OS:(.*)Other OS detections', Event.getAny('description', ''), re.DOTALL)
+            results = re.match(r'Best matching OS:(.*)Other OS detections', event.get_any('description', ''), re.DOTALL)
             if results:
-                Event['description_cpe'] = []
+                event['description_cpe'] = []
                 for cpe in re.findall(r'cpe:/\S+', results.group(1)):
-                    Event['description_cpe'] += cpe
+                    event['description_cpe'] += cpe
 
         # The tags and description fields may contain fairy long descriptions
         # of what has been found. We combine them as event content.
-        Event.SetContent(
+        event.set_content(
             '\n'.join(
-                Event.get('description', []) +
-                Event.get('tags', [])
+                event.get('description', []) +
+                event.get('tags', [])
             )
         )
 
-        del Event['description']
-        del Event['tags']
+        del event['description']
+        del event['tags']
 
         # Ports are strings like 443/tcp. Split them
         # out in a port number and protocol.
-        port, protocol = Event.get('port', ['/'])[0].split('/')
+        port, protocol = event.get('port', ['/'])[0].split('/')
 
         try:
             int(port)
         except ValueError:
             # Not a port number.
-            del Event['port']
+            del event['port']
 
         # The host may be an IPv4 or IPv6 address. Determine
         # what it is and store in the correct property.
         try:
-            Parsed = IP(Event['host-ipv4'][0])
+            parsed = IP(event['host-ipv4'][0])
         except ValueError:
             # The IPy fails on zone identifiers in IPv6 addresses, strip them.
-            Parsed = IP(Event['host-ipv4'][0].split('%')[0])
-        if Parsed.version() == 6:
-            Event['source-ipv6'] = Parsed.strFullsize()
-            del Event['source-ipv4']
+            parsed = IP(event['host-ipv4'][0].split('%')[0])
+        if parsed.version() == 6:
+            event['source-ipv6'] = parsed.strFullsize()
+            del event['source-ipv4']
 
         # Populate event properties depending on what the
         # detected CPEs represent. Note that some plugins
         # put CPEs in the detect tag, while others put it
         # in the description tag. Here, we combine both.
-        for cpe in Event['cpe_detect'] + Event['description_cpe']:
+        for cpe in event['cpe_detect'] + event['description_cpe']:
             if cpe.startswith('cpe:/a:'):
                 # Vulnerability concerns an application.
-                Event['application'] += [cpe]
+                event['application'] += [cpe]
             elif cpe.startswith('cpe:/h:'):
                 # Vulnerability concerns a hardware device.
-                Event['device'] += [cpe]
+                event['device'] += [cpe]
             elif cpe.startswith('cpe:/o:'):
                 # Vulnerability concerns an operating system.
-                Event['os'] += [cpe]
+                event['os'] += [cpe]
 
-        del Event['cpe_detect']
-        del Event['description_cpe']
+        del event['cpe_detect']
+        del event['description_cpe']
 
         # The xrefs in OpenVAS reports often contain invalid URIs.
         # Remove these to prevent producing invalid events.
         valid_xrefs = []
-        for xref in Event['xref']:
+        for xref in event['xref']:
             scheme, netloc, path, qs, anchor = urlsplit(xref)
             if scheme == '':
-                self.Warning('XREF field contains Invalid URI (omitted): %s' % xref)
+                self.warning('XREF field contains Invalid URI (omitted): %s' % xref)
                 continue
             valid_xrefs.append(xref)
 
-        Event['xref'] = valid_xrefs
+        event['xref'] = valid_xrefs
 
-        yield Event
+        yield event
 
-    def GenerateEventTypes(self):
+    def generate_event_types(self):
 
-        for EventTypeName, EventTypeInstance in XmlTranscoder.GenerateEventTypes(self):
-            if EventTypeName == 'org.openvas.scan.result':
-                Result = EventTypeInstance
+        for event_type_name, event_type_instance in XmlTranscoder.generate_event_types(self):
+            if event_type_name == 'org.openvas.scan.result':
+                result = event_type_instance  # type: EventType
 
             # TODO: SDK does not automatically set this property to single valued
             # when associating with parent event type. Fix that.
-            Result['scan-id']._setAttr('multivalued', False)
+            result['scan-id'].set_multi_valued(False)
 
             # Associate OpenVAS plugins with the vulnerability concept. This models
             # the fact that OpenVAS plugin IODs are unique identifiers of a particular
             # issue.
-            Result['nvt-oid'].Identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 10)
+            result['nvt-oid'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 10)
 
             # OpenVAS plugins may refer to multiple external vulnerability identifiers,
             # like CVE numbers. So, OpenVAS plugins conceptually detect meta-vulnerabilities,
@@ -343,52 +343,52 @@ class OpenVasResultTranscoder(XmlTranscoder):
             # vulnerability concept. The NVT IOD should be the strongest identifier of
             # the vulnerability concept, CVE and BID are weaker because one CVE might be
             # referenced by multiple OpenVAS plugins.
-            Result['cve'].Identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 9)
-            Result['bid'].Identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 9)
+            result['cve'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 9)
+            result['bid'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 9)
 
             # The IP address of the host is an identifier of a computer.
-            Result['host-ipv4'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
-            Result['host-ipv6'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
+            result['host-ipv4'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
+            result['host-ipv6'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
 
             # The detected device, operating system and applications are properties
             # of a computer, but they are weak identifiers.
-            Result['application'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 10)
-            Result['device'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 10)
-            Result['os'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 10)
+            result['application'].identifies(ComputingBrick.CONCEPT_COMPUTER, 10)
+            result['device'].identifies(ComputingBrick.CONCEPT_COMPUTER, 10)
+            result['os'].identifies(ComputingBrick.CONCEPT_COMPUTER, 10)
 
             # Create inter-concept relation between host IP addresses and en OpenVAS plugin,
             # indicating the the host is susceptible to the problem that the plugin detects.
-            Result['host-ipv4'].RelateInter('is vulnerable to', 'nvt-oid')\
-                .Because('OpenVAS plugin [[nvt-oid]] returned a positive result while scanning host [[host-ipv4]]')
-            Result['host-ipv6'].RelateInter('is vulnerable to', 'nvt-oid')\
-                .Because('OpenVAS plugin [[nvt-oid]] returned a positive result while scanning host [[host-ipv6]]')
+            result['host-ipv4'].relate_inter('is vulnerable to', 'nvt-oid') \
+                .because('OpenVAS plugin [[nvt-oid]] returned a positive result while scanning host [[host-ipv4]]')
+            result['host-ipv6'].relate_inter('is vulnerable to', 'nvt-oid') \
+                .because('OpenVAS plugin [[nvt-oid]] returned a positive result while scanning host [[host-ipv6]]')
 
             # Create intra-concept relations between the OpenVAS plugin and any associated vulnerability
             # identifiers, like CVE.
-            Result['nvt-oid'].RelateIntra('checks for', 'cve')\
-                .Because('OpenVAS plugin [[nvt-oid]] mentions CVE [[cve]]')
-            Result['nvt-oid'].RelateIntra('checks for', 'bid')\
-                .Because('OpenVAS plugin [[nvt-oid]] mentions BID [[bid]]')
+            result['nvt-oid'].relate_intra('checks for', 'cve') \
+                .because('OpenVAS plugin [[nvt-oid]] mentions CVE [[cve]]')
+            result['nvt-oid'].relate_intra('checks for', 'bid') \
+                .because('OpenVAS plugin [[nvt-oid]] mentions BID [[bid]]')
 
             # Create intra-concept relations between the host IP and any detected OSes, devices
             # and applications.
-            Result['host-ipv4'].RelateIntra('is', 'device')\
-                .Because('OpenVAS found evidence that host [[host-ipv4]] is a [[device]]')
-            Result['host-ipv6'].RelateIntra('is', 'device')\
-                .Because('OpenVAS found evidence that host [[host-ipv6]] is a [[device]]')
-            Result['host-ipv4'].RelateIntra('runs', 'os')\
-                .Because('OpenVAS found evidence that host [[host-ipv4]] runs on [[os]]')
-            Result['host-ipv6'].RelateIntra('runs', 'os')\
-                .Because('OpenVAS found evidence that host [[host-ipv6]] runs on [[os]]')
-            Result['host-ipv4'].RelateIntra('runs', 'application')\
-                .Because('OpenVAS detected [[application]] running on host [[host-ipv4]]')
-            Result['host-ipv6'].RelateIntra('runs', 'application')\
-                .Because('OpenVAS detected [[application]] running on host [[host-ipv6]]')
+            result['host-ipv4'].relate_intra('is', 'device') \
+                .because('OpenVAS found evidence that host [[host-ipv4]] is a [[device]]')
+            result['host-ipv6'].relate_intra('is', 'device') \
+                .because('OpenVAS found evidence that host [[host-ipv6]] is a [[device]]')
+            result['host-ipv4'].relate_intra('runs', 'os') \
+                .because('OpenVAS found evidence that host [[host-ipv4]] runs on [[os]]')
+            result['host-ipv6'].relate_intra('runs', 'os') \
+                .because('OpenVAS found evidence that host [[host-ipv6]] runs on [[os]]')
+            result['host-ipv4'].relate_intra('runs', 'application') \
+                .because('OpenVAS detected [[application]] running on host [[host-ipv4]]')
+            result['host-ipv6'].relate_intra('runs', 'application') \
+                .because('OpenVAS detected [[application]] running on host [[host-ipv6]]')
 
             # Add a hint to relate scan results found by the same OpenVAS plugin and
             # results that concern the same host
-            Result['nvt-oid'].HintSimilar('found by')
-            Result['host-ipv4'].HintSimilar('concerning')
-            Result['host-ipv6'].HintSimilar('concerning')
+            result['nvt-oid'].hint_similar('found by')
+            result['host-ipv4'].hint_similar('concerning')
+            result['host-ipv6'].hint_similar('concerning')
 
-            yield EventTypeName, Result
+            yield event_type_name, result

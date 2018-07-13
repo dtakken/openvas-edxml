@@ -86,39 +86,39 @@ class OpenVasReportTranscoder(XmlTranscoder):
         }
     }
 
-    def GenerateEventTypes(self):
+    def generate_event_types(self):
 
-        for EventTypeName, EventTypeInstance in XmlTranscoder.GenerateEventTypes(self):
-            if EventTypeName == 'org.openvas.scan':
+        for event_type_name, event_type_instance in XmlTranscoder.generate_event_types(self):
+            if event_type_name == 'org.openvas.scan':
 
                 # The IP address of the scanned host is an identifier of a computer.
-                EventTypeInstance['host-ipv4'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
-                EventTypeInstance['host-ipv6'].Identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
+                event_type_instance['host-ipv4'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
+                event_type_instance['host-ipv6'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
 
-                yield EventTypeName, EventTypeInstance
+                yield event_type_name, event_type_instance
 
-    def PostProcess(self, Event):
+    def post_process(self, event):
 
-        if not Event['time-end']:
-            Event['time-end'] = Event['time-start']
+        if not event['time-end']:
+            event['time-end'] = event['time-start']
             sys.stderr.write('This scan report is incomplete, its scan_end tag is empty.\n')
 
         # The hosts may be IPv4 or IPv6 addresses. Determine
         # what it is and store in the correct property.
-        Event['host-ipv4'] = []
-        Event['host-ipv6'] = []
+        event['host-ipv4'] = []
+        event['host-ipv6'] = []
 
-        for Host in set(Event['host']):
+        for host in set(event['host']):
             try:
-                Parsed = IP(Host)
+                parsed = IP(host)
             except ValueError:
                 # The IPy fails on zone identifiers in IPv6 addresses, strip them.
-                Parsed = IP(Host.split('%')[0])
-            if Parsed.version() == 4:
-                Event['host-ipv4'] += [Parsed.strFullsize()]
+                parsed = IP(host.split('%')[0])
+            if parsed.version() == 4:
+                event['host-ipv4'] += [parsed.strFullsize()]
             else:
-                Event['host-ipv6'] += [Parsed.strFullsize()]
+                event['host-ipv6'] += [parsed.strFullsize()]
 
-        del Event['host']
+        del event['host']
 
-        yield Event
+        yield event
