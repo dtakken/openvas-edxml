@@ -1,0 +1,6 @@
+stages:
+  - test
+
+flake8:
+  stage: test
+  script: flake8 --max-line-length=120
