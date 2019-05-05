@@ -86,6 +86,8 @@ class OpenVasReportTranscoder(XmlTranscoder):
         }
     }
 
+    TYPE_TIMESPANS = {'org.openvas.scan': ('time-start', 'time-end')}
+
     def generate_event_types(self):
 
         for event_type_name, event_type_instance in XmlTranscoder.generate_event_types(self):
