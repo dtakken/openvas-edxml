@@ -205,6 +205,10 @@ class OpenVasResultTranscoder(XmlTranscoder):
         }
     }
 
+    TYPE_ATTACHMENTS = {
+        'org.openvas.scan.result': ['description']
+    }
+
     def __init__(self):
         super(OpenVasResultTranscoder, self).__init__()
         ns = etree.FunctionNamespace(None)
@@ -255,17 +259,11 @@ class OpenVasResultTranscoder(XmlTranscoder):
                 for cpe in re.findall(r'cpe:/\S+', results.group(1)):
                     event['description_cpe'] += cpe
 
-        # The tags and description fields may contain fairy long descriptions
-        # of what has been found. We combine them as event content.
-        event.set_content(
-            '\n'.join(
-                event.get('description', []) +
-                event.get('tags', [])
-            )
-        )
+        # The description field may contain fairy long descriptions
+        # of what has been found. We store it as event attachment.
+        event.set_attachments({'description': event.get_any('description', '')})
 
         del event['description']
-        del event['tags']
 
         # Ports are strings like 443/tcp. Split them
         # out in a port number and protocol.
