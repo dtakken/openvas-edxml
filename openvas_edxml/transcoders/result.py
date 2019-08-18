@@ -257,7 +257,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
             if results:
                 event['description_cpe'] = []
                 for cpe in re.findall(r'cpe:/\S+', results.group(1)):
-                    event['description_cpe'] += cpe
+                    event['description_cpe'].add(cpe)
 
         # The description field may contain fairy long descriptions
         # of what has been found. We store it as event attachment.
@@ -290,16 +290,16 @@ class OpenVasResultTranscoder(XmlTranscoder):
         # detected CPEs represent. Note that some plugins
         # put CPEs in the detect tag, while others put it
         # in the description tag. Here, we combine both.
-        for cpe in event['cpe_detect'] + event['description_cpe']:
+        for cpe in event['cpe_detect'] | event['description_cpe']:
             if cpe.startswith('cpe:/a:'):
                 # Vulnerability concerns an application.
-                event['application'] += [cpe]
+                event['application'].add(cpe)
             elif cpe.startswith('cpe:/h:'):
                 # Vulnerability concerns a hardware device.
-                event['device'] += [cpe]
+                event['device'].add(cpe)
             elif cpe.startswith('cpe:/o:'):
                 # Vulnerability concerns an operating system.
-                event['os'] += [cpe]
+                event['os'].add(cpe)
 
         del event['cpe_detect']
         del event['description_cpe']

@@ -117,9 +117,9 @@ class OpenVasReportTranscoder(XmlTranscoder):
                 # The IPy fails on zone identifiers in IPv6 addresses, strip them.
                 parsed = IP(host.split('%')[0])
             if parsed.version() == 4:
-                event['host-ipv4'] += [parsed.strFullsize()]
+                event['host-ipv4'].add(parsed.strFullsize())
             else:
-                event['host-ipv6'] += [parsed.strFullsize()]
+                event['host-ipv6'].add(parsed.strFullsize())
 
         del event['host']
 
