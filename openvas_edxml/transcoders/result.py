@@ -267,7 +267,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
 
         # Ports are strings like 443/tcp. Split them
         # out in a port number and protocol.
-        port, protocol = event.get('port', ['/'])[0].split('/')
+        port, protocol = event.get_any('port', '/').split('/')
 
         try:
             int(port)
@@ -278,10 +278,10 @@ class OpenVasResultTranscoder(XmlTranscoder):
         # The host may be an IPv4 or IPv6 address. Determine
         # what it is and store in the correct property.
         try:
-            parsed = IP(event['host-ipv4'][0])
+            parsed = IP(event.get_any('host-ipv4'))
         except ValueError:
             # The IPy fails on zone identifiers in IPv6 addresses, strip them.
-            parsed = IP(event['host-ipv4'][0].split('%')[0])
+            parsed = IP(event.get_any('host-ipv4').split('%')[0])
         if parsed.version() == 6:
             event['source-ipv6'] = parsed.strFullsize()
             del event['source-ipv4']
