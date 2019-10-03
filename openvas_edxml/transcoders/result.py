@@ -320,75 +320,74 @@ class OpenVasResultTranscoder(XmlTranscoder):
 
         yield event
 
-    def generate_event_types(self):
+    @classmethod
+    def create_event_type(cls, event_type_name, ontology):
 
-        for event_type_name, event_type_instance in XmlTranscoder.generate_event_types(self):
-            if event_type_name == 'org.openvas.scan.result':
-                result = event_type_instance  # type: EventType
+        result = super(OpenVasResultTranscoder, cls).create_event_type(event_type_name, ontology)
 
-            # TODO: SDK does not automatically set this property to single valued
-            # when associating with parent event type. Fix that.
-            result['scan-id'].set_multi_valued(False)
+        # TODO: SDK does not automatically set this property to single valued
+        # when associating with parent event type. Fix that.
+        result['scan-id'].set_multi_valued(False)
 
-            # Associate OpenVAS plugins with the vulnerability concept. This models
-            # the fact that OpenVAS plugin IODs are unique identifiers of a particular
-            # issue.
-            result['nvt-oid'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 10)
+        # Associate OpenVAS plugins with the vulnerability concept. This models
+        # the fact that OpenVAS plugin IODs are unique identifiers of a particular
+        # issue.
+        result['nvt-oid'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 10)
 
-            # OpenVAS plugins may refer to multiple external vulnerability identifiers,
-            # like CVE numbers. So, OpenVAS plugins conceptually detect meta-vulnerabilities,
-            # which include any of multiple CVE. OpenVAS does not tell us which CVE was
-            # actually detected, so we cannot include the CVE in the computer concept as
-            # a vulnerability of a particular computer. We will associate them with the
-            # vulnerability concept. The NVT IOD should be the strongest identifier of
-            # the vulnerability concept, CVE and BID are weaker because one CVE might be
-            # referenced by multiple OpenVAS plugins.
-            result['cve'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 9)
-            result['bid'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 9)
+        # OpenVAS plugins may refer to multiple external vulnerability identifiers,
+        # like CVE numbers. So, OpenVAS plugins conceptually detect meta-vulnerabilities,
+        # which include any of multiple CVE. OpenVAS does not tell us which CVE was
+        # actually detected, so we cannot include the CVE in the computer concept as
+        # a vulnerability of a particular computer. We will associate them with the
+        # vulnerability concept. The NVT IOD should be the strongest identifier of
+        # the vulnerability concept, CVE and BID are weaker because one CVE might be
+        # referenced by multiple OpenVAS plugins.
+        result['cve'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 9)
+        result['bid'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 9)
 
-            # The IP address of the host is an identifier of a computer.
-            result['host-ipv4'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
-            result['host-ipv6'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
+        # The IP address of the host is an identifier of a computer.
+        result['host-ipv4'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
+        result['host-ipv6'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
 
-            # The detected device, operating system and applications are properties
-            # of a computer, but they are weak identifiers.
-            result['application'].identifies(ComputingBrick.CONCEPT_COMPUTER, 10)
-            result['device'].identifies(ComputingBrick.CONCEPT_COMPUTER, 10)
-            result['os'].identifies(ComputingBrick.CONCEPT_COMPUTER, 10)
+        # The detected device, operating system and applications are properties
+        # of a computer, but they are weak identifiers.
+        result['application'].identifies(ComputingBrick.CONCEPT_COMPUTER, 10)
+        result['device'].identifies(ComputingBrick.CONCEPT_COMPUTER, 10)
+        result['os'].identifies(ComputingBrick.CONCEPT_COMPUTER, 10)
 
-            # Create inter-concept relation between host IP addresses and en OpenVAS plugin,
-            # indicating the the host is susceptible to the problem that the plugin detects.
-            result['host-ipv4'].relate_inter('is vulnerable to', 'nvt-oid') \
-                .because('OpenVAS plugin [[nvt-oid]] returned a positive result while scanning host [[host-ipv4]]')
-            result['host-ipv6'].relate_inter('is vulnerable to', 'nvt-oid') \
-                .because('OpenVAS plugin [[nvt-oid]] returned a positive result while scanning host [[host-ipv6]]')
+        # Create inter-concept relation between host IP addresses and en OpenVAS plugin,
+        # indicating the the host is susceptible to the problem that the plugin detects.
+        result['host-ipv4'].relate_inter('is vulnerable to', 'nvt-oid') \
+            .because('OpenVAS plugin [[nvt-oid]] returned a positive result while scanning host [[host-ipv4]]')
+        result['host-ipv6'].relate_inter('is vulnerable to', 'nvt-oid') \
+            .because('OpenVAS plugin [[nvt-oid]] returned a positive result while scanning host [[host-ipv6]]')
 
-            # Create intra-concept relations between the OpenVAS plugin and any associated vulnerability
-            # identifiers, like CVE.
-            result['nvt-oid'].relate_intra('checks for', 'cve') \
-                .because('OpenVAS plugin [[nvt-oid]] mentions CVE [[cve]]')
-            result['nvt-oid'].relate_intra('checks for', 'bid') \
-                .because('OpenVAS plugin [[nvt-oid]] mentions BID [[bid]]')
+        # Create intra-concept relations between the OpenVAS plugin and any associated vulnerability
+        # identifiers, like CVE.
+        result['nvt-oid'].relate_intra('checks for', 'cve') \
+            .because('OpenVAS plugin [[nvt-oid]] mentions CVE [[cve]]')
+        result['nvt-oid'].relate_intra('checks for', 'bid') \
+            .because('OpenVAS plugin [[nvt-oid]] mentions BID [[bid]]')
 
-            # Create intra-concept relations between the host IP and any detected OSes, devices
-            # and applications.
-            result['host-ipv4'].relate_intra('is', 'device') \
-                .because('OpenVAS found evidence that host [[host-ipv4]] is a [[device]]')
-            result['host-ipv6'].relate_intra('is', 'device') \
-                .because('OpenVAS found evidence that host [[host-ipv6]] is a [[device]]')
-            result['host-ipv4'].relate_intra('runs', 'os') \
-                .because('OpenVAS found evidence that host [[host-ipv4]] runs on [[os]]')
-            result['host-ipv6'].relate_intra('runs', 'os') \
-                .because('OpenVAS found evidence that host [[host-ipv6]] runs on [[os]]')
-            result['host-ipv4'].relate_intra('runs', 'application') \
-                .because('OpenVAS detected [[application]] running on host [[host-ipv4]]')
-            result['host-ipv6'].relate_intra('runs', 'application') \
-                .because('OpenVAS detected [[application]] running on host [[host-ipv6]]')
+        # Create intra-concept relations between the host IP and any detected OSes, devices
+        # and applications.
+        result['host-ipv4'].relate_intra('is', 'device') \
+            .because('OpenVAS found evidence that host [[host-ipv4]] is a [[device]]')
+        result['host-ipv6'].relate_intra('is', 'device') \
+            .because('OpenVAS found evidence that host [[host-ipv6]] is a [[device]]')
+        result['host-ipv4'].relate_intra('runs', 'os') \
+            .because('OpenVAS found evidence that host [[host-ipv4]] runs on [[os]]')
+        result['host-ipv6'].relate_intra('runs', 'os') \
+            .because('OpenVAS found evidence that host [[host-ipv6]] runs on [[os]]')
+        result['host-ipv4'].relate_intra('runs', 'application') \
+            .because('OpenVAS detected [[application]] running on host [[host-ipv4]]')
+        result['host-ipv6'].relate_intra('runs', 'application') \
+            .because('OpenVAS detected [[application]] running on host [[host-ipv6]]')
 
-            # Add a hint to relate scan results found by the same OpenVAS plugin and
-            # results that concern the same host
-            result['nvt-oid'].hint_similar('found by')
-            result['host-ipv4'].hint_similar('concerning')
-            result['host-ipv6'].hint_similar('concerning')
+        # Add a hint to relate scan results found by the same OpenVAS plugin and
+        # results that concern the same host
+        result['nvt-oid'].hint_similar('found by')
+        result['host-ipv4'].hint_similar('concerning')
+        result['host-ipv6'].hint_similar('concerning')
 
-            yield event_type_name, result
+        return result

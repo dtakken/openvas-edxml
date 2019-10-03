@@ -90,16 +90,16 @@ class OpenVasReportTranscoder(XmlTranscoder):
 
     TYPE_TIMESPANS = {'org.openvas.scan': ('time-start', 'time-end')}
 
-    def generate_event_types(self):
+    @classmethod
+    def create_event_type(cls, event_type_name, ontology):
 
-        for event_type_name, event_type_instance in XmlTranscoder.generate_event_types(self):
-            if event_type_name == 'org.openvas.scan':
+        scan = super(OpenVasReportTranscoder, cls).create_event_type(event_type_name, ontology)
 
-                # The IP address of the scanned host is an identifier of a computer.
-                event_type_instance['host-ipv4'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
-                event_type_instance['host-ipv6'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
+        # The IP address of the scanned host is an identifier of a computer.
+        scan['host-ipv4'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
+        scan['host-ipv6'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
 
-                yield event_type_name, event_type_instance
+        return scan
 
     def post_process(self, event):
 
