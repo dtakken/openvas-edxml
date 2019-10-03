@@ -23,7 +23,7 @@ class OpenVASBrick(Brick):
     OBJECT_IMPACT = 'org.openvas.result.impact'
     OBJECT_INSIGHT = 'org.openvas.result.insight'
     OBJECT_SOLUTION = 'org.openvas.result.solution'
-    OBJECT_SOLUTION_TYPE = 'org.openvas.result.solutiontype'
+    OBJECT_SOLUTION_TYPE = 'org.openvas.result.solution-type'
     OBJECT_XREF = 'org.openvas.result.xref'
 
     CONCEPT_VULNERABILITY = 'threat.vulnerability'
