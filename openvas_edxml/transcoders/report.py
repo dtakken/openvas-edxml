@@ -18,7 +18,7 @@ class OpenVasReportTranscoder(XmlTranscoder):
 
     TYPES = ['org.openvas.scan']
 
-    TYPE_MAP = {'/get_reports_response/report/report': 'org.openvas.scan'}
+    TYPE_MAP = {'.': 'org.openvas.scan'}
 
     PROPERTY_MAP = {
         'org.openvas.scan': {
