@@ -24,76 +24,78 @@ class OpenVasResultTranscoder(XmlTranscoder):
     TYPE_MAP = {'/get_reports_response/report/report/results/result': 'org.openvas.scan.result'}
 
     XPATH_MAP = {
-        './@id': 'id',
-        '../../../report/@id': 'scan-id',
-        './nvt/name': 'nvt-name',
-        './nvt/family': 'nvt-family',
-        './nvt/cvss_base': 'cvss-score',
-        './nvt/@oid': 'nvt-oid',
-        './creation_time': 'time',
-        './severity': 'severity',
-        './threat': 'threat',
-        './host': 'host-ipv4',
-        './port': 'port',
-        './qod/type': 'qod-type',
-        './qod/value': 'qod-value',
-        './description': 'description',
-        './detection/result/details/detail/value[re:test(., "^cpe:/", "i")]': 'cpe_detect',
-        ('ws_normalize('
-         '  openvas_normalize('
-         '    findall(./nvt/tags, "(?:^|\|)summary=([^|]*)", %d)'
-         '  )'
-         ')') % re.IGNORECASE: 'summary',
-        ('ws_normalize('
-         '  ctrl_strip('
-         '    findall(./nvt/tags, "(?:^|\|)cvss_base_vector=([^|]*)", %d)'
-         '  )'
-         ')') % re.IGNORECASE: 'cvss-base',
-        ('ws_normalize('
-         '  openvas_normalize('
-         '    findall(./nvt/tags, "(?:^|\|)solution=([^|]*)", %d)'
-         '  )'
-         ')') % re.IGNORECASE: 'solution',
-        ('ws_normalize('
-         '  ctrl_strip('
-         '    findall(./nvt/tags, "(?:^|\|)solution_type=([^|]*)", %d)'
-         '  )'
-         ')') % re.IGNORECASE: 'solution-type',
-        ('ws_normalize('
-         '  ctrl_strip('
-         '    findall(./nvt/xref, "(?:^|[, ])URL:((?:.(?!,[ ]*))+.)", %d)'
-         '  )'
-         ')') % re.IGNORECASE: 'xref',
-        ('ws_normalize('
-         '  openvas_normalize('
-         '    findall(./nvt/tags, "(?:^|\|)insight=([^|]*)", %d)'
-         '  )'
-         ')') % re.IGNORECASE: 'insight',
-        ('ws_normalize('
-         '  openvas_normalize('
-         '    findall(./nvt/tags, "(?:^|\|)affected=([^|]*)", %d)'
-         '  )'
-         ')') % re.IGNORECASE: 'affected',
-        ('ws_normalize('
-         '  openvas_normalize('
-         '    findall(./nvt/tags, "(?:^|\|)impact=([^|]*)", %d)'
-         '  )'
-         ')') % re.IGNORECASE: 'impact',
-        ('ws_normalize('
-         '  ctrl_strip('
-         '    findall(./nvt/cve, "(?:^|[, ])(CVE-(?:.(?!,[ ]*))+.)", %d)'
-         '  )'
-         ')') % re.IGNORECASE: 'cve',
-        ('ws_normalize('
-         '  ctrl_strip('
-         '    findall(./nvt/bid, "(?:^|[, ])((?:\d(?!,[ ]*))+.)", %d)'
-         '  )'
-         ')') % re.IGNORECASE: 'bid',
-        ('ws_normalize('
-         '  ctrl_strip('
-         '    findall(./description, "cpe:/\S+", %d)'
-         '  )'
-         ')') % re.IGNORECASE: 'description_cpe',
+        'org.openvas.scan.result': {
+            '@id': 'id',
+            '../../../report/@id': 'scan-id',
+            'nvt/name': 'nvt-name',
+            'nvt/family': 'nvt-family',
+            'nvt/cvss_base': 'cvss-score',
+            'nvt/@oid': 'nvt-oid',
+            'creation_time': 'time',
+            'severity': 'severity',
+            'threat': 'threat',
+            'host': 'host-ipv4',
+            'port': 'port',
+            'qod/type': 'qod-type',
+            'qod/value': 'qod-value',
+            'description': 'description',
+            'detection/result/details/detail/value[re:test(., "^cpe:/", "i")]': 'cpe_detect',
+            ('ws_normalize('
+             '  openvas_normalize('
+             '    findall(./nvt/tags, "(?:^|\|)summary=([^|]*)", %d)'
+             '  )'
+             ')') % re.IGNORECASE: 'summary',
+            ('ws_normalize('
+             '  ctrl_strip('
+             '    findall(./nvt/tags, "(?:^|\|)cvss_base_vector=([^|]*)", %d)'
+             '  )'
+             ')') % re.IGNORECASE: 'cvss-base',
+            ('ws_normalize('
+             '  openvas_normalize('
+             '    findall(./nvt/tags, "(?:^|\|)solution=([^|]*)", %d)'
+             '  )'
+             ')') % re.IGNORECASE: 'solution',
+            ('ws_normalize('
+             '  ctrl_strip('
+             '    findall(./nvt/tags, "(?:^|\|)solution_type=([^|]*)", %d)'
+             '  )'
+             ')') % re.IGNORECASE: 'solution-type',
+            ('ws_normalize('
+             '  ctrl_strip('
+             '    findall(./nvt/xref, "(?:^|[, ])URL:((?:.(?!,[ ]*))+.)", %d)'
+             '  )'
+             ')') % re.IGNORECASE: 'xref',
+            ('ws_normalize('
+             '  openvas_normalize('
+             '    findall(./nvt/tags, "(?:^|\|)insight=([^|]*)", %d)'
+             '  )'
+             ')') % re.IGNORECASE: 'insight',
+            ('ws_normalize('
+             '  openvas_normalize('
+             '    findall(./nvt/tags, "(?:^|\|)affected=([^|]*)", %d)'
+             '  )'
+             ')') % re.IGNORECASE: 'affected',
+            ('ws_normalize('
+             '  openvas_normalize('
+             '    findall(./nvt/tags, "(?:^|\|)impact=([^|]*)", %d)'
+             '  )'
+             ')') % re.IGNORECASE: 'impact',
+            ('ws_normalize('
+             '  ctrl_strip('
+             '    findall(./nvt/cve, "(?:^|[, ])(CVE-(?:.(?!,[ ]*))+.)", %d)'
+             '  )'
+             ')') % re.IGNORECASE: 'cve',
+            ('ws_normalize('
+             '  ctrl_strip('
+             '    findall(./nvt/bid, "(?:^|[, ])((?:\d(?!,[ ]*))+.)", %d)'
+             '  )'
+             ')') % re.IGNORECASE: 'bid',
+            ('ws_normalize('
+             '  ctrl_strip('
+             '    findall(./description, "cpe:/\S+", %d)'
+             '  )'
+             ')') % re.IGNORECASE: 'description_cpe',
+        }
     }
 
     TYPE_DESCRIPTIONS = {

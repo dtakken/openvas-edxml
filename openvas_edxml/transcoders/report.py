@@ -21,13 +21,15 @@ class OpenVasReportTranscoder(XmlTranscoder):
     TYPE_MAP = {'/get_reports_response/report/report': 'org.openvas.scan'}
 
     XPATH_MAP = {
-        './@id': 'id',
-        '../task/name': 'name',
-        './host/ip': 'host',
-        './hosts/count': 'host-count',
-        './vulns/count': 'vuln-count',
-        './scan_start': 'time-start',
-        './scan_end': 'time-end',
+        'org.openvas.scan': {
+            '@id': 'id',
+            '../task/name': 'name',
+            'host/ip': 'host',
+            'hosts/count': 'host-count',
+            'vulns/count': 'vuln-count',
+            'scan_start': 'time-start',
+            'scan_end': 'time-end'
+        }
     }
 
     TYPE_DESCRIPTIONS = {
