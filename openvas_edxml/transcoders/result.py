@@ -233,7 +233,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
                 out_strings.append(string)
         return out_strings if isinstance(strings, list) else out_strings[0]
 
-    def post_process(self, event):
+    def post_process(self, event, input_element):
 
 
         # The description field may contain fairy long descriptions

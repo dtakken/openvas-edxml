@@ -101,7 +101,7 @@ class OpenVasReportTranscoder(XmlTranscoder):
 
         return scan
 
-    def post_process(self, event):
+    def post_process(self, event, input_element):
 
         if not event['time-end']:
             event['time-end'] = event['time-start']

@@ -94,7 +94,7 @@ class OpenVasErrorTranscoder(XmlTranscoder):
         }
     }
 
-    def post_process(self, event):
+    def post_process(self, event, input_element):
 
         parsed = IP(event.get_any('host'))
 
