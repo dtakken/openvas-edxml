@@ -6,6 +6,7 @@ from lxml import etree
 import re
 from IPy import IP
 
+from edxml.event import EventElement
 from openvas_edxml.brick import OpenVASBrick
 
 from edxml.ontology import EventProperty
@@ -275,6 +276,34 @@ class OpenVasResultTranscoder(XmlTranscoder):
         event['xref'] = valid_xrefs
 
         yield event
+
+        # While we use the OpenVasHostTranscoder to generate events that
+        # list the executed NVTs, these lists are incomplete. The host details
+        # section in OpenVAS reports only contains NVT that were successfully
+        # executed without yielding any results. To complete the NVT lists, we
+        # need to generate an org.openvas.scan.nvt event from each scan result
+        # as well. This is what we do below. Note that the nvt-oid property has
+        # its merge strategy set to 'add', which means that the full list of
+        # executed NVTs can be readily aggregated from multiple org.openvas.scan.nvt
+        # output events.
+
+        nvt_event = EventElement(
+            properties={},
+            event_type_name='org.openvas.scan.nvt',
+            source_uri=event.get_source_uri()
+        )
+
+        nvt_event.copy_properties_from(
+            event,
+            {
+                'scan-id': 'scan-id',
+                'host-ipv4': 'host-ipv4',
+                'host-ipv6': 'host-ipv6',
+                'nvt-oid': 'nvt-oid'
+            }
+        )
+
+        yield nvt_event
 
     @classmethod
     def create_event_type(cls, event_type_name, ontology):
