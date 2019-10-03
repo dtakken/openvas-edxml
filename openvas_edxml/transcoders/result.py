@@ -194,7 +194,19 @@ class OpenVasResultTranscoder(XmlTranscoder):
     }
 
     TYPE_ATTACHMENTS = {
-        'org.openvas.scan.result': ['description']
+        'org.openvas.scan.result': ['description', 'input-xml-element']
+    }
+
+    TYPE_ATTACHMENT_MEDIA_TYPES = {
+        'org.openvas.scan.result': {
+            'input-xml-element': 'application/xml'
+        }
+    }
+
+    TYPE_ATTACHMENT_DISPLAY_NAMES = {
+        'org.openvas.scan.result': {
+            'input-xml-element': 'original OpenVAS data record'
+        }
     }
 
     def __init__(self):
@@ -235,10 +247,17 @@ class OpenVasResultTranscoder(XmlTranscoder):
 
     def post_process(self, event, input_element):
 
-
-        # The description field may contain fairy long descriptions
-        # of what has been found. We store it as event attachment.
-        event.set_attachments({'description': event.get_any('description', '')})
+        event.set_attachments(
+            {
+                # The description field may contain fairy long descriptions
+                # of what has been found. We store it as event attachment.
+                'description': event.get_any('description', ''),
+                # We also store the original OpenVAS XML element, allowing
+                # us to re-process it using future transcoder versions even
+                # when the original data is no longer available.
+                'input-xml-element': etree.tostring(input_element)
+            }
+        )
 
         del event['description']
 
