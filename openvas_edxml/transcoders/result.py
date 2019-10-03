@@ -140,7 +140,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
             'port': NetworkBrick.OBJECT_HOST_PORT,
             'nvt-name': OpenVASBrick.OBJECT_NVT_NAME,
             'nvt-family': OpenVASBrick.OBJECT_NVT_FAMILY,
-            'nvt-oid': OpenVASBrick.OBJECT_NVT_OID,
+            'nvt-oid': ComputingBrick.OBJECT_OID,
             'severity': OpenVASBrick.OBJECT_SEVERITY,
             'threat': OpenVASBrick.OBJECT_THREAT,
             'summary': OpenVASBrick.OBJECT_SUMMARY,

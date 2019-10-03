@@ -11,7 +11,6 @@ class OpenVASBrick(Brick):
     Class that defines some object types specific to OpenVAS.
     """
 
-    OBJECT_NVT_OID = 'org.openvas.nvt.iod'
     OBJECT_NVT_NAME = 'org.openvas.nvt.name'
     OBJECT_NVT_FAMILY = 'org.openvas.nvt.family'
     OBJECT_SCAN_NAME = 'org.openvas.scan.name'
@@ -49,11 +48,6 @@ class OpenVASBrick(Brick):
 
     @classmethod
     def generate_object_types(cls, target_ontology):
-
-        yield target_ontology.create_object_type(cls.OBJECT_NVT_OID) \
-            .set_description('identifier of an OpenVAS plugin (NVT)')\
-            .set_data_type(DataType.string(255, case_sensitive=False, require_unicode=False))\
-            .set_display_name('OpenVAS plugin identifier')
 
         yield target_ontology.create_object_type(cls.OBJECT_NVT_NAME) \
             .set_description('name of an OpenVAS plugin (NVT)')\
