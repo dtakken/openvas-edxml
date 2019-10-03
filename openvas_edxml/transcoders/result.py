@@ -39,7 +39,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
             'qod/type': 'qod-type',
             'qod/value': 'qod-value',
             'description': 'description',
-            'detection/result/details/detail/value[re:test(., "^cpe:/", "i")]': 'cpe_detect',
             ('ws_normalize('
              '  openvas_normalize('
              '    findall(./nvt/tags, "(?:^|\|)summary=([^|]*)", %d)'
@@ -90,11 +89,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
              '    findall(./nvt/bid, "(?:^|[, ])((?:\d(?!,[ ]*))+.)", %d)'
              '  )'
              ')') % re.IGNORECASE: 'bid',
-            ('ws_normalize('
-             '  ctrl_strip('
-             '    findall(./description, "cpe:/\S+", %d)'
-             '  )'
-             ')') % re.IGNORECASE: 'description_cpe',
         }
     }
 
@@ -124,9 +118,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
             '{ Technical details about the problem:\n"[[insight]]"\n}'
             '{ Concerning the solution ([[solution-type]]), the OpenVAS plugin authors say:\n"[[solution]]"}'
             '{\nAdditional information about the issue can be found [[URL:xref,here]].}'
-            '{\nThe detection process revealed that the host is probably'
-            '{ a [[device]] device}{ running [[os]]}.}'
-            '{\nScanning results suggest that the host has the following application(s) installed: [[application]].}'
         )
     }
 
@@ -152,9 +143,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
             'solution': OpenVASBrick.OBJECT_SOLUTION,
             'solution-type': OpenVASBrick.OBJECT_SOLUTION_TYPE,
             'xref': OpenVASBrick.OBJECT_XREF,
-            'application': SecurityBrick.OBJECT_CPE_URI,
-            'device': SecurityBrick.OBJECT_CPE_URI,
-            'os': SecurityBrick.OBJECT_CPE_URI,
             'cvss-base': SecurityBrick.OBJECT_CVSS_VECTOR,
             'cvss-score': SecurityBrick.OBJECT_CVSS_SCORE,
             'cve': SecurityBrick.OBJECT_CVE,
@@ -177,9 +165,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
             'qod-value': 'QoD value',
             'xref': 'cross reference',
             'affected': 'affected systems',
-            'application': 'detected application',
-            'device': 'detected device',
-            'os': 'detected OS',
             'cvss-base': 'CVSS base vector',
             'cvss-score': 'CVSS base score',
             'cve': 'associated CVE',
@@ -249,17 +234,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
 
     def post_process(self, event):
 
-        plugin_oid = event.get_any('nvt-oid')
-
-        if plugin_oid == '1.3.6.1.4.1.25623.1.0.105937':
-            # This plugin aggregates OS detection results from other
-            # plugins that do not yield any results of their own. We only
-            # want to get the best matching OS.
-            results = re.match(r'Best matching OS:(.*)Other OS detections', event.get_any('description', ''), re.DOTALL)
-            if results:
-                event['description_cpe'] = []
-                for cpe in re.findall(r'cpe:/\S+', results.group(1)):
-                    event['description_cpe'].add(cpe)
 
         # The description field may contain fairy long descriptions
         # of what has been found. We store it as event attachment.
@@ -287,24 +261,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
         if parsed.version() == 6:
             event['source-ipv6'] = parsed.strFullsize()
             del event['source-ipv4']
-
-        # Populate event properties depending on what the
-        # detected CPEs represent. Note that some plugins
-        # put CPEs in the detect tag, while others put it
-        # in the description tag. Here, we combine both.
-        for cpe in event['cpe_detect'] | event['description_cpe']:
-            if cpe.startswith('cpe:/a:'):
-                # Vulnerability concerns an application.
-                event['application'].add(cpe)
-            elif cpe.startswith('cpe:/h:'):
-                # Vulnerability concerns a hardware device.
-                event['device'].add(cpe)
-            elif cpe.startswith('cpe:/o:'):
-                # Vulnerability concerns an operating system.
-                event['os'].add(cpe)
-
-        del event['cpe_detect']
-        del event['description_cpe']
 
         # The xrefs in OpenVAS reports often contain invalid URIs.
         # Remove these to prevent producing invalid events.
@@ -349,12 +305,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
         result['host-ipv4'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
         result['host-ipv6'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
 
-        # The detected device, operating system and applications are properties
-        # of a computer, but they are weak identifiers.
-        result['application'].identifies(ComputingBrick.CONCEPT_COMPUTER, 10)
-        result['device'].identifies(ComputingBrick.CONCEPT_COMPUTER, 10)
-        result['os'].identifies(ComputingBrick.CONCEPT_COMPUTER, 10)
-
         # Create inter-concept relation between host IP addresses and en OpenVAS plugin,
         # indicating the the host is susceptible to the problem that the plugin detects.
         result['host-ipv4'].relate_inter('is vulnerable to', 'nvt-oid') \
@@ -369,20 +319,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
         result['nvt-oid'].relate_intra('checks for', 'bid') \
             .because('OpenVAS plugin [[nvt-oid]] mentions BID [[bid]]')
 
-        # Create intra-concept relations between the host IP and any detected OSes, devices
-        # and applications.
-        result['host-ipv4'].relate_intra('is', 'device') \
-            .because('OpenVAS found evidence that host [[host-ipv4]] is a [[device]]')
-        result['host-ipv6'].relate_intra('is', 'device') \
-            .because('OpenVAS found evidence that host [[host-ipv6]] is a [[device]]')
-        result['host-ipv4'].relate_intra('runs', 'os') \
-            .because('OpenVAS found evidence that host [[host-ipv4]] runs on [[os]]')
-        result['host-ipv6'].relate_intra('runs', 'os') \
-            .because('OpenVAS found evidence that host [[host-ipv6]] runs on [[os]]')
-        result['host-ipv4'].relate_intra('runs', 'application') \
-            .because('OpenVAS detected [[application]] running on host [[host-ipv4]]')
-        result['host-ipv6'].relate_intra('runs', 'application') \
-            .because('OpenVAS detected [[application]] running on host [[host-ipv6]]')
 
         # Add a hint to relate scan results found by the same OpenVAS plugin and
         # results that concern the same host

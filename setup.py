@@ -38,6 +38,7 @@ setup(
         'edxml-bricks-computing>=3.0.0.dev0',
         'edxml-bricks-computing-networking>=3.0.0.dev0',
         'edxml-bricks-computing-security>=3.0.0.dev0',
+        'cryptography'
         'IPy',
         'python-dateutil'
     ]

@@ -24,7 +24,7 @@ class OpenVasReportTranscoder(XmlTranscoder):
         'org.openvas.scan': {
             '@id': 'id',
             '../task/name': 'name',
-            'host/ip': 'host',
+            'ports/port/host': 'host',
             'hosts/count': 'host-count',
             'vulns/count': 'vuln-count',
             'scan_start': 'time-start',
