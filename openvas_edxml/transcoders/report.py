@@ -20,7 +20,7 @@ class OpenVasReportTranscoder(XmlTranscoder):
 
     TYPE_MAP = {'/get_reports_response/report/report': 'org.openvas.scan'}
 
-    XPATH_MAP = {
+    PROPERTY_MAP = {
         'org.openvas.scan': {
             '@id': 'id',
             '../task/name': 'name',
