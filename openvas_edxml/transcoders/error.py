@@ -1,0 +1,133 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from IPy import IP
+
+from openvas_edxml.brick import OpenVASBrick
+
+from edxml.ontology import EventProperty
+from edxml.transcode.xml import XmlTranscoder
+
+from edxml_bricks.computing.generic import ComputingBrick
+from edxml_bricks.computing.networking.generic import NetworkBrick
+
+
+class OpenVasErrorTranscoder(XmlTranscoder):
+
+    TYPES = ['org.openvas.scan.error']
+
+    TYPE_MAP = {
+        '.': 'org.openvas.scan.error'
+    }
+
+    PROPERTY_MAP = {
+        'org.openvas.scan.error': {
+            '../../../report/@id': 'scan-id',
+            'host': 'host',
+            'nvt/@oid': 'nvt-oid',
+            'nvt/name': 'nvt-name',
+            'description': 'message',
+        }
+    }
+
+    TYPE_DESCRIPTIONS = {
+        'org.openvas.scan.error': 'Failed OpenVAS test'
+    }
+
+    TYPE_DISPLAY_NAMES = {
+        'org.openvas.scan.error': ['OpenVAS test failure']
+    }
+
+    TYPE_SUMMARIES = {
+        'org.openvas.scan.error': 'OpenVAS failure while testing [[host-ipv4]][[host-ipv6]]'
+    }
+
+    TYPE_STORIES = {
+        'org.openvas.scan.error': (
+            'During OpenVAS scan [[scan-id]], host [[host-ipv4]][[host-ipv6]] was tested using a '
+            'plugin titled [[nvt-name]] (NVT OID [[nvt-oid]]). '
+            'Unfortunately, the test failed with error message "[[message]]".'
+        )
+    }
+
+    TYPE_PROPERTIES = {
+        'org.openvas.scan.error': {
+            'scan-id': ComputingBrick.OBJECT_UUID,
+            'host-ipv4': NetworkBrick.OBJECT_HOST_IPV4,
+            'host-ipv6': NetworkBrick.OBJECT_HOST_IPV6,
+            'nvt-oid': ComputingBrick.OBJECT_OID,
+            'nvt-name': OpenVASBrick.OBJECT_NVT_NAME,
+            'message': OpenVASBrick.OBJECT_ERROR_MESSAGE,
+        }
+    }
+
+    TYPE_PROPERTY_DESCRIPTIONS = {
+        'org.openvas.scan.error': {
+            'scan-id': 'scan UUID',
+            'host-ipv4': 'target host (IPv4)',
+            'host-ipv6': 'target host (IPv6)',
+            'nvt-oid': 'OpenVAS plugin ID',
+            'nvt-name': 'OpenVAS plugin name',
+        }
+    }
+
+    TYPE_PROPERTY_MERGE_STRATEGIES = {
+        'org.openvas.scan.error': {
+            'scan-id': EventProperty.MERGE_MATCH,
+            'host-ipv4': EventProperty.MERGE_MATCH,
+            'host-ipv6': EventProperty.MERGE_MATCH,
+            'nvt-oid': EventProperty.MERGE_MATCH
+        }
+    }
+
+    PARENTS_CHILDREN = [
+        ['org.openvas.scan', 'that produced', 'org.openvas.scan.error']
+    ]
+
+    CHILDREN_SIBLINGS = [
+        ['org.openvas.scan.error', 'produced by', 'org.openvas.scan']
+    ]
+
+    PARENT_MAPPINGS = {
+        'org.openvas.scan.error': {
+            'scan-id': 'id'
+        }
+    }
+
+    def post_process(self, event):
+
+        parsed = IP(event.get_any('host'))
+
+        # We assign the host IP address to both the IPv4 and IPv6
+        # property. Either one of these will be invalid and will
+        # be automatically removed by the EDXML transcoder mediator,
+        # provided that it is configured to do so.
+        event['host-ipv4'] = parsed.strFullsize()
+        event['host-ipv6'] = parsed.strFullsize()
+
+        del event['host']
+
+        yield event
+
+    @classmethod
+    def create_event_type(cls, event_type_name, ontology):
+
+        error = super(OpenVasErrorTranscoder, cls).create_event_type(event_type_name, ontology)
+
+        # Associate OpenVAS plugins with the vulnerability concept. This models
+        # the fact that OpenVAS plugin IODs are unique identifiers of a particular
+        # issue.
+        error['nvt-oid'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 10)
+
+        # Associate NVT names with the vulnerability concept. Confidence is
+        # lower though as NVT names are not unique.
+        error['nvt-name'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 5)
+
+        # The IP address of the host is an identifier of a computer.
+        error['host-ipv4'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
+        error['host-ipv6'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
+
+        # Relate the NVT OID to its name
+        error['nvt-oid'].relate_intra('is named', 'nvt-name') \
+            .because('an OpenVAS result of plugin [[nvt-oid]] is named [[nvt-name]]')
+
+        return error

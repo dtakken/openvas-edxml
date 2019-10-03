@@ -12,6 +12,7 @@ class OpenVASBrick(Brick):
     """
 
     OBJECT_NVT_NAME = 'org.openvas.nvt.name'
+    OBJECT_ERROR_MESSAGE = 'org.openvas.error-message'
     OBJECT_NVT_FAMILY = 'org.openvas.nvt.family'
     OBJECT_SCAN_NAME = 'org.openvas.scan.name'
     OBJECT_QOD_TYPE = 'org.openvas.result.qod.type'
@@ -53,6 +54,11 @@ class OpenVASBrick(Brick):
             .set_description('name of an OpenVAS plugin (NVT)')\
             .set_data_type(DataType.string(255))\
             .set_display_name('OpenVAS plugin name')
+
+        yield target_ontology.create_object_type(cls.OBJECT_ERROR_MESSAGE) \
+            .set_description('error message produced by an OpenVAS plugin (NVT)')\
+            .set_data_type(DataType.string(255))\
+            .set_display_name('OpenVAS error message')
 
         yield target_ontology.create_object_type(cls.OBJECT_NVT_FAMILY) \
             .set_description('name of a category of OpenVAS plugins')\
