@@ -265,6 +265,11 @@ class OpenVasResultTranscoder(XmlTranscoder):
         # out in a port number and protocol.
         port, protocol = event.get_any('port', '/').split('/')
 
+        # Newer OpenVAS versions append a description to the port,
+        # like '80/tcp (IANA: www-http)'. Strip it off.
+        protocol,  = protocol.split(' ')[0:1]
+        event['port'] = ['%s/%s' % (port, protocol)]
+
         try:
             int(port)
         except ValueError:
