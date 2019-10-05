@@ -343,6 +343,10 @@ class OpenVasResultTranscoder(XmlTranscoder):
         # issue.
         result['nvt-oid'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 10)
 
+        # We associate the NVT names with the vulnerability concept. Confidence is
+        # lower than the OID association though as NVT names are not unique.
+        result['nvt-name'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 5)
+
         # OpenVAS plugins may refer to multiple external vulnerability identifiers,
         # like CVE numbers. So, OpenVAS plugins conceptually detect meta-vulnerabilities,
         # which include any of multiple CVE. OpenVAS does not tell us which CVE was
@@ -372,6 +376,9 @@ class OpenVasResultTranscoder(XmlTranscoder):
         result['nvt-oid'].relate_intra('checks for', 'bid') \
             .because('OpenVAS plugin [[nvt-oid]] mentions BID [[bid]]')
 
+        # Relate the NVT OID to its name
+        result['nvt-oid'].relate_intra('is named', 'nvt-name') \
+            .because('an OpenVAS result of plugin [[nvt-oid]] is named [[nvt-name]]')
 
         # Add a hint to relate scan results found by the same OpenVAS plugin and
         # results that concern the same host
