@@ -16,8 +16,6 @@ from edxml_bricks.computing.networking.generic import NetworkBrick
 
 class OpenVasReportTranscoder(XmlTranscoder):
 
-    TYPES = ['org.openvas.scan']
-
     TYPE_MAP = {'.': 'org.openvas.scan'}
 
     PROPERTY_MAP = {

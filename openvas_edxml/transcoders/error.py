@@ -14,8 +14,6 @@ from edxml_bricks.computing.networking.generic import NetworkBrick
 
 class OpenVasErrorTranscoder(XmlTranscoder):
 
-    TYPES = ['org.openvas.scan.error']
-
     TYPE_MAP = {
         '.': 'org.openvas.scan.error'
     }
