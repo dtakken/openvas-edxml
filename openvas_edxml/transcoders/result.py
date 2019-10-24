@@ -173,7 +173,10 @@ class OpenVasResultTranscoder(XmlTranscoder):
 
     TYPE_PROPERTY_MERGE_STRATEGIES = {
         'org.openvas.scan.result': {
-            'id': EventProperty.MERGE_MATCH,
+            'nvt-oid': EventProperty.MERGE_MATCH,
+            'host-ipv4': EventProperty.MERGE_MATCH,
+            'host-ipv6': EventProperty.MERGE_MATCH,
+            'port': EventProperty.MERGE_MATCH
         }
     }
 

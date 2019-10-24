@@ -219,7 +219,8 @@ class OpenVasHostTranscoder(XmlTranscoder):
     TYPE_PROPERTY_MERGE_STRATEGIES = {
         'org.openvas.scan.nvt': {
             'id': EventProperty.MERGE_MATCH,
-            'host-ipv4': EventProperty.MERGE_MATCH,  # TODO: For now we assume that ipv6 does not occur. Currently, properties having the "match" strategy are mandatory, which cannot be done for both the ipv4 and ipv6 properties...
+            'host-ipv4': EventProperty.MERGE_MATCH,
+            'host-ipv6': EventProperty.MERGE_MATCH,
             'nvt-oid': EventProperty.MERGE_ADD
         },
         'org.openvas.scan.application-detection': {
