@@ -1,0 +1,42 @@
+<report id="fb167629-3bdf-4ab1-ae7d-c64a0d7ad595" format_id="f976ff7b-3f53-418d-bac3-521fed53b174" extension="xml" type="scan" content_type="text/xml">
+  <report id="fb167629-3bdf-4ab1-ae7d-c64a0d7ad595">
+    <omp>
+      <version>7.0</version>
+    </omp>
+    <host>
+      <ip>10.0.0.1</ip>
+      <detail>
+        <name>cpe:/a:openbsd:openssh:7.4p1</name>
+        <value>22/tcp</value>
+        <source>
+          <type>nvt</type>
+          <name>1.3.6.1.4.1.25623.1.0.10267</name>
+          <description>Service detection (1.3.6.1.4.1.25623.1.0.10267)</description>
+        </source>
+        <extra></extra>
+      </detail>
+      <detail>
+        <name>cpe:/a:apache:http_server:2.4.25</name>
+        <value>443/tcp</value>
+        <source>
+          <type>nvt</type>
+          <name>1.3.6.1.4.1.25623.1.0.900498</name>
+          <description></description>
+        </source>
+        <extra></extra>
+      </detail>
+      <detail>
+        <name>cpe:/a:apache:http_server:2.4.25</name>
+        <value>80/tcp</value>
+        <source>
+          <type>nvt</type>
+          <name>1.3.6.1.4.1.25623.1.0.900498</name>
+          <description></description>
+        </source>
+        <extra></extra>
+      </detail>
+    </host>
+    <results max="-1" start="1">
+    </results>
+  </report>
+</report>

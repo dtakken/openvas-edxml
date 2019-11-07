@@ -1,0 +1,45 @@
+<!-- Variant of result.xml containing "general/tcp" as port -->
+<report id="fb167629-3bdf-4ab1-ae7d-c64a0d7ad595" format_id="f976ff7b-3f53-418d-bac3-521fed53b174" extension="xml" type="scan" content_type="text/xml">
+  <report id="fb167629-3bdf-4ab1-ae7d-c64a0d7ad595">
+    <omp>
+      <version>7.0</version>
+    </omp>
+    <results max="-1" start="1">
+      <result id="d37be786-a052-433e-9ecf-28babfaea2ac">
+        <name>Check open ports</name>
+        <comment></comment>
+        <creation_time>2019-01-02T12:01:01Z</creation_time>
+        <modification_time>2019-01-02T13:01:01Z</modification_time>
+        <user_tags>
+          <count>0</count>
+        </user_tags>
+        <host>10.0.0.1
+          <asset asset_id="94acc6fa-2ede-4c1c-be4c-94f03dcb981a"></asset>
+        </host>
+        <port>general/tcp</port>
+        <nvt oid="1.3.6.1.4.1.25623.1.0.112081">
+          <type>nvt</type>
+          <name>HTTP Security Headers Detection</name>
+          <family>General</family>
+          <cvss_base>5.0</cvss_base>
+          <cve>NOCVE</cve>
+          <cve>CVE-2016-0800, CVE-2014-3566</cve>
+          <bid>NOBID</bid>
+          <bid>9506, 9561</bid>
+          <!-- Note the invalid URL in below xref tag. Some OpenVAS NVT produce rubbish URIs. -->
+          <xref>URL:http://test1/, URL:http://test2/, URL:invalid</xref>
+          <tags>cvss_base_vector=AV:N/AC:L/Au:N/C:N/I:N/A:N|summary=Test summary  |qod_type=remote_banner|solution=Test solution  |solution_type= Test solution  type  |insight=  Test insight|affected=  Test affected |impact=  Test impact </tags>
+          <cert></cert>
+        </nvt>
+        <scan_nvt_version>$Revision: 10899 $</scan_nvt_version>
+        <threat>Log</threat>
+        <severity>6.0</severity>
+        <qod>
+          <value>80</value>
+          <type>remote_banner</type>
+        </qod>
+        <description>Test description</description>
+      </result>
+    </results>
+  </report>
+</report>

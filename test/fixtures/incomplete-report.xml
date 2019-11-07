@@ -1,0 +1,34 @@
+<!--
+This file is a stripped down OpenVAS report that is incomplete. It lacks a
+scan_end tag. This happens when downloading a report while the scan is running.
+-->
+<report id="fb167629-3bdf-4ab1-ae7d-c64a0d7ad595" format_id="f976ff7b-3f53-418d-bac3-521fed53b174" extension="xml" type="scan" content_type="text/xml">
+  <task id="06a45617-eeda-4190-8a18-75b490d2dc77">
+    <name>task name</name>
+  </task>
+  <report id="fb167629-3bdf-4ab1-ae7d-c64a0d7ad595">
+    <omp>
+      <version>7.0</version>
+    </omp>
+    <hosts>
+      <count>3</count>
+    </hosts>
+    <vulns>
+      <count>2</count>
+    </vulns>
+    <scan_start>2019-01-01T12:01:01Z</scan_start>
+    <ports max="-1" start="1">
+      <count>2</count>
+      <port>80/tcp
+        <host>10.0.0.1</host>
+        <severity>0.0</severity>
+        <threat>Log</threat>
+      </port>
+      <port>80/tcp
+        <host>10.0.0.2</host>
+        <severity>0.0</severity>
+        <threat>Log</threat>
+      </port>
+    </ports>
+  </report>
+</report>

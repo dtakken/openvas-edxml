@@ -7,8 +7,8 @@ from openvas_edxml.transcoders.report import OpenVasReportTranscoder
 from openvas_edxml.transcoders.result import OpenVasResultTranscoder
 
 
-def register_transcoders():
-    XmlTranscoderMediator.register('/get_reports_response/report/report', OpenVasReportTranscoder)
-    XmlTranscoderMediator.register('/get_reports_response/report/report/results/result', OpenVasResultTranscoder)
-    XmlTranscoderMediator.register('/get_reports_response/report/report/host', OpenVasHostTranscoder)
-    XmlTranscoderMediator.register('/get_reports_response/report/report/errors/error', OpenVasErrorTranscoder)
+def register_transcoders(mediator=XmlTranscoderMediator):
+    mediator.register('/get_reports_response/report/report', OpenVasReportTranscoder)
+    mediator.register('/get_reports_response/report/report/results/result', OpenVasResultTranscoder)
+    mediator.register('/get_reports_response/report/report/host', OpenVasHostTranscoder)
+    mediator.register('/get_reports_response/report/report/errors/error', OpenVasErrorTranscoder)

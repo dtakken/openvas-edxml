@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import sys
-
+from openvas_edxml.transcoders.logger import log
 from IPy import IP
 
 from openvas_edxml.brick import OpenVASBrick
@@ -103,7 +102,7 @@ class OpenVasReportTranscoder(XmlTranscoder):
 
         if not event['time-end']:
             event['time-end'] = event['time-start']
-            sys.stderr.write('This scan report is incomplete, its scan_end tag is empty.\n')
+            log.warning('This scan report is incomplete, its scan_end tag is empty.\n')
 
         # The hosts may be IPv4 or IPv6 addresses. Determine
         # what it is and store in the correct property.
