@@ -125,7 +125,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
     }
 
     TYPE_DISPLAY_NAMES = {
-        'org.openvas.scan.result': ['detected vulnerability', 'detected vulnerabilities']
+        'org.openvas.scan.result': ['vulnerability detection']
     }
 
     TYPE_SUMMARIES = {

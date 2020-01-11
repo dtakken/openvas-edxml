@@ -218,20 +218,20 @@ class OpenVasHostTranscoder(XmlTranscoder):
 
     TYPE_PROPERTY_MERGE_STRATEGIES = {
         'org.openvas.scan.nvt': {
-            'id': EventProperty.MERGE_MATCH,
+            'scan-id': EventProperty.MERGE_MATCH,
             'host-ipv4': EventProperty.MERGE_MATCH,
             'host-ipv6': EventProperty.MERGE_MATCH,
             'nvt-oid': EventProperty.MERGE_ADD
         },
         'org.openvas.scan.application-detection': {
-            'id': EventProperty.MERGE_MATCH,
+            'scan-id': EventProperty.MERGE_MATCH,
             'host-ipv4': EventProperty.MERGE_MATCH,
             'host-ipv6': EventProperty.MERGE_MATCH,
             'port': EventProperty.MERGE_ADD,
             'application': EventProperty.MERGE_MATCH
         },
         'org.openvas.scan.os-detection': {
-            'id': EventProperty.MERGE_MATCH,
+            'scan-id': EventProperty.MERGE_MATCH,
             'host-ipv4': EventProperty.MERGE_MATCH,
             'host-ipv6': EventProperty.MERGE_MATCH,
             'os': EventProperty.MERGE_ADD
@@ -243,7 +243,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'fingerprint': EventProperty.MERGE_MATCH,
         },
         'org.openvas.scan.open-ports': {
-            'id': EventProperty.MERGE_MATCH,
+            'scan-id': EventProperty.MERGE_MATCH,
             'host-ipv4': EventProperty.MERGE_MATCH,
             'host-ipv6': EventProperty.MERGE_MATCH,
         },
