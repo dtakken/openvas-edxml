@@ -277,16 +277,12 @@ class OpenVasResultTranscoder(XmlTranscoder):
             # Not a port number.
             del event['port']
 
-        # The host may be an IPv4 or IPv6 address. Determine
-        # what it is and store in the correct property.
-        try:
-            parsed = IP(event.get_any('host-ipv4'))
-        except ValueError:
-            # The IPy fails on zone identifiers in IPv6 addresses, strip them.
-            parsed = IP(event.get_any('host-ipv4').split('%')[0])
-        if parsed.version() == 6:
-            event['source-ipv6'] = parsed.strFullsize()
-            del event['source-ipv4']
+        # We assign the host IP address to both the IPv4 and IPv6
+        # property. Either one of these will be invalid and will
+        # be automatically removed by the EDXML transcoder mediator,
+        # provided that it is configured to do so.
+        event['host-ipv4'] = IP(event.get_any('host-ipv4'))
+        event['host-ipv6'] = event['host-ipv4']
 
         # The xrefs in OpenVAS reports often contain invalid URIs.
         # Remove these to prevent producing invalid events.

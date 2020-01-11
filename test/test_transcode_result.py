@@ -17,6 +17,7 @@ def harness():
     harness = XmlTranscoderTestHarness(dirname(__file__) + '/fixtures', OpenVasResultTranscoder())
     harness.add_event_source('/some/source/')
     harness.set_event_source('/some/source/')
+    harness.ignore_invalid_objects()
     return harness
 
 

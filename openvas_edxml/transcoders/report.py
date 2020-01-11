@@ -104,21 +104,17 @@ class OpenVasReportTranscoder(XmlTranscoder):
             event['time-end'] = event['time-start']
             log.warning('This scan report is incomplete, its scan_end tag is empty.\n')
 
-        # The hosts may be IPv4 or IPv6 addresses. Determine
-        # what it is and store in the correct property.
         event['host-ipv4'] = []
         event['host-ipv6'] = []
 
         for host in set(event['host']):
-            try:
-                parsed = IP(host)
-            except ValueError:
-                # The IPy fails on zone identifiers in IPv6 addresses, strip them.
-                parsed = IP(host.split('%')[0])
-            if parsed.version() == 4:
-                event['host-ipv4'].add(parsed.strFullsize())
-            else:
-                event['host-ipv6'].add(parsed.strFullsize())
+            # We assign the host IP address to both the IPv4 and IPv6
+            # property. Either one of these will be invalid and will
+            # be automatically removed by the EDXML transcoder mediator,
+            # provided that it is configured to do so.
+            parsed = IP(host)
+            event['host-ipv4'].add(parsed)
+            event['host-ipv6'].add(parsed)
 
         del event['host']
 

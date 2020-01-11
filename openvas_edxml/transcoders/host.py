@@ -316,18 +316,13 @@ class OpenVasHostTranscoder(XmlTranscoder):
 
     def post_process(self, event, input_element):
 
-        # The host may be an IPv4 or IPv6 address. Determine
-        # what it is and store in the correct property.
-        try:
-            parsed = IP(event.get_any('host'))
-        except ValueError:
-            # The IPy fails on zone identifiers in IPv6 addresses, strip them.
-            parsed = IP(event.get_any('host').split('%')[0])
-
-        if parsed.version() == 4:
-            event['host-ipv4'] = parsed.strFullsize()
-        else:
-            event['host-ipv6'] = parsed.strFullsize()
+        # We assign the host IP address to both the IPv4 and IPv6
+        # property. Either one of these will be invalid and will
+        # be automatically removed by the EDXML transcoder mediator,
+        # provided that it is configured to do so.
+        parsed = IP(event.get_any('host'))
+        event['host-ipv4'] = parsed
+        event['host-ipv6'] = parsed
 
         del event['host']
 
