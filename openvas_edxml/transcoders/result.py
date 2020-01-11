@@ -62,7 +62,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
             'creation_time': 'time',
             'severity': 'severity',
             'threat': 'threat',
-            'host': 'host-ipv4',
+            'ws_normalize(host)': 'host-ipv4',
             'port': 'port',
             'qod/type': 'qod-type',
             'qod/value': 'qod-value',
