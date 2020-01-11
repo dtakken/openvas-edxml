@@ -8,6 +8,7 @@ from IPy import IP
 
 from edxml.event import EventElement
 from openvas_edxml.brick import OpenVASBrick
+from openvas_edxml.transcoders.logger import log
 
 from edxml.ontology import EventProperty
 from edxml.transcode.xml import XmlTranscoder
@@ -16,6 +17,34 @@ from edxml_bricks.generic import GenericBrick
 from edxml_bricks.computing.generic import ComputingBrick
 from edxml_bricks.computing.networking.generic import NetworkBrick
 from edxml_bricks.computing.security import SecurityBrick
+
+
+def post_process_port(port):
+    # Ports are strings like 443/tcp. Split them
+    # out in a port number and protocol.
+    port, protocol = port.split('/')
+
+    # Newer OpenVAS versions append a description to the port,
+    # like '80/tcp (IANA: www-http)'. Strip it off.
+    protocol, = protocol.split(' ')[0:1]
+
+    try:
+        int(port)
+    except ValueError:
+        # Not a port number.
+        return None
+
+    return '%s/%s' % (port, protocol)
+
+
+def post_process_xref(xref):
+    # The xrefs in OpenVAS reports often contain invalid URIs.
+    # Remove these to prevent producing invalid events.
+    scheme, netloc, path, qs, anchor = urlsplit(xref)
+    if scheme == '':
+        log.warning('XREF field contains Invalid URI (omitted): %s' % xref)
+        return None
+    return xref
 
 
 class OpenVasResultTranscoder(XmlTranscoder):
@@ -180,6 +209,13 @@ class OpenVasResultTranscoder(XmlTranscoder):
         }
     }
 
+    TYPE_PROPERTY_POST_PROCESSORS = {
+        'org.openvas.scan.result': {
+            'port': post_process_port,
+            'xref': post_process_xref
+        }
+    }
+
     PARENTS_CHILDREN = [
         ['org.openvas.scan', 'yielding', 'org.openvas.scan.result']
     ]
@@ -262,39 +298,12 @@ class OpenVasResultTranscoder(XmlTranscoder):
 
         del event['description']
 
-        # Ports are strings like 443/tcp. Split them
-        # out in a port number and protocol.
-        port, protocol = event.get_any('port', '/').split('/')
-
-        # Newer OpenVAS versions append a description to the port,
-        # like '80/tcp (IANA: www-http)'. Strip it off.
-        protocol,  = protocol.split(' ')[0:1]
-        event['port'] = ['%s/%s' % (port, protocol)]
-
-        try:
-            int(port)
-        except ValueError:
-            # Not a port number.
-            del event['port']
-
         # We assign the host IP address to both the IPv4 and IPv6
         # property. Either one of these will be invalid and will
         # be automatically removed by the EDXML transcoder mediator,
         # provided that it is configured to do so.
         event['host-ipv4'] = IP(event.get_any('host-ipv4'))
         event['host-ipv6'] = event['host-ipv4']
-
-        # The xrefs in OpenVAS reports often contain invalid URIs.
-        # Remove these to prevent producing invalid events.
-        valid_xrefs = []
-        for xref in event['xref']:
-            scheme, netloc, path, qs, anchor = urlsplit(xref)
-            if scheme == '':
-                self.warning('XREF field contains Invalid URI (omitted): %s' % xref)
-                continue
-            valid_xrefs.append(xref)
-
-        event['xref'] = valid_xrefs
 
         yield event
 
