@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from urlparse import urlsplit
+from urllib.parse import urlsplit
 from lxml import etree
 
 import re
@@ -292,7 +292,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
                 # We also store the original OpenVAS XML element, allowing
                 # us to re-process it using future transcoder versions even
                 # when the original data is no longer available.
-                'input-xml-element': etree.tostring(input_element)
+                'input-xml-element': etree.tostring(input_element).decode('utf-8')
             }
         )
 
