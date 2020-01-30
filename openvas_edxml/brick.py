@@ -8,7 +8,7 @@ from edxml.ontology import DataType
 
 class OpenVASBrick(Brick):
     """
-    Class that defines some object types specific to OpenVAS.
+    Brick that defines some object types and concepts specific to OpenVAS.
     """
 
     OBJECT_NVT_NAME = 'org.openvas.nvt.name'
@@ -109,7 +109,7 @@ class OpenVASBrick(Brick):
         yield target_ontology.create_object_type(cls.OBJECT_INSIGHT)\
             .set_description('technical details about an issue detected by OpenVAS')\
             .set_data_type(DataType.string())\
-            .set_display_name('OpenVAS issue details')
+            .set_display_name('OpenVAS issue detail')
 
         yield target_ontology.create_object_type(cls.OBJECT_SOLUTION) \
             .set_description('proposed solution for an issue detected by OpenVAS')\
