@@ -9,9 +9,8 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.x509 import NameOID, ExtensionOID, ExtensionNotFound
 
-from edxml_bricks.computing.cryptography import CryptoBrick
 from edxml_bricks.computing.email import EmailBrick
-from edxml_bricks.computing.security import SecurityBrick
+from edxml_bricks.computing.security import SecurityBrick, CryptoBrick
 from edxml_bricks.generic import GenericBrick
 from edxml_bricks.geography import GeoBrick
 from openvas_edxml.brick import OpenVASBrick
