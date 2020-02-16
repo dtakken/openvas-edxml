@@ -27,6 +27,10 @@ setup(
     # simple. Or you can use find_packages().
     packages=find_packages(exclude=[]),
 
+    # Add entry points which will be installed as CLI utilities
+    entry_points={
+        'console_scripts': ['openvas-edxml=openvas_edxml/cli:main'],
+    },
     # List run-time dependencies here. These will be installed by pip when your
     # project is installed.
     # See https://pip.pypa.io/en/latest/reference/pip_install.html#requirements-file-format
