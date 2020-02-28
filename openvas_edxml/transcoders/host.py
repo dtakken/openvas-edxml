@@ -243,6 +243,13 @@ class OpenVasHostTranscoder(XmlTranscoder):
         },
     }
 
+    TYPE_MULTI_VALUED_PROPERTIES = {
+        'org.openvas.scan.nvt': ['nvt-oid'],
+        'org.openvas.scan.application-detection': ['port', 'application'],
+        'org.openvas.scan.ssl-certificate': ['host-name', 'subject-domain'],
+        'org.openvas.scan.open-ports': ['port']
+    }
+
     PARENTS_CHILDREN = [
         ['org.openvas.scan', 'executed', 'org.openvas.scan.nvt'],
         ['org.openvas.scan', 'which found', 'org.openvas.scan.application-detection'],
@@ -394,10 +401,6 @@ class OpenVasHostTranscoder(XmlTranscoder):
     def create_event_type(cls, event_type_name, ontology):
 
         event_type = super(OpenVasHostTranscoder, cls).create_event_type(event_type_name, ontology)
-
-        # TODO: SDK does not automatically set this property to single valued
-        # when associating with parent event type. Fix that.
-        event_type['scan-id'].set_multi_valued(False)
 
         # The IP address of the host is an identifier of a computer.
         event_type['host-ipv4'].identifies(ComputingBrick.CONCEPT_COMPUTER, confidence=7)

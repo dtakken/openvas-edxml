@@ -62,6 +62,10 @@ class OpenVasReportTranscoder(XmlTranscoder):
         }
     }
 
+    TYPE_MULTI_VALUED_PROPERTIES = {
+        'org.openvas.scan': ['host-ipv4', 'host-ipv6']
+    }
+
     TYPE_PROPERTY_DESCRIPTIONS = {
         'org.openvas.scan': {
             'id': 'OpenVAS UUID',

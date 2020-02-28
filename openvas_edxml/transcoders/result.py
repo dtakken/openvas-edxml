@@ -199,6 +199,10 @@ class OpenVasResultTranscoder(XmlTranscoder):
         }
     }
 
+    TYPE_MULTI_VALUED_PROPERTIES = {
+        'org.openvas.scan.result': ['xref', 'cve', 'bid']
+    }
+
     TYPE_PROPERTY_MERGE_STRATEGIES = {
         'org.openvas.scan.result': {
             'nvt-oid': EventProperty.MERGE_MATCH,
@@ -338,10 +342,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
     def create_event_type(cls, event_type_name, ontology):
 
         result = super(OpenVasResultTranscoder, cls).create_event_type(event_type_name, ontology)
-
-        # TODO: SDK does not automatically set this property to single valued
-        # when associating with parent event type. Fix that.
-        result['scan-id'].set_multi_valued(False)
 
         # Associate OpenVAS plugins with the vulnerability concept. This models
         # the fact that OpenVAS plugin IODs are unique identifiers of a particular
