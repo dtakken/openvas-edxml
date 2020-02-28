@@ -84,7 +84,7 @@ class OpenVasReportTranscoder(XmlTranscoder):
             'host-ipv6': EventProperty.MERGE_ADD,
             'host-count': EventProperty.MERGE_MAX,
             'vuln-count': EventProperty.MERGE_MAX,
-            'time-end': EventProperty.MERGE_MAX
+            'time-end': EventProperty.MERGE_REPLACE
         }
     }
 
@@ -104,7 +104,6 @@ class OpenVasReportTranscoder(XmlTranscoder):
     def post_process(self, event, input_element):
 
         if not event['time-end']:
-            event['time-end'] = event['time-start']
             log.warning('This scan report is incomplete, its scan_end tag is empty.\n')
 
         event['host-ipv4'] = []

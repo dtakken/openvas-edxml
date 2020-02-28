@@ -42,5 +42,5 @@ def test_incomplete_report(harness, caplog):
     result = harness.events.filter_type('org.openvas.scan').pop()  # type: edxml.EDXMLEvent
 
     assert result['time-start'] == {'2019-01-01T12:01:01.000000Z'}
-    assert result['time-end'] == result['time-start']
+    assert 'time-end' not in result
     assert 'scan report is incomplete' in ''.join(caplog.messages)
