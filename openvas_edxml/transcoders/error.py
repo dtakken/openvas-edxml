@@ -41,11 +41,10 @@ class OpenVasErrorTranscoder(XmlTranscoder):
     }
 
     TYPE_STORIES = {
-        'org.openvas.scan.error': (
+        'org.openvas.scan.error':
             'During OpenVAS scan [[scan-id]], host [[host-ipv4]][[host-ipv6]] was tested using a '
             'plugin titled [[nvt-name]] (NVT OID [[nvt-oid]]). '
             'Unfortunately, the test failed with error message "[[message]]".'
-        )
     }
 
     TYPE_PROPERTIES = {

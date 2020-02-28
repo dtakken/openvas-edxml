@@ -133,7 +133,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
     }
 
     TYPE_STORIES = {
-        'org.openvas.scan.result': (
+        'org.openvas.scan.result':
             'On [[FULLDATETIME:time]], OpenVAS detected a possible security issue related to host '
             '{[[host-ipv4]]}{[[host-ipv6]]}{, on port [[port]]}.'
             ' The issue was found by an OpenVAS plugin from the [[nvt-family]] family, titled "[[nvt-name]]".'
@@ -146,7 +146,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
             '{ Technical details about the problem:\n"[[insight]]"\n}'
             '{ Concerning the solution ([[solution-type]]), the OpenVAS plugin authors say:\n"[[solution]]"}'
             '{\nAdditional information about the issue can be found [[URL:xref,here]].}'
-        )
     }
 
     TYPE_PROPERTIES = {

@@ -100,25 +100,20 @@ class OpenVasHostTranscoder(XmlTranscoder):
     }
 
     TYPE_STORIES = {
-        'org.openvas.scan.nvt': (
+        'org.openvas.scan.nvt':
             'OpenVAS scan [[scan-id]] performed the following tests on '
-            'host [[host-ipv4]][[host-ipv6]]: [[nvt-oid]].'
-        ),
-        'org.openvas.scan.application-detection': (
+            'host [[host-ipv4]][[host-ipv6]]: [[nvt-oid]].',
+        'org.openvas.scan.application-detection':
             'OpenVAS scan [[scan-id]] detected application [[application]] running on '
-            'host [[host-ipv4]][[host-ipv6]]{ port [[port]]}.'
-        ),
-        'org.openvas.scan.os-detection': (
+            'host [[host-ipv4]][[host-ipv6]]{ port [[port]]}.',
+        'org.openvas.scan.os-detection':
             'OpenVAS scan [[scan-id]] detected operating system [[os]] running on '
-            'host [[host-ipv4]][[host-ipv6]].'
-        ),
-        'org.openvas.scan.ssl-certificate': (
-            'OpenVAS scan [[scan-id]] discovered an SSL certificate on host [[host-ipv4]][[host-ipv6]].'
-        ),
-        'org.openvas.scan.open-ports': (
+            'host [[host-ipv4]][[host-ipv6]].',
+        'org.openvas.scan.ssl-certificate':
+            'OpenVAS scan [[scan-id]] discovered an SSL certificate on host [[host-ipv4]][[host-ipv6]].',
+        'org.openvas.scan.open-ports':
             'OpenVAS scan [[scan-id]] detected the following open TCP/IP ports on '
-            'host [[host-ipv4]][[host-ipv6]]: [[port]].'
-        )
+            'host [[host-ipv4]][[host-ipv6]]: [[port]].',
     }
 
     TYPE_PROPERTIES = {
