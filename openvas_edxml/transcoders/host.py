@@ -43,7 +43,9 @@ class OpenVasHostTranscoder(XmlTranscoder):
         # We extract one event per host containing SSL certificate details
         'detail/source/name[text() = "1.3.6.1.4.1.25623.1.0.103692"]/../..': 'org.openvas.scan.ssl-certificate',
         # We extract one event per host containing open TCP/IP ports
-        'detail/source/name[text() = "1.3.6.1.4.1.25623.1.0.900239"]/../../..': 'org.openvas.scan.open-ports'
+        'detail/source/name[text() = "1.3.6.1.4.1.25623.1.0.900239"]/../../..': 'org.openvas.scan.open-ports',
+        # We extract one event per detail listing routers extracted from TraceRoute results
+        'detail/source/name[text() = "1.3.6.1.4.1.25623.1.0.51662"]/../..': 'org.openvas.scan.routers',
     }
 
     PROPERTY_MAP = {
@@ -72,6 +74,10 @@ class OpenVasHostTranscoder(XmlTranscoder):
             '../../@id': 'scan-id',
             'ip|../ip': 'host',
             'detail/source/name[text() = "1.3.6.1.4.1.25623.1.0.900239"]/../../value': 'port',
+        },
+        'org.openvas.scan.routers': {
+            '../../@id': 'scan-id',
+            'value': 'host'
         }
     }
 
@@ -80,7 +86,8 @@ class OpenVasHostTranscoder(XmlTranscoder):
         'org.openvas.scan.application-detection': 'Application detected during an OpenVAS scan',
         'org.openvas.scan.os-detection': 'Operating system detected during an OpenVAS scan',
         'org.openvas.scan.ssl-certificate': 'SSL certificate detected during an OpenVAS scan',
-        'org.openvas.scan.open-ports': 'List of open TCP/IP ports detected during an OpenVAS scan'
+        'org.openvas.scan.open-ports': 'List of open TCP/IP ports detected during an OpenVAS scan',
+        'org.openvas.scan.routers': 'Network routers detected during an OpenVAS scan',
     }
 
     TYPE_DISPLAY_NAMES = {
@@ -89,6 +96,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
         'org.openvas.scan.os-detection': ['detected operating system'],
         'org.openvas.scan.ssl-certificate': ['discovered SSL certificate'],
         'org.openvas.scan.open-ports': ['detected open port listing'],
+        'org.openvas.scan.routers': ['discovered router listing'],
     }
 
     TYPE_SUMMARIES = {
@@ -97,6 +105,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
         'org.openvas.scan.os-detection': 'Operating system detected on {[[host-ipv4]]}{[[host-ipv6]]}',
         'org.openvas.scan.ssl-certificate': 'SSL certificate discovered on {[[host-ipv4]]}{[[host-ipv6]]}',
         'org.openvas.scan.open-ports': 'Open TCP/IP ports detected on {[[host-ipv4]]}{[[host-ipv6]]}',
+        'org.openvas.scan.routers': 'Network router detected at {[[router-ipv4]]}{[[router-ipv6]]}',
     }
 
     TYPE_STORIES = {
@@ -114,6 +123,9 @@ class OpenVasHostTranscoder(XmlTranscoder):
         'org.openvas.scan.open-ports':
             'OpenVAS scan [[scan-id]] detected the following open TCP/IP ports on '
             'host [[host-ipv4]][[host-ipv6]]: [[port]].',
+        'org.openvas.scan.routers':
+            'OpenVAS scan [[scan-id]] was executed from the scanner at [[scanner-ipv4]][[scanner-ipv6]] which detected '
+            'a network router at IP [[router-ipv4]][[router-ipv6]].',
     }
 
     TYPE_PROPERTIES = {
@@ -168,7 +180,14 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'host-ipv4': NetworkBrick.OBJECT_HOST_IPV4,
             'host-ipv6': NetworkBrick.OBJECT_HOST_IPV6,
             'port': NetworkBrick.OBJECT_HOST_PORT
-        }
+        },
+        'org.openvas.scan.routers': {
+            'scan-id': ComputingBrick.OBJECT_UUID,
+            'scanner-ipv4': NetworkBrick.OBJECT_HOST_IPV4,
+            'scanner-ipv6': NetworkBrick.OBJECT_HOST_IPV6,
+            'router-ipv4': NetworkBrick.OBJECT_HOST_IPV4,
+            'router-ipv6': NetworkBrick.OBJECT_HOST_IPV6,
+        },
     }
 
     TYPE_PROPERTY_DESCRIPTIONS = {
@@ -207,7 +226,14 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'host-ipv4': 'target host (IPv4)',
             'host-ipv6': 'target host (IPv6)',
             'port': 'port',
-        }
+        },
+        'org.openvas.scan.routers': {
+            'scan-id': 'scan UUID',
+            'scanner-ipv4': 'scanner (IPv4)',
+            'scanner-ipv6': 'scanner (IPv6)',
+            'router-ipv4': 'router (IPv4)',
+            'router-ipv6': 'router (IPv6)',
+        },
     }
 
     TYPE_PROPERTY_MERGE_STRATEGIES = {
@@ -241,10 +267,16 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'host-ipv4': EventProperty.MERGE_MATCH,
             'host-ipv6': EventProperty.MERGE_MATCH,
         },
+        'org.openvas.scan.routers': {
+            'scan-id': EventProperty.MERGE_MATCH,
+            'router-ipv4': EventProperty.MERGE_ADD,
+            'router-ipv6': EventProperty.MERGE_ADD,
+        },
     }
 
     TYPE_MULTI_VALUED_PROPERTIES = {
         'org.openvas.scan.nvt': ['nvt-oid'],
+        'org.openvas.scan.routers': ['router-ipv4', 'router-ipv6'],
         'org.openvas.scan.application-detection': ['port', 'application'],
         'org.openvas.scan.ssl-certificate': ['host-name', 'subject-domain'],
         'org.openvas.scan.open-ports': ['port']
@@ -255,7 +287,8 @@ class OpenVasHostTranscoder(XmlTranscoder):
         ['org.openvas.scan', 'which found', 'org.openvas.scan.application-detection'],
         ['org.openvas.scan', 'which found', 'org.openvas.scan.os-detection'],
         ['org.openvas.scan', 'which found', 'org.openvas.scan.ssl-certificate'],
-        ['org.openvas.scan', 'which found', 'org.openvas.scan.open-ports']
+        ['org.openvas.scan', 'which found', 'org.openvas.scan.open-ports'],
+        ['org.openvas.scan', 'which found', 'org.openvas.scan.routers']
     ]
 
     CHILDREN_SIBLINGS = [
@@ -263,7 +296,8 @@ class OpenVasHostTranscoder(XmlTranscoder):
         ['org.openvas.scan.application-detection', 'found by', 'org.openvas.scan'],
         ['org.openvas.scan.os-detection', 'found by', 'org.openvas.scan'],
         ['org.openvas.scan.ssl-certificate', 'found by', 'org.openvas.scan'],
-        ['org.openvas.scan.open-ports', 'found by', 'org.openvas.scan']
+        ['org.openvas.scan.open-ports', 'found by', 'org.openvas.scan'],
+        ['org.openvas.scan.routers', 'found by', 'org.openvas.scan'],
     ]
 
     PARENT_MAPPINGS = {
@@ -281,7 +315,10 @@ class OpenVasHostTranscoder(XmlTranscoder):
         },
         'org.openvas.scan.open-ports': {
             'scan-id': 'id'
-        }
+        },
+        'org.openvas.scan.routers': {
+            'scan-id': 'id'
+        },
     }
 
     TYPE_ATTACHMENTS = {
@@ -316,6 +353,10 @@ class OpenVasHostTranscoder(XmlTranscoder):
     }
 
     def post_process(self, event, input_element):
+
+        if event.get_type_name() == 'org.openvas.scan.routers':
+            yield from self.post_process_traceroute(event)
+            return
 
         # We assign the host IP address to both the IPv4 and IPv6
         # property. Either one of these will be invalid and will
@@ -352,6 +393,44 @@ class OpenVasHostTranscoder(XmlTranscoder):
                 except ValueError as e:
                     log.warning('Failed to process SSL certificate: ' + str(e))
                     return
+
+        yield event
+
+    def post_process_traceroute(self, event):
+        hosts = event.get_any('host')
+        if hosts is None:
+            return
+
+        # The hosts string is a comma separated list of the
+        # IP addresses along the route from the OpenVAS scanner
+        # to the scan target.
+        hosts = hosts.split(',')
+        if len(hosts) == 0:
+            return
+
+        # The first host in the list is the OpenVAS scanner itself.
+        scanner = hosts.pop(0)
+
+        # We assign the host IP address to both the IPv4 and IPv6
+        # property. Either one of these will be invalid and will
+        # be automatically removed by the EDXML transcoder mediator,
+        # provided that it is configured to do so.
+        parsed = IP(scanner)
+        event['scanner-ipv4'] = parsed
+        event['scanner-ipv6'] = parsed
+
+        if len(hosts) > 1:
+            # The original hosts list had at least three hosts
+            # in it, which means it contains network routers.
+            # Pop off the last host in the list, which is the
+            # scanned host. Now, only routers remain.
+            hosts.pop()
+            for host in hosts:
+                parsed = IP(host)
+                event['router-ipv4'].add(parsed)
+                event['router-ipv6'].add(parsed)
+
+        del event['host']
 
         yield event
 
@@ -402,9 +481,17 @@ class OpenVasHostTranscoder(XmlTranscoder):
 
         event_type = super(OpenVasHostTranscoder, cls).create_event_type(event_type_name, ontology)
 
-        # The IP address of the host is an identifier of a computer.
-        event_type['host-ipv4'].identifies(ComputingBrick.CONCEPT_COMPUTER, confidence=7)
-        event_type['host-ipv6'].identifies(ComputingBrick.CONCEPT_COMPUTER, confidence=7)
+        if event_type_name == 'org.openvas.scan.routers':
+            # The IP address of the scanner is an identifier of a vulnerability scanner.
+            event_type['scanner-ipv4'].identifies(SecurityBrick.CONCEPT_VULN_SCANNER, confidence=7)
+            event_type['scanner-ipv6'].identifies(SecurityBrick.CONCEPT_VULN_SCANNER, confidence=7)
+            # The IP addresses of the routers are identifiers of network routers.
+            event_type['router-ipv4'].identifies(NetworkBrick.CONCEPT_NETWORK_ROUTER, confidence=7)
+            event_type['router-ipv6'].identifies(NetworkBrick.CONCEPT_NETWORK_ROUTER, confidence=7)
+        else:
+            # The IP address of the scanned host is an identifier of a computer.
+            event_type['host-ipv4'].identifies(ComputingBrick.CONCEPT_COMPUTER, confidence=7)
+            event_type['host-ipv6'].identifies(ComputingBrick.CONCEPT_COMPUTER, confidence=7)
 
         if 'port' in event_type:
             # An open port of the host is a weak identifier of a computer.
