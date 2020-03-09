@@ -62,6 +62,10 @@ class OpenVasReportTranscoder(XmlTranscoder):
         }
     }
 
+    TYPE_OPTIONAL_PROPERTIES = {
+        'org.openvas.scan': ['host-ipv4', 'host-ipv6', 'time-end']
+    }
+
     TYPE_MULTI_VALUED_PROPERTIES = {
         'org.openvas.scan': ['host-ipv4', 'host-ipv6']
     }

@@ -190,6 +190,22 @@ class OpenVasHostTranscoder(XmlTranscoder):
         },
     }
 
+    TYPE_OPTIONAL_PROPERTIES = {
+        'org.openvas.scan.nvt': ['host-ipv4', 'host-ipv6'],
+        'org.openvas.scan.application-detection': ['host-ipv4', 'host-ipv6', 'port'],
+        'org.openvas.scan.os-detection': ['host-ipv4', 'host-ipv6'],
+        'org.openvas.scan.ssl-certificate': True,
+        'org.openvas.scan.open-ports': ['host-ipv4', 'host-ipv6'],
+        'org.openvas.scan.routers': True
+    }
+
+    TYPE_MANDATORY_PROPERTIES = {
+        'org.openvas.scan.ssl-certificate': [
+            'scan-id', 'valid-from', 'valid-until', 'fingerprint', 'issuer-dn', 'subject-dn'
+        ],
+        'org.openvas.scan.routers': ['scan-id']
+    }
+
     TYPE_PROPERTY_DESCRIPTIONS = {
         'org.openvas.scan.nvt': {
             'scan-id': 'scan UUID',

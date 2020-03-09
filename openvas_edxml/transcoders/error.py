@@ -58,6 +58,10 @@ class OpenVasErrorTranscoder(XmlTranscoder):
         }
     }
 
+    TYPE_OPTIONAL_PROPERTIES = {
+        'org.openvas.scan.error': ['host-ipv4', 'host-ipv6']
+    }
+
     TYPE_PROPERTY_DESCRIPTIONS = {
         'org.openvas.scan.error': {
             'scan-id': 'scan UUID',

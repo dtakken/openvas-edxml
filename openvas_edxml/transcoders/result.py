@@ -177,6 +177,13 @@ class OpenVasResultTranscoder(XmlTranscoder):
         }
     }
 
+    TYPE_OPTIONAL_PROPERTIES = {
+        'org.openvas.scan.result': [
+            'host-ipv4', 'host-ipv6', 'port', 'xref', 'cvss-base', 'cvss-score', 'cve', 'bid',
+            'affected', 'impact', 'insight', 'solution', 'solution-type'
+        ]
+    }
+
     TYPE_PROPERTY_DESCRIPTIONS = {
         'org.openvas.scan.result': {
             'id': 'result UUID',
