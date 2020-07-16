@@ -29,12 +29,10 @@ def post_process_port(port):
     protocol, = protocol.split(' ')[0:1]
 
     try:
-        int(port)
+        yield '%d/%s' % (int(port), protocol)
     except ValueError:
-        # Not a port number.
-        return None
-
-    return '%s/%s' % (port, protocol)
+        # Not a port number, we yield nothing.
+        ...
 
 
 def post_process_xref(xref):
@@ -43,8 +41,9 @@ def post_process_xref(xref):
     scheme, netloc, path, qs, anchor = urlsplit(xref)
     if scheme == '':
         log.warning('XREF field contains Invalid URI (omitted): %s' % xref)
-        return None
-    return xref
+        return
+
+    yield xref
 
 
 class OpenVasResultTranscoder(XmlTranscoder):
