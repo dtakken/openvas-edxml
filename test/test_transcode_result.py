@@ -4,17 +4,14 @@ import pytest
 from IPy import IP
 
 import edxml
-from edxml.transcode.test_harness import TranscoderTestHarness
-from edxml.transcode.xml import XmlTranscoderTestHarness, XmlTranscoderMediator
+from edxml.transcode.xml import XmlTranscoderTestHarness
 from openvas_edxml import OpenVasResultTranscoder, register_transcoders
-
-TranscoderTestHarness.clear_registrations()
-register_transcoders(TranscoderTestHarness)
 
 
 @pytest.fixture()
 def harness():
     harness = XmlTranscoderTestHarness(dirname(__file__) + '/fixtures', OpenVasResultTranscoder())
+    register_transcoders(harness)
     harness.add_event_source('/some/source/')
     harness.set_event_source('/some/source/')
     harness.ignore_invalid_objects()

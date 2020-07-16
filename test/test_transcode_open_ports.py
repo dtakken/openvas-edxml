@@ -3,17 +3,14 @@ from os.path import dirname
 import pytest
 
 import edxml
-from edxml.transcode.test_harness import TranscoderTestHarness
 from edxml.transcode.xml import XmlTranscoderTestHarness
 from openvas_edxml import register_transcoders, OpenVasHostTranscoder
-
-TranscoderTestHarness.clear_registrations()
-register_transcoders(TranscoderTestHarness)
 
 
 @pytest.fixture()
 def harness():
     harness = XmlTranscoderTestHarness(dirname(__file__) + '/fixtures', OpenVasHostTranscoder())
+    register_transcoders(harness)
     harness.add_event_source('/some/source/')
     harness.set_event_source('/some/source/')
     harness.enable_event_repair('org.openvas.scan.open-ports')

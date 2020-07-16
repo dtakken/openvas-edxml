@@ -7,7 +7,7 @@ from openvas_edxml.transcoders.report import OpenVasReportTranscoder
 from openvas_edxml.transcoders.result import OpenVasResultTranscoder
 
 
-def register_transcoders(mediator=XmlTranscoderMediator):
+def register_transcoders(mediator):
     mediator.register('/get_reports_response/report/report', OpenVasReportTranscoder)
     mediator.register('/get_reports_response/report/report/results/result', OpenVasResultTranscoder)
     mediator.register('/get_reports_response/report/report/host', OpenVasHostTranscoder)

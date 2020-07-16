@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import logging
+import os
 import sys
 import openvas_edxml
 
@@ -129,13 +130,15 @@ def main():
         if args.verbose > 1:
             logger.setLevel(logging.DEBUG)
 
-    openvas_edxml.register_transcoders(OpenVasTranscoderMediator, args.have_response_tag)
-
     if args.dump_description:
-        print(OpenVasTranscoderMediator.describe_transcoder('`OpenVAS <http://www.openvas.org/>`_ XML reports'))
+        with OpenVasTranscoderMediator(open(os.devnull, 'wb'), args.uri, args.desc, args.have_response_tag) as mediator:
+            openvas_edxml.register_transcoders(mediator, args.have_response_tag)
+            print(mediator.describe_transcoder('`OpenVAS <http://www.openvas.org/>`_ XML reports'))
         return
 
     with OpenVasTranscoderMediator(sys.stdout.buffer, args.uri, args.desc, args.have_response_tag) as mediator:
+        openvas_edxml.register_transcoders(mediator, args.have_response_tag)
+
         mediator.debug(warn_fallback=False, warn_no_transcoder=False)
         mediator.ignore_invalid_objects()
         if not args.dump_ontology:
