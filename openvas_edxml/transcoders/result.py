@@ -225,6 +225,14 @@ class OpenVasResultTranscoder(XmlTranscoder):
         }
     }
 
+    TYPE_AUTO_REPAIR_NORMALIZE = {
+        'org.openvas.scan.result': ['cve', 'time', 'host-ipv4', 'host-ipv6']
+    }
+
+    TYPE_AUTO_REPAIR_DROP = {
+        'org.openvas.scan.result': ['host-ipv4', 'host-ipv6']
+    }
+
     PARENTS_CHILDREN = [
         ['org.openvas.scan', 'yielding', 'org.openvas.scan.result']
     ]

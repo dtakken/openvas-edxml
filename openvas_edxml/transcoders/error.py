@@ -81,6 +81,14 @@ class OpenVasErrorTranscoder(XmlTranscoder):
         }
     }
 
+    TYPE_AUTO_REPAIR_NORMALIZE = {
+        'org.openvas.scan.error': ['host-ipv4', 'host-ipv6']
+    }
+
+    TYPE_AUTO_REPAIR_DROP = {
+        'org.openvas.scan.error': ['host-ipv4', 'host-ipv6']
+    }
+
     PARENTS_CHILDREN = [
         ['org.openvas.scan', 'that produced', 'org.openvas.scan.error']
     ]

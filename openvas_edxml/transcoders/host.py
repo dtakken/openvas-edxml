@@ -298,6 +298,29 @@ class OpenVasHostTranscoder(XmlTranscoder):
         'org.openvas.scan.open-ports': ['port']
     }
 
+    TYPE_AUTO_REPAIR_NORMALIZE = {
+        'org.openvas.scan.nvt': ['host-ipv4', 'host-ipv6'],
+        'org.openvas.scan.routers': ['scanner-ipv4', 'scanner-ipv6', 'router-ipv4', 'router-ipv6'],
+        'org.openvas.scan.application-detection': ['host-ipv4', 'host-ipv6'],
+        'org.openvas.scan.os-detection': ['host-ipv4', 'host-ipv6'],
+        'org.openvas.scan.ssl-certificate': [
+            'host-ipv4', 'host-ipv6', 'valid-from', 'valid-until', 'issuer-country', 'subject-country',
+            'host-name', 'issuer-domain', 'subject-domain'
+        ],
+        'org.openvas.scan.open-ports': ['host-ipv4', 'host-ipv6'],
+    }
+
+    TYPE_AUTO_REPAIR_DROP = {
+        'org.openvas.scan.nvt': ['host-ipv4', 'host-ipv6'],
+        'org.openvas.scan.routers': ['scanner-ipv4', 'scanner-ipv6', 'router-ipv4', 'router-ipv6'],
+        'org.openvas.scan.application-detection': ['port', 'host-ipv4', 'host-ipv6'],
+        'org.openvas.scan.os-detection': ['host-ipv4', 'host-ipv6'],
+        'org.openvas.scan.ssl-certificate': [
+            'host-ipv4', 'host-ipv6', 'issuer-domain', 'subject-domain', 'subject-country', 'issuer-country'
+        ],
+        'org.openvas.scan.open-ports': ['host-ipv4', 'host-ipv6'],
+    }
+
     PARENTS_CHILDREN = [
         ['org.openvas.scan', 'executed', 'org.openvas.scan.nvt'],
         ['org.openvas.scan', 'which found', 'org.openvas.scan.application-detection'],

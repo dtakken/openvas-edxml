@@ -92,6 +92,14 @@ class OpenVasReportTranscoder(XmlTranscoder):
         }
     }
 
+    TYPE_AUTO_REPAIR_NORMALIZE = {
+        'org.openvas.scan': ['host-ipv4', 'host-ipv6', 'time-start', 'time-end']
+    }
+
+    TYPE_AUTO_REPAIR_DROP = {
+        'org.openvas.scan': ['host-ipv4', 'host-ipv6']
+    }
+
     TYPE_TIMESPANS = {'org.openvas.scan': ('time-start', 'time-end')}
 
     @classmethod

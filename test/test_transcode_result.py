@@ -14,9 +14,6 @@ def harness():
     register_transcoders(harness)
     harness.add_event_source('/some/source/')
     harness.set_event_source('/some/source/')
-    harness.ignore_invalid_objects()
-    harness.enable_event_repair('org.openvas.scan.result')
-    harness.enable_event_repair('org.openvas.scan.nvt')
     return harness
 
 

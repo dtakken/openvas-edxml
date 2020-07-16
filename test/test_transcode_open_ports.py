@@ -13,8 +13,6 @@ def harness():
     register_transcoders(harness)
     harness.add_event_source('/some/source/')
     harness.set_event_source('/some/source/')
-    harness.enable_event_repair('org.openvas.scan.open-ports')
-    harness.ignore_invalid_objects()
     return harness
 
 
