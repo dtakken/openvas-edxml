@@ -380,6 +380,38 @@ class OpenVasHostTranscoder(XmlTranscoder):
         'org.openvas.scan.ssl-certificate': ['valid-from', 'valid-until']
     }
 
+    TYPE_PROPERTY_CONCEPTS = {
+        'org.openvas.scan.nvt': {
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 7},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 7}
+        },
+        'org.openvas.scan.application-detection': {
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 7},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 7},
+            'port': {ComputingBrick.CONCEPT_COMPUTER: 0}
+        },
+        'org.openvas.scan.os-detection': {
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 7},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 7}
+        },
+        'org.openvas.scan.ssl-certificate': {
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 7},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 7}
+        },
+        'org.openvas.scan.open-ports': {
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 7},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 7},
+            'port': {ComputingBrick.CONCEPT_COMPUTER: 0}
+        },
+        'org.openvas.scan.routers':
+            {
+                'scanner-ipv4': {SecurityBrick.CONCEPT_VULN_SCANNER: 7},
+                'scanner-ipv6': {SecurityBrick.CONCEPT_VULN_SCANNER: 7},
+                'router-ipv4': {NetworkBrick.CONCEPT_NETWORK_ROUTER: 7},
+                'router-ipv6': {NetworkBrick.CONCEPT_NETWORK_ROUTER: 7}
+            },
+    }
+
     # Mapping of certificate name components to partial property names
     DN_FIELD_PROPERTY_MAP = {
         NameOID.COMMON_NAME: 'cn',
