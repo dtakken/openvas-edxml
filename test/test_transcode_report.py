@@ -1,6 +1,5 @@
 from os.path import dirname
 import pytest
-import edxml
 from edxml.transcode.xml import XmlTranscoderTestHarness
 from openvas_edxml import register_transcoders, OpenVasReportTranscoder
 
@@ -35,7 +34,7 @@ def test_incomplete_report(harness, caplog):
 
     assert len(harness.events.filter_type('org.openvas.scan')) == 1
 
-    result = harness.events.filter_type('org.openvas.scan').pop()  # type: edxml.EDXMLEvent
+    result = harness.events.filter_type('org.openvas.scan').pop()
 
     assert result['time-start'] == {'2019-01-01T12:01:01.000000Z'}
     assert 'time-end' not in result

@@ -2,7 +2,6 @@ from os.path import dirname
 
 import pytest
 
-import edxml
 from edxml.transcode.xml import XmlTranscoderTestHarness
 from openvas_edxml import register_transcoders, OpenVasErrorTranscoder
 
@@ -25,7 +24,7 @@ def test_application_detection(harness):
 
     assert len(harness.events.filter_type('org.openvas.scan.error')) == 1
 
-    result = harness.events.filter_type('org.openvas.scan.error').pop()  # type: edxml.EDXMLEvent
+    result = harness.events.filter_type('org.openvas.scan.error').pop()
 
     assert result['scan-id'] == {'fb167629-3bdf-4ab1-ae7d-c64a0d7ad595'}
     assert result['nvt-oid'] == {'1.3.6.1.4.1.25623.1.0.804489'}

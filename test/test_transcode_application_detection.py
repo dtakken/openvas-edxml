@@ -2,7 +2,6 @@ from os.path import dirname
 
 import pytest
 
-import edxml
 from edxml.transcode.xml import XmlTranscoderTestHarness
 from openvas_edxml import register_transcoders, OpenVasHostTranscoder
 
@@ -28,7 +27,7 @@ def test_application_detection(harness):
     ports = {'22/tcp', '443/tcp', '80/tcp'}
     cpe = {'cpe:/a:openbsd:openssh:7.4p1', 'cpe:/a:apache:http_server:2.4.25'}
 
-    for result in harness.events.filter_type('org.openvas.scan.application-detection'):  # type: edxml.EDXMLEvent
+    for result in harness.events.filter_type('org.openvas.scan.application-detection'):
         assert result['scan-id'] == {'fb167629-3bdf-4ab1-ae7d-c64a0d7ad595'}
         assert result['host-ipv4'] == {'10.0.0.1'}
         assert result['port'].intersection(ports) != {}

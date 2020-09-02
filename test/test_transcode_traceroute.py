@@ -2,7 +2,6 @@ from os.path import dirname
 
 import pytest
 
-import edxml
 from edxml.transcode.xml import XmlTranscoderTestHarness
 from openvas_edxml import register_transcoders, OpenVasHostTranscoder
 
@@ -25,7 +24,7 @@ def test_traceroute(harness):
 
     assert len(harness.events.filter_type('org.openvas.scan.routers')) == 1
 
-    result = harness.events.filter_type('org.openvas.scan.routers').pop()  # type: edxml.EDXMLEvent
+    result = harness.events.filter_type('org.openvas.scan.routers').pop()
 
     assert result['scan-id'] == {'fb167629-3bdf-4ab1-ae7d-c64a0d7ad595'}
     assert result['scanner-ipv4'] == {'192.168.0.1'}

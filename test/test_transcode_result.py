@@ -1,9 +1,7 @@
 from os.path import dirname
 
 import pytest
-from IPy import IP
 
-import edxml
 from edxml.transcode.xml import XmlTranscoderTestHarness
 from openvas_edxml import OpenVasResultTranscoder, register_transcoders
 
@@ -23,7 +21,7 @@ def test_result(harness):
     assert len(harness.events.filter_type('org.openvas.scan.nvt')) == 1
     assert len(harness.events.filter_type('org.openvas.scan.result')) == 1
 
-    result = harness.events.filter_type('org.openvas.scan.result').pop()  # type: edxml.EDXMLEvent
+    result = harness.events.filter_type('org.openvas.scan.result').pop()
 
     assert result['id'] == {'d37be786-a052-433e-9ecf-28babfaea2ac'}
     assert result['scan-id'] == {'fb167629-3bdf-4ab1-ae7d-c64a0d7ad595'}
