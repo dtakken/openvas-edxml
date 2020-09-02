@@ -61,6 +61,13 @@ class OpenVasTranscoderMediator(XmlTranscoderMediator):
 
         return super(OpenVasTranscoderMediator, self).process(element, tree)
 
+    def _get_tags(self):
+        tags = super()._get_tags()
+        if self.__have_response_tag:
+            # The XML parser should also visit the get_reports_response tag.
+            tags.append('get_reports_response')
+        return tags
+
     def _create_source(self, element):
         """
         Create a EDXML source definition describing the scan. The method can be
