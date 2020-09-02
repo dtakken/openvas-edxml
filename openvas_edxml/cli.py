@@ -21,27 +21,22 @@ class OpenVasTranscoderMediator(XmlTranscoderMediator):
                  have_response_tag=False):
         super(OpenVasTranscoderMediator, self).__init__(output)
         self.__time_of_first_result = None  # type: Optional[datetime]
-        self.__found_response_tag = False
         self.__source_uri = source_uri or '/org/openvas/scans/'
         self.__source_desc = source_desc or 'OpenVAS scan data'
         self.__have_response_tag = have_response_tag
 
     def process(self, element, tree=None):
 
-        if self.__have_response_tag and element.tag == 'report':
+        if self.__have_response_tag and element.tag == 'get_reports_response':
             # Report is wrapped into a response tag allowing us to
-            # check if the reponse actually contains a successful
+            # check if the report actually contains a successful
             # response. This means that we will error when parsing
             # a failed report fetch response in stead of outputting
             # an empty EDXML file.
-            response_element = element.getparent().getparent()
-            if response_element is not None:
-                self.__found_response_tag = True
-                if response_element.attrib['status'] != '200':
-                    raise ValueError(
-                        'OpenVAS report contains a server error response status: %s' %
-                        response_element.attrib['status']
-                    )
+            if element.attrib['status'] != '200':
+                raise ValueError(
+                    f"OpenVAS report contains a server error response status: {element.attrib['status']}"
+                )
 
         scan_start = element.find('creation_time')
 
@@ -85,9 +80,6 @@ class OpenVasTranscoderMediator(XmlTranscoderMediator):
         return self._ontology.create_event_source(
                     self.__source_uri, self.__source_desc, datetime.now().strftime('%Y%m%d')
                 )
-
-    def found_response_tag(self):
-        return self.__found_response_tag
 
 
 def main():
@@ -150,8 +142,6 @@ def main():
         mediator.ignore_invalid_objects()
         if not args.dump_ontology:
             mediator.parse(openvas_input)
-            if args.have_response_tag and not mediator.found_response_tag():
-                raise Exception('OpenVAS report does not contain the expected <get_reports_response> tag.')
 
 
 if __name__ == "__main__":
