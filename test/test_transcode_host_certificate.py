@@ -56,7 +56,7 @@ def test_nist_pkits_host_certificate(harness):
     assert cert_b['fingerprint'] == {'debfb496afdfc6b82440cf5dec9332a34ef83269'}
     assert cert_b['issuer-email'] == {'ca@trustwave.com'}
     assert cert_b['subject-province'] == {'Texas'}
-    assert cert_b['subject-locality'] == {'austin'}
+    assert cert_b['subject-locality'] == {'Austin'}
     assert cert_b['subject-domain'] == {'*.langui.sh', 'langui.sh', 'saseliminator.com', '*.saseliminator.com'}
     assert cert_b['host-name'] == {'langui.sh', 'saseliminator.com'}
 
