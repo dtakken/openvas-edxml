@@ -31,3 +31,15 @@ def test_nvt_listings(harness):
     assert result['nvt-oid'] == {'1.3.6.1.4.1.25623.1.0.103028', '1.3.6.1.4.1.25623.1.0.803197'}
 
     assert result.get_attachments() == {}
+
+
+def test_nvt_listings_ipv6(harness):
+    harness.process_xml(
+        'nvt-listing-ipv6.xml',
+        transcoder_root='/report/report/host',
+        element_root='detail/name[text() = "EXIT_CODE"]/../..'
+    )
+
+    result = harness.events.filter_type('org.openvas.scan.nvt').pop()
+
+    assert result['host-ipv6'] == {'2001:0db8:0000:0000:0000:8a2e:0370:7334'}

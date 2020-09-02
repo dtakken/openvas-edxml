@@ -33,3 +33,15 @@ def test_application_detection(harness):
     assert result['host-ipv4'] == {'10.0.0.1'}
 
     assert result.get_attachments() == {}
+
+
+def test_detection_errors_ipv6(harness):
+    harness.process_xml(
+        'errors-ipv6.xml',
+        transcoder_root='/report/report/errors/error',
+        element_root='.'
+    )
+
+    result = harness.events.filter_type('org.openvas.scan.error').pop()
+
+    assert result['host-ipv6'] == {'2001:0db8:0000:0000:0000:8a2e:0370:7334'}

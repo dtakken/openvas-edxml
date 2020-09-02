@@ -34,3 +34,14 @@ def test_application_detection(harness):
         assert result['application'].intersection(cpe) != {}
 
         assert result.get_attachments() == {}
+
+
+def test_application_detection_ipv6(harness):
+    harness.process_xml(
+        'application-detection-ipv6.xml',
+        transcoder_root='/report/report/host',
+        element_root='detail/name[starts-with(text(),"cpe:/a:")]/..'
+    )
+
+    for result in harness.events.filter_type('org.openvas.scan.application-detection'):
+        assert result['host-ipv6'] == {'2001:0db8:0000:0000:0000:8a2e:0370:7334'}

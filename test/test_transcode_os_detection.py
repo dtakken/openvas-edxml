@@ -31,3 +31,15 @@ def test_application_detection(harness):
     assert result['os'] == {'cpe:/o:debian:debian_linux:9', 'cpe:/o:linux:kernel:2.6.10'}
 
     assert result.get_attachments() == {}
+
+
+def test_os_detection_ipv6(harness):
+    harness.process_xml(
+        'os-detection-ipv6.xml',
+        transcoder_root='/report/report/host',
+        element_root='detail/name[starts-with(text(),"cpe:/o:")]/../..'
+    )
+
+    result = harness.events.filter_type('org.openvas.scan.os-detection').pop()
+
+    assert result['host-ipv6'] == {'2001:0db8:0000:0000:0000:8a2e:0370:7334'}

@@ -1,0 +1,33 @@
+<report id="fb167629-3bdf-4ab1-ae7d-c64a0d7ad595" format_id="f976ff7b-3f53-418d-bac3-521fed53b174" extension="xml" type="scan" content_type="text/xml">
+  <task id="06a45617-eeda-4190-8a18-75b490d2dc77">
+    <name>task name</name>
+  </task>
+  <report id="fb167629-3bdf-4ab1-ae7d-c64a0d7ad595">
+    <omp>
+      <version>7.0</version>
+    </omp>
+    <hosts>
+      <count>3</count>
+    </hosts>
+    <vulns>
+      <count>2</count>
+    </vulns>
+    <scan_start>2019-01-01T12:01:01Z</scan_start>
+    <scan_end>2019-01-02T12:01:01Z</scan_end>
+    <host>
+      <ip>2001:db8::8a2e:370:7334</ip>
+      <detail>
+        <name>Cert:843D3FED096DCE2F5A76AE737759989D7EF55D56DC4EE7ACC43DED6C5ED21AAD</name>
+        <!-- This is a test certificate from the NIST PKITS at https://csrc.nist.gov/projects/pki-testing -->
+        <value>x509:MIIDfDCCAmSgAwIBAgIBAjANBgkqhkiG9w0BAQsFADBFMQswCQYDVQQGEwJVUzEfMB0GA1UEChMWVGVzdCBDZXJ0aWZpY2F0ZXMgMjAxMTEVMBMGA1UEAxMMVHJ1c3QgQW5jaG9yMB4XDTEwMDEwMTA4MzAwMFoXDTMwMTIzMTA4MzAwMFowQDELMAkGA1UEBhMCVVMxHzAdBgNVBAoTFlRlc3QgQ2VydGlmaWNhdGVzIDIwMTExEDAOBgNVBAMTB0dvb2QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCQWJpHYo37Xfb7oJSPe+WvfTlzIG21WQ7MyMbGtK/m8mejCzR6c+f/pJhEH/OcDSMsXq8h5kXaBGqWK+vSwD/Pzp5OYGptXmGPcthDtAwlrafkGOS4GqIJ8+k9XGKs+vQUXJKsOk47RuzD6PZupq4s16xaLVqYbUC26UcY08GpnoLNHJZS/EmXw1ZZ3d4YZjNlpIpWFNHnUGmdiGKXUPX/9H0fVjIAaQwjnGAbpgyCumWgzIwPpX+ElFOUr3z7BoVnFKhIXze+VmQGSWxZxvWDUN90Ul0tLEpLgk3OVxUB4VUGuf15OJOpgo1xibINPmWt14Vda2N9yrNKloJGZNqLAgMBAAGjfDB6MB8GA1UdIwQYMBaAFOR9X9FclYYILAWuvnW2ZafZXahmMB0GA1UdDgQWBBRYAYQkG7wrUpRKPaUQchRR9a86yTAOBgNVHQ8BAf8EBAMCAQYwFwYDVR0gBBAwDjAMBgpghkgBZQMCATABMA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcNAQELBQADggEBADWHlxbmdTXNwBL/llwhQqwnazK7CC2WsXBBqgNPWj7mtvQ+aLG8/50Qc2Sun7o2VnwF9D18UUe8Gj3uPUYH+oSI1vDdyKcjmMbKRU4rk0eo3UHNDXwqIVc9CQS9smyV+x1HCwL4TTrq+LXLKx/qVij0Yqk+UJfAtrg2jnYKXsCuFMBQQnWCGrwa1g1TphRp/RmYHnMynYFmZrXtzFz+U9XEA7C+gPq4kqDI/iVfIT1s6lBtdB50lrDVwl2oYfAvW/6sC2se2QleZidUmrziVNP4oEeXINokU6T6p//HM1FGQYw2jOvpKcKtWCSAnegEbgsGYzATKjmPJPJ0npHFqzM=
+        </value>
+        <source>
+          <type>nvt</type>
+          <name>1.3.6.1.4.1.25623.1.0.103692</name>
+          <description>SSL/TLS Certificate</description>
+        </source>
+        <extra></extra>
+      </detail>
+    </host>
+  </report>
+</report>

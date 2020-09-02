@@ -1,0 +1,32 @@
+<report id="fb167629-3bdf-4ab1-ae7d-c64a0d7ad595" format_id="f976ff7b-3f53-418d-bac3-521fed53b174" extension="xml" type="scan" content_type="text/xml">
+  <report id="fb167629-3bdf-4ab1-ae7d-c64a0d7ad595">
+    <omp>
+      <version>7.0</version>
+    </omp>
+    <host>
+      <ip>2001:db8::8a2e:370:7334</ip>
+      <detail>
+        <name>cpe:/o:debian:debian_linux:9</name>
+        <value>general/tcp</value>
+        <source>
+          <type>nvt</type>
+          <name>1.3.6.1.4.1.25623.1.0.105937</name>
+          <description></description>
+        </source>
+        <extra></extra>
+      </detail>
+      <detail>
+        <name>cpe:/o:linux:kernel:2.6.10</name>
+        <value>general/tcp</value>
+        <source>
+          <type>nvt</type>
+          <name>1.3.6.1.4.1.25623.1.0.105937</name>
+          <description></description>
+        </source>
+        <extra></extra>
+      </detail>
+    </host>
+    <results max="-1" start="1">
+    </results>
+  </report>
+</report>

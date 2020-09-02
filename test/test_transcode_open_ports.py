@@ -31,3 +31,15 @@ def test_application_detection(harness):
     assert result['port'] == {'443/tcp', '22/tcp', '80/tcp'}
 
     assert result.get_attachments() == {}
+
+
+def test_open_port_detection_ipv6(harness):
+    harness.process_xml(
+        'open-ports-ipv6.xml',
+        transcoder_root='/report/report/host',
+        element_root='detail/source/name[text() = "1.3.6.1.4.1.25623.1.0.900239"]/../../..'
+    )
+
+    result = harness.events.filter_type('org.openvas.scan.open-ports').pop()
+
+    assert result['host-ipv6'] == {'2001:0db8:0000:0000:0000:8a2e:0370:7334'}

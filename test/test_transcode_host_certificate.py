@@ -61,6 +61,18 @@ def test_nist_pkits_host_certificate(harness):
     assert cert_b['host-name'] == {'langui.sh', 'saseliminator.com'}
 
 
+def test_nist_pkits_host_certificate_ipv6(harness):
+    harness.process_xml(
+        'host-certificate-ipv6.xml',
+        transcoder_root='/report/report/host',
+        element_root='detail/source/name[text() = "1.3.6.1.4.1.25623.1.0.103692"]/../../..'
+    )
+
+    cert = harness.events.filter_type('org.openvas.scan.ssl-certificate').pop()
+
+    assert cert['host-ipv6'] == {'2001:0db8:0000:0000:0000:8a2e:0370:7334'}
+
+
 def test_invalid_nist_pkits_host_certificate(harness, caplog):
     harness.process_xml(
         'invalid-host-certificate.xml',
