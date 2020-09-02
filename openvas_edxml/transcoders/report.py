@@ -117,6 +117,10 @@ class OpenVasReportTranscoder(XmlTranscoder):
 
         if not event['time-end']:
             log.warning('This scan report is incomplete, its scan_end tag is empty.\n')
+        else:
+            filtering = input_element.find('filters/term').text
+            if 'rows=' in filtering and 'rows=-1' not in filtering:
+                log.warning('This scan report may be incomplete, it has been capped to a maximum result count.\n')
 
         event['host-ipv4'] = []
         event['host-ipv6'] = []

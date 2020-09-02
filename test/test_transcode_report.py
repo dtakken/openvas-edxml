@@ -36,6 +36,17 @@ def test_incomplete_report(harness, caplog):
 
     result = harness.events.filter_type('org.openvas.scan').pop()
 
+    assert 'time-end' in result
+    assert 'scan report may be incomplete' in ''.join(caplog.messages)
+
+
+def test_unfinished_report(harness, caplog):
+    harness.process_xml('unfinished-report.xml', transcoder_root='/report/report')
+
+    assert len(harness.events.filter_type('org.openvas.scan')) == 1
+
+    result = harness.events.filter_type('org.openvas.scan').pop()
+
     assert result['time-start'] == {'2019-01-01T12:01:01.000000Z'}
     assert 'time-end' not in result
     assert 'scan report is incomplete' in ''.join(caplog.messages)

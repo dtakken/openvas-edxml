@@ -11,8 +11,7 @@ scan_end tag. This happens when downloading a report while the scan is running.
       <version>7.0</version>
     </omp>
     <filters id="">
-      <!-- Below filter indicates that report was capped to 1000 results. -->
-      <term>apply_overrides=0 min_qod=70 first=1 rows=1000 sort=name</term>
+      <term>apply_overrides=0 min_qod=70 first=1 rows=-1 sort=name</term>
     </filters>
     <hosts>
       <count>3</count>
@@ -21,7 +20,6 @@ scan_end tag. This happens when downloading a report while the scan is running.
       <count>2</count>
     </vulns>
     <scan_start>2019-01-01T12:01:01Z</scan_start>
-    <scan_end>2019-01-02T12:01:01Z</scan_end>
     <ports max="-1" start="1">
       <count>2</count>
       <port>80/tcp
