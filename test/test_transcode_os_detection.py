@@ -15,7 +15,7 @@ def harness():
     return harness
 
 
-def test_application_detection(harness):
+def test_os_detection(harness):
     harness.process_xml(
         'os-detection.xml',
         transcoder_root='/report/report/host',

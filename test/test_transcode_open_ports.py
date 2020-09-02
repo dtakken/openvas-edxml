@@ -15,7 +15,7 @@ def harness():
     return harness
 
 
-def test_application_detection(harness):
+def test_open_port_detection(harness):
     harness.process_xml(
         'open-ports.xml',
         transcoder_root='/report/report/host',

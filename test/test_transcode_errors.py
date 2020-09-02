@@ -15,7 +15,7 @@ def harness():
     return harness
 
 
-def test_application_detection(harness):
+def test_detection_errors(harness):
     harness.process_xml(
         'errors.xml',
         transcoder_root='/report/report/errors/error',
