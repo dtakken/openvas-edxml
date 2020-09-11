@@ -88,7 +88,7 @@ class OpenVasReportTranscoder(XmlTranscoder):
             'host-ipv6': EventProperty.MERGE_ADD,
             'host-count': EventProperty.MERGE_MAX,
             'vuln-count': EventProperty.MERGE_MAX,
-            'time-end': EventProperty.MERGE_REPLACE
+            'time-end': EventProperty.MERGE_SET
         }
     }
 
