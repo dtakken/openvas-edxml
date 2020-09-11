@@ -264,7 +264,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
     }
 
     def __init__(self):
-        super(OpenVasResultTranscoder, self).__init__()
+        super().__init__()
         ns = etree.FunctionNamespace(None)
         ns['openvas_normalize'] = self._open_vas_normalize_string
 
@@ -355,7 +355,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
     @classmethod
     def create_event_type(cls, event_type_name, ontology):
 
-        result = super(OpenVasResultTranscoder, cls).create_event_type(event_type_name, ontology)
+        result = super().create_event_type(event_type_name, ontology)
 
         # Associate OpenVAS plugins with the vulnerability concept. This models
         # the fact that OpenVAS plugin IODs are unique identifiers of a particular

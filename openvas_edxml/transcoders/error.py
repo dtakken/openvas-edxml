@@ -149,7 +149,7 @@ class OpenVasErrorTranscoder(XmlTranscoder):
     @classmethod
     def create_event_type(cls, event_type_name, ontology):
 
-        error = super(OpenVasErrorTranscoder, cls).create_event_type(event_type_name, ontology)
+        error = super().create_event_type(event_type_name, ontology)
 
         # Associate OpenVAS plugins with the vulnerability concept. This models
         # the fact that OpenVAS plugin IODs are unique identifiers of a particular

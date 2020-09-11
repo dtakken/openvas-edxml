@@ -19,7 +19,7 @@ class OpenVasTranscoderMediator(XmlTranscoderMediator):
     """
     def __init__(self, output, source_uri=None, source_desc=None,
                  have_response_tag=False):
-        super(OpenVasTranscoderMediator, self).__init__(output)
+        super().__init__(output)
         self.__time_of_first_result = None  # type: Optional[datetime]
         self.__source_uri = source_uri or '/org/openvas/scans/'
         self.__source_desc = source_desc or 'OpenVAS scan data'
@@ -54,7 +54,7 @@ class OpenVasTranscoderMediator(XmlTranscoderMediator):
             self.add_event_source(source.get_uri())
             self.set_event_source(source.get_uri())
 
-        return super(OpenVasTranscoderMediator, self).process(element, tree)
+        return super().process(element, tree)
 
     def _get_tags(self):
         tags = super()._get_tags()

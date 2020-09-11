@@ -105,7 +105,7 @@ class OpenVasReportTranscoder(XmlTranscoder):
     @classmethod
     def create_event_type(cls, event_type_name, ontology):
 
-        scan = super(OpenVasReportTranscoder, cls).create_event_type(event_type_name, ontology)
+        scan = super().create_event_type(event_type_name, ontology)
 
         # The IP address of the scanned host is an identifier of a computer.
         scan['host-ipv4'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
