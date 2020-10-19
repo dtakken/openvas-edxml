@@ -301,17 +301,18 @@ class OpenVasResultTranscoder(XmlTranscoder):
 
     def post_process(self, event, input_element):
 
-        event.set_attachments(
-            {
-                # The description field may contain fairy long descriptions
-                # of what has been found. We store it as event attachment.
-                'description': event.get_any('description', ''),
-                # We also store the original OpenVAS XML element, allowing
-                # us to re-process it using future transcoder versions even
-                # when the original data is no longer available.
-                'input-xml-element': etree.tostring(input_element).decode('utf-8')
-            }
-        )
+        # We store the original OpenVAS XML element, allowing
+        # us to re-process it using future transcoder versions even
+        # when the original data is no longer available.
+        attachments = {
+            'input-xml-element': etree.tostring(input_element).decode('utf-8')
+        }
+        # The description field may contain fairy long descriptions
+        # of what has been found. We store it as event attachment.
+        if event.get_any('description'):
+            attachments['description'] = event.get_any('description')
+
+        event.set_attachments(attachments)
 
         del event['description']
 
