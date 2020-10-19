@@ -28,7 +28,7 @@ def test_open_port_detection(harness):
 
     assert result['scan-id'] == {'fb167629-3bdf-4ab1-ae7d-c64a0d7ad595'}
     assert result['host-ipv4'] == {'10.0.0.1'}
-    assert result['port'] == {'443/tcp', '22/tcp', '80/tcp'}
+    assert result['port'] == {'443/TCP', '22/TCP', '80/TCP'}
 
     assert result.get_attachments() == {}
 

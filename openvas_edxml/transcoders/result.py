@@ -29,7 +29,7 @@ def post_process_port(port):
     protocol, = protocol.split(' ')[0:1]
 
     try:
-        yield '%d/%s' % (int(port), protocol)
+        yield '%d/%s' % (int(port), protocol.upper())
     except ValueError:
         # Not a port number, we yield nothing.
         ...

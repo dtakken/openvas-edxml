@@ -33,7 +33,7 @@ def test_result(harness):
     assert result['severity'] == {'6.0'}
     assert result['threat'] == {'Log'}
     assert result['host-ipv4'] == {'10.0.0.1'}
-    assert result['port'] == {'443/tcp'}
+    assert result['port'] == {'443/TCP'}
     assert result['qod-type'] == {'remote_banner'}
     assert result['qod-value'] == {'80'}
     assert result['summary'] == {'Test summary'}
@@ -44,7 +44,7 @@ def test_result(harness):
     assert result['insight'] == {'Test insight'}
     assert result['affected'] == {'Test affected'}
     assert result['impact'] == {'Test impact'}
-    assert result['cve'] == {'cve-2014-3566', 'cve-2016-0800'}
+    assert result['cve'] == {'CVE-2014-3566', 'CVE-2016-0800'}
     assert result['bid'] == {'9506', '9561'}
 
     assert result.get_attachments()['description'] == 'Test description'

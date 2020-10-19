@@ -448,7 +448,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
             return
 
         if event.get_type_name() == 'org.openvas.scan.open-ports':
-            event['port'] = [port + '/tcp' for port in event.get_any('port').split(',')]
+            event['port'] = [port + '/TCP' for port in event.get_any('port').split(',')]
 
         if event.get_type_name() == 'org.openvas.scan.ssl-certificate':
             if 'certificates' in event:
