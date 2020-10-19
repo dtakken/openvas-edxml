@@ -44,8 +44,8 @@ def test_nist_pkits_host_certificate(harness):
     assert cert_a['subject-dn'] == {'C=US,O=Test Certificates 2011,CN=Good CA'}
     assert cert_a['issuer-cn'] == {'Trust Anchor'}
     assert cert_a['subject-cn'] == {'Good CA'}
-    assert cert_a['issuer-country'] == {'us'}
-    assert cert_a['subject-country'] == {'us'}
+    assert cert_a['issuer-country'] == {'US'}
+    assert cert_a['subject-country'] == {'US'}
     assert cert_a['issuer-organization'] == {'Test Certificates 2011'}
     assert cert_a['subject-organization'] == {'Test Certificates 2011'}
 
