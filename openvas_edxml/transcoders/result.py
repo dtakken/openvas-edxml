@@ -65,7 +65,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
             'port': 'port',
             'qod/type': 'qod-type',
             'qod/value': 'qod-value',
-            'description': 'description',
             (r'ws_normalize('
              '  openvas_normalize('
              '    findall(./nvt/tags, "(?:^|\\|)summary=([^|]*)", %d)'
@@ -76,11 +75,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
              '    findall(./nvt/tags, "(?:^|\\|)cvss_base_vector=([^|]*)", %d)'
              '  )'
              ')') % re.IGNORECASE: 'cvss-base',
-            (r'ws_normalize('
-             '  openvas_normalize('
-             '    findall(./nvt/tags, "(?:^|\\|)solution=([^|]*)", %d)'
-             '  )'
-             ')') % re.IGNORECASE: 'solution',
             (r'ws_normalize('
              '  ctrl_strip('
              '    findall(./nvt/tags, "(?:^|\\|)solution_type=([^|]*)", %d)'
@@ -98,11 +92,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
              ')') % re.IGNORECASE: 'insight',
             (r'ws_normalize('
              '  openvas_normalize('
-             '    findall(./nvt/tags, "(?:^|\\|)affected=([^|]*)", %d)'
-             '  )'
-             ')') % re.IGNORECASE: 'affected',
-            (r'ws_normalize('
-             '  openvas_normalize('
              '    findall(./nvt/tags, "(?:^|\\|)impact=([^|]*)", %d)'
              '  )'
              ')') % re.IGNORECASE: 'impact',
@@ -116,6 +105,12 @@ class OpenVasResultTranscoder(XmlTranscoder):
              '    findall(./nvt/bid, "(?:^|[, ])((?:\\d(?!,[ ]*))+.)", %d)'
              '  )'
              ')') % re.IGNORECASE: 'bid',
+
+            # The last couple of entries are intended to be
+            # moved into event attachments.
+            'description': 'attachment-description',
+            r'findall(./nvt/tags, "(?:^|\\|)solution=([^|]*)", %d)' % re.IGNORECASE: 'attachment-solution',
+            r'findall(./nvt/tags, "(?:^|\\|)affected=([^|]*)", %d)' % re.IGNORECASE: 'attachment-affected',
         }
     }
 
@@ -139,11 +134,11 @@ class OpenVasResultTranscoder(XmlTranscoder):
             '{ OpenVAS indicates a severity of [[severity]], threat level [[threat]].}'
             '{ The CVSS base score is [[cvss-score]] (base vector [[cvss-base]]).}'
             '{ The result is summarized as:\n"[[summary]]"\n}'
-            ' The problem{ affects [[affected]] and} is with [[qod-value]]% certainty applicable to this host, '
+            ' The problem is with [[qod-value]]% certainty applicable to this host, '
             'based on [[qod-type]].'
             '{ The impact is described as follows:\n"[[impact]]"\n}'
             '{ Technical details about the problem:\n"[[insight]]"\n}'
-            '{ Concerning the solution ([[solution-type]]), the OpenVAS plugin authors say:\n"[[solution]]"}'
+            '{ Solution is of type([[solution-type]])"}'
             '{\nAdditional information about the issue can be found [[URL:xref,here]].}'
     }
 
@@ -161,12 +156,10 @@ class OpenVasResultTranscoder(XmlTranscoder):
             'severity': OpenVASBrick.OBJECT_SEVERITY,
             'threat': OpenVASBrick.OBJECT_THREAT,
             'summary': OpenVASBrick.OBJECT_SUMMARY,
-            'affected': OpenVASBrick.OBJECT_AFFECTS,
             'impact': OpenVASBrick.OBJECT_IMPACT,
             'insight': OpenVASBrick.OBJECT_INSIGHT,
             'qod-type': OpenVASBrick.OBJECT_QOD_TYPE,
             'qod-value': OpenVASBrick.OBJECT_QOD_VALUE,
-            'solution': OpenVASBrick.OBJECT_SOLUTION,
             'solution-type': OpenVASBrick.OBJECT_SOLUTION_TYPE,
             'xref': OpenVASBrick.OBJECT_XREF,
             'cvss-base': SecurityBrick.OBJECT_CVSS_VECTOR,
@@ -179,7 +172,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
     TYPE_OPTIONAL_PROPERTIES = {
         'org.openvas.scan.result': [
             'host-ipv4', 'host-ipv6', 'port', 'xref', 'cvss-base', 'cvss-score', 'cve', 'bid',
-            'affected', 'impact', 'insight', 'solution', 'solution-type'
+            'impact', 'insight', 'solution-type'
         ]
     }
 
@@ -197,7 +190,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
             'qod-type': 'QoD type',
             'qod-value': 'QoD value',
             'xref': 'cross reference',
-            'affected': 'affected systems',
             'cvss-base': 'CVSS base vector',
             'cvss-score': 'CVSS base score',
             'cve': 'associated CVE',
@@ -248,7 +240,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
     }
 
     TYPE_ATTACHMENTS = {
-        'org.openvas.scan.result': ['description', 'input-xml-element']
+        'org.openvas.scan.result': ['description', 'affected', 'solution', 'input-xml-element']
     }
 
     TYPE_ATTACHMENT_MEDIA_TYPES = {
@@ -259,7 +251,8 @@ class OpenVasResultTranscoder(XmlTranscoder):
 
     TYPE_ATTACHMENT_DISPLAY_NAMES = {
         'org.openvas.scan.result': {
-            'input-xml-element': 'original OpenVAS data record'
+            'input-xml-element': 'original OpenVAS data record',
+            'affected': 'vulnerability scope',
         }
     }
 
@@ -309,12 +302,23 @@ class OpenVasResultTranscoder(XmlTranscoder):
         }
         # The description field may contain fairy long descriptions
         # of what has been found. We store it as event attachment.
-        if event.get_any('description'):
-            attachments['description'] = event.get_any('description')
+        if event.get_any('attachment-description'):
+            attachments['description'] = event.get_any('attachment-description')
+
+        # The description of affected systems and proposed solution can
+        # both be multi-line texts containing formatting like itemized lists.
+        # We store these as attachments as well.
+        if event.get_any('attachment-affected'):
+            attachments['affected'] = event.get_any('attachment-affected')
+
+        if event.get_any('attachment-solution'):
+            attachments['solution'] = event.get_any('attachment-solution')
 
         event.set_attachments(attachments)
 
-        del event['description']
+        del event['attachment-description']
+        del event['attachment-affected']
+        del event['attachment-solution']
 
         # We assign the host IP address to both the IPv4 and IPv6
         # property. Either one of these will be invalid and will

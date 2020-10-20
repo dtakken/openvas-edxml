@@ -20,10 +20,8 @@ class OpenVASBrick(Brick):
     OBJECT_SEVERITY = 'org.openvas.result.severity'
     OBJECT_THREAT = 'org.openvas.result.threat'
     OBJECT_SUMMARY = 'org.openvas.result.summary'
-    OBJECT_AFFECTS = 'org.openvas.result.affects'
     OBJECT_IMPACT = 'org.openvas.result.impact'
     OBJECT_INSIGHT = 'org.openvas.result.insight'
-    OBJECT_SOLUTION = 'org.openvas.result.solution'
     OBJECT_SOLUTION_TYPE = 'org.openvas.result.solution-type'
     OBJECT_XREF = 'org.openvas.result.xref'
 
@@ -95,12 +93,6 @@ class OpenVASBrick(Brick):
             .set_data_type(DataType.string())\
             .set_display_name('OpenVAS issue summary', 'OpenVAS issue summaries')
 
-        yield target_ontology.create_object_type(cls.OBJECT_AFFECTS) \
-            .set_description('description of the scope of affected systems of an OpenVAS '
-                             'security issue')\
-            .set_data_type(DataType.string())\
-            .set_display_name('affected systems description')
-
         yield target_ontology.create_object_type(cls.OBJECT_IMPACT) \
             .set_description('description of the impact of an issue detected by OpenVAS')\
             .set_data_type(DataType.string())\
@@ -110,11 +102,6 @@ class OpenVASBrick(Brick):
             .set_description('technical details about an issue detected by OpenVAS')\
             .set_data_type(DataType.string())\
             .set_display_name('OpenVAS issue detail')
-
-        yield target_ontology.create_object_type(cls.OBJECT_SOLUTION) \
-            .set_description('proposed solution for an issue detected by OpenVAS')\
-            .set_data_type(DataType.string())\
-            .set_display_name('OpenVAS issue solution')
 
         yield target_ontology.create_object_type(cls.OBJECT_SOLUTION_TYPE)\
             .set_description('type of solution for an issue detected by OpenVAS')\
