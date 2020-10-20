@@ -252,39 +252,26 @@ class OpenVasHostTranscoder(XmlTranscoder):
         },
     }
 
+    TYPE_HASHED_PROPERTIES = {
+        'org.openvas.scan.nvt':                   ['scan-id', 'host-ipv4', 'host-ipv6'],
+        'org.openvas.scan.application-detection': ['scan-id', 'host-ipv4', 'host-ipv6', 'application'],
+        'org.openvas.scan.os-detection':          ['scan-id', 'host-ipv4', 'host-ipv6'],
+        'org.openvas.scan.ssl-certificate':       ['scan-id', 'host-ipv4', 'host-ipv6', 'fingerprint'],
+        'org.openvas.scan.open-ports':            ['scan-id', 'host-ipv4', 'host-ipv6'],
+        'org.openvas.scan.routers':               ['scan-id'],
+    }
+
     TYPE_PROPERTY_MERGE_STRATEGIES = {
         'org.openvas.scan.nvt': {
-            'scan-id': EventProperty.MERGE_MATCH,
-            'host-ipv4': EventProperty.MERGE_MATCH,
-            'host-ipv6': EventProperty.MERGE_MATCH,
             'nvt-oid': EventProperty.MERGE_ADD
         },
         'org.openvas.scan.application-detection': {
-            'scan-id': EventProperty.MERGE_MATCH,
-            'host-ipv4': EventProperty.MERGE_MATCH,
-            'host-ipv6': EventProperty.MERGE_MATCH,
             'port': EventProperty.MERGE_ADD,
-            'application': EventProperty.MERGE_MATCH
         },
         'org.openvas.scan.os-detection': {
-            'scan-id': EventProperty.MERGE_MATCH,
-            'host-ipv4': EventProperty.MERGE_MATCH,
-            'host-ipv6': EventProperty.MERGE_MATCH,
             'os': EventProperty.MERGE_ADD
         },
-        'org.openvas.scan.ssl-certificate': {
-            'scan-id': EventProperty.MERGE_MATCH,
-            'host-ipv4': EventProperty.MERGE_MATCH,
-            'host-ipv6': EventProperty.MERGE_MATCH,
-            'fingerprint': EventProperty.MERGE_MATCH,
-        },
-        'org.openvas.scan.open-ports': {
-            'scan-id': EventProperty.MERGE_MATCH,
-            'host-ipv4': EventProperty.MERGE_MATCH,
-            'host-ipv6': EventProperty.MERGE_MATCH,
-        },
         'org.openvas.scan.routers': {
-            'scan-id': EventProperty.MERGE_MATCH,
             'router-ipv4': EventProperty.MERGE_ADD,
             'router-ipv6': EventProperty.MERGE_ADD,
         },

@@ -201,13 +201,8 @@ class OpenVasResultTranscoder(XmlTranscoder):
         'org.openvas.scan.result': ['xref', 'cve', 'bid']
     }
 
-    TYPE_PROPERTY_MERGE_STRATEGIES = {
-        'org.openvas.scan.result': {
-            'nvt-oid': EventProperty.MERGE_MATCH,
-            'host-ipv4': EventProperty.MERGE_MATCH,
-            'host-ipv6': EventProperty.MERGE_MATCH,
-            'port': EventProperty.MERGE_MATCH
-        }
+    TYPE_HASHED_PROPERTIES = {
+        'org.openvas.scan.result': ['scan-id', 'nvt-oid', 'host-ipv4', 'host-ipv6', 'port']
     }
 
     TYPE_PROPERTY_POST_PROCESSORS = {

@@ -5,7 +5,6 @@ from IPy import IP
 from edxml.event import EventElement
 from openvas_edxml.brick import OpenVASBrick
 
-from edxml.ontology import EventProperty
 from edxml.transcode.xml import XmlTranscoder
 
 from edxml_bricks.computing.generic import ComputingBrick
@@ -72,13 +71,8 @@ class OpenVasErrorTranscoder(XmlTranscoder):
         }
     }
 
-    TYPE_PROPERTY_MERGE_STRATEGIES = {
-        'org.openvas.scan.error': {
-            'scan-id': EventProperty.MERGE_MATCH,
-            'host-ipv4': EventProperty.MERGE_MATCH,
-            'host-ipv6': EventProperty.MERGE_MATCH,
-            'nvt-oid': EventProperty.MERGE_MATCH
-        }
+    TYPE_HASHED_PROPERTIES = {
+        'org.openvas.scan.error': ['scan-id', 'host-ipv4', 'host-ipv6', 'nvt-oid']
     }
 
     TYPE_AUTO_REPAIR_NORMALIZE = {

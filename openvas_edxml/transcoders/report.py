@@ -81,9 +81,12 @@ class OpenVasReportTranscoder(XmlTranscoder):
         }
     }
 
+    TYPE_HASHED_PROPERTIES = {
+        'org.openvas.scan': ['id']
+    }
+
     TYPE_PROPERTY_MERGE_STRATEGIES = {
         'org.openvas.scan': {
-            'id': EventProperty.MERGE_MATCH,
             'host-ipv4': EventProperty.MERGE_ADD,
             'host-ipv6': EventProperty.MERGE_ADD,
             'host-count': EventProperty.MERGE_MAX,
