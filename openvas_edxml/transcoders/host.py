@@ -20,7 +20,7 @@ from edxml.transcode.xml import XmlTranscoder
 
 from edxml_bricks.computing.generic import ComputingBrick
 from edxml_bricks.computing.networking.generic import NetworkBrick
-from openvas_edxml.transcoders.logger import log
+from openvas_edxml.logger import log
 
 
 class OpenVasHostTranscoder(XmlTranscoder):

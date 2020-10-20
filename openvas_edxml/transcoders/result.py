@@ -8,7 +8,7 @@ from IPy import IP
 
 from edxml.event import EventElement
 from openvas_edxml.brick import OpenVASBrick
-from openvas_edxml.transcoders.logger import log
+from openvas_edxml.logger import log
 
 from edxml.ontology import EventProperty
 from edxml.transcode.xml import XmlTranscoder
