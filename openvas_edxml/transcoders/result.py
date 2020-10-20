@@ -4,7 +4,6 @@ from urllib.parse import urlsplit
 from lxml import etree
 
 import re
-from IPy import IP
 
 from edxml.event import EventElement
 from openvas_edxml.brick import OpenVASBrick
@@ -17,6 +16,7 @@ from edxml_bricks.generic import GenericBrick
 from edxml_bricks.computing.generic import ComputingBrick
 from edxml_bricks.computing.networking.generic import NetworkBrick
 from edxml_bricks.computing.security import SecurityBrick
+from openvas_edxml.transcoders import post_process_ip
 
 
 def post_process_port(port):
@@ -61,7 +61,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
             'creation_time': 'time',
             'severity': 'severity',
             'threat': 'threat',
-            'ws_normalize(host)': 'host-ipv4',
+            'ws_normalize(host)': ['host-ipv4', 'host-ipv6'],
             'port': 'port',
             'qod/type': 'qod-type',
             'qod/value': 'qod-value',
@@ -208,7 +208,9 @@ class OpenVasResultTranscoder(XmlTranscoder):
     TYPE_PROPERTY_POST_PROCESSORS = {
         'org.openvas.scan.result': {
             'port': post_process_port,
-            'xref': post_process_xref
+            'xref': post_process_xref,
+            'host-ipv4': post_process_ip,
+            'host-ipv6': post_process_ip,
         }
     }
 
@@ -312,13 +314,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
         del event['attachment-description']
         del event['attachment-affected']
         del event['attachment-solution']
-
-        # We assign the host IP address to both the IPv4 and IPv6
-        # property. Either one of these will be invalid and will
-        # be automatically removed by the EDXML transcoder mediator,
-        # provided that it is configured to do so.
-        event['host-ipv4'] = IP(event.get_any('host-ipv4'))
-        event['host-ipv6'] = event['host-ipv4']
 
         yield event
 

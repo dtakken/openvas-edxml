@@ -21,6 +21,7 @@ from edxml.transcode.xml import XmlTranscoder
 from edxml_bricks.computing.generic import ComputingBrick
 from edxml_bricks.computing.networking.generic import NetworkBrick
 from openvas_edxml.logger import log
+from openvas_edxml.transcoders import post_process_ip
 
 
 class OpenVasHostTranscoder(XmlTranscoder):
@@ -51,28 +52,28 @@ class OpenVasHostTranscoder(XmlTranscoder):
     PROPERTY_MAP = {
         'org.openvas.scan.nvt': {
             '../../@id': 'scan-id',
-            'ip': 'host',
+            'ip': ['host-ipv4', 'host-ipv6'],
             'detail/name[text() = "EXIT_CODE"]/../source/name': 'nvt-oid',
         },
         'org.openvas.scan.application-detection': {
             '../../@id': 'scan-id',
-            '../ip': 'host',
+            '../ip': ['host-ipv4', 'host-ipv6'],
             'name': 'application',
             'value': 'port',
         },
         'org.openvas.scan.os-detection': {
             '../../@id': 'scan-id',
-            '../ip': 'host',
+            '../ip': ['host-ipv4', 'host-ipv6'],
             'name': 'os',
         },
         'org.openvas.scan.ssl-certificate': {
             '../../@id': 'scan-id',
-            'ip|../ip': 'host',
+            'ip|../ip': ['host-ipv4', 'host-ipv6'],
             'value': 'certificates',
         },
         'org.openvas.scan.open-ports': {
             '../../@id': 'scan-id',
-            'ip|../ip': 'host',
+            'ip|../ip': ['host-ipv4', 'host-ipv6'],
             'detail/source/name[text() = "1.3.6.1.4.1.25623.1.0.900239"]/../../value': 'port',
         },
         'org.openvas.scan.routers': {
@@ -188,6 +189,14 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'router-ipv4': NetworkBrick.OBJECT_HOST_IPV4,
             'router-ipv6': NetworkBrick.OBJECT_HOST_IPV6,
         },
+    }
+
+    TYPE_PROPERTY_POST_PROCESSORS = {
+        'org.openvas.scan.nvt': {'host-ipv4': post_process_ip, 'host-ipv6': post_process_ip},
+        'org.openvas.scan.application-detection': {'host-ipv4': post_process_ip, 'host-ipv6': post_process_ip},
+        'org.openvas.scan.os-detection': {'host-ipv4': post_process_ip, 'host-ipv6': post_process_ip},
+        'org.openvas.scan.ssl-certificate': {'host-ipv4': post_process_ip, 'host-ipv6': post_process_ip},
+        'org.openvas.scan.open-ports': {'host-ipv4': post_process_ip, 'host-ipv6': post_process_ip},
     }
 
     TYPE_OPTIONAL_PROPERTIES = {
@@ -415,16 +424,6 @@ class OpenVasHostTranscoder(XmlTranscoder):
         if event.get_type_name() == 'org.openvas.scan.routers':
             yield from self.post_process_traceroute(event)
             return
-
-        # We assign the host IP address to both the IPv4 and IPv6
-        # property. Either one of these will be invalid and will
-        # be automatically removed by the EDXML transcoder mediator,
-        # provided that it is configured to do so.
-        parsed = IP(event.get_any('host'))
-        event['host-ipv4'] = parsed
-        event['host-ipv6'] = parsed
-
-        del event['host']
 
         if event.get_type_name() == 'org.openvas.scan.application-detection' and 'application' not in event:
             # No application detections found for this host.

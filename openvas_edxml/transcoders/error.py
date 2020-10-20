@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from IPy import IP
-
 from edxml.event import EventElement
 from openvas_edxml.brick import OpenVASBrick
 
@@ -9,6 +7,7 @@ from edxml.transcode.xml import XmlTranscoder
 
 from edxml_bricks.computing.generic import ComputingBrick
 from edxml_bricks.computing.networking.generic import NetworkBrick
+from openvas_edxml.transcoders import post_process_ip
 
 
 class OpenVasErrorTranscoder(XmlTranscoder):
@@ -20,7 +19,7 @@ class OpenVasErrorTranscoder(XmlTranscoder):
     PROPERTY_MAP = {
         'org.openvas.scan.error': {
             '../../../report/@id': 'scan-id',
-            'host': 'host',
+            'host': ['host-ipv4', 'host-ipv6'],
             'nvt/@oid': 'nvt-oid',
             'nvt/name': 'nvt-name',
             'description': 'message',
@@ -71,6 +70,13 @@ class OpenVasErrorTranscoder(XmlTranscoder):
         }
     }
 
+    TYPE_PROPERTY_POST_PROCESSORS = {
+        'org.openvas.scan.error': {
+            'host-ipv4': post_process_ip,
+            'host-ipv6': post_process_ip,
+        }
+    }
+
     TYPE_HASHED_PROPERTIES = {
         'org.openvas.scan.error': ['scan-id', 'host-ipv4', 'host-ipv6', 'nvt-oid']
     }
@@ -98,17 +104,6 @@ class OpenVasErrorTranscoder(XmlTranscoder):
     }
 
     def post_process(self, event, input_element):
-
-        parsed = IP(event.get_any('host'))
-
-        # We assign the host IP address to both the IPv4 and IPv6
-        # property. Either one of these will be invalid and will
-        # be automatically removed by the EDXML transcoder mediator,
-        # provided that it is configured to do so.
-        event['host-ipv4'] = parsed.strFullsize()
-        event['host-ipv6'] = parsed.strFullsize()
-
-        del event['host']
 
         yield event
 
