@@ -271,10 +271,10 @@ class OpenVasResultTranscoder(XmlTranscoder):
 
         Args:
             context: lxml function context
-            strings (Union[unicode, List[unicode]): Input strings
+            strings (Union[str, List[str]): Input strings
 
         Returns:
-          (Union[unicode, List[unicode])
+          (Union[str, List[str])
 
         """
         out_strings = []
@@ -282,9 +282,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
             if not isinstance(strings, list):
                 strings = [strings]
             for string in strings:
-                string = string.replace('\n', '\\n')
-
-                out_strings.append(string)
+                out_strings.append(string.replace('\n', ''))
         return out_strings if isinstance(strings, list) else out_strings[0]
 
     def post_process(self, event, input_element):
