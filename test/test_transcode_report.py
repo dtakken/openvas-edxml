@@ -29,6 +29,16 @@ def test_report(harness):
     assert result['time-end'] == {'2019-01-02T12:01:01.000000Z'}
 
 
+def test_report_ipv6(harness):
+    harness.process_xml('report-ipv6.xml', transcoder_root='/report/report')
+
+    assert len(harness.events.filter_type('org.openvas.scan')) == 1
+
+    result = harness.events.filter_type('org.openvas.scan')[0]
+
+    assert result['host-ipv6'] == {'2001:0db8:0000:0000:0000:8a2e:0370:7334', '2001:0db8:0000:0000:0000:8a2e:0370:7335'}
+
+
 def test_incomplete_report(harness, caplog):
     harness.process_xml('incomplete-report.xml', transcoder_root='/report/report')
 
