@@ -154,6 +154,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
             'nvt-family': OpenVASBrick.OBJECT_NVT_FAMILY,
             'nvt-oid': ComputingBrick.OBJECT_OID,
             'severity': OpenVASBrick.OBJECT_SEVERITY,
+            'vulnerability-severity': OpenVASBrick.OBJECT_SEVERITY,
             'threat': OpenVASBrick.OBJECT_THREAT,
             'summary': OpenVASBrick.OBJECT_SUMMARY,
             'impact': OpenVASBrick.OBJECT_IMPACT,
@@ -236,6 +237,69 @@ class OpenVasResultTranscoder(XmlTranscoder):
         }
     }
 
+    TYPE_PROPERTY_CONCEPTS = {
+        'org.openvas.scan.result': {
+
+            # The IP address of the host is an identifier of a computer. IP addresses
+            # are not always unique, so we will not make them really strong identifiers.
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8},
+            # Open ports are weak identifiers of computers.
+            'port': {ComputingBrick.CONCEPT_COMPUTER: 0},
+
+            # Associate OpenVAS plugins with the finding concept. This models
+            # the fact that OpenVAS plugin IODs are unique identifiers of a particular
+            # type of finding.
+            'nvt-oid': {OpenVASBrick.CONCEPT_FINDING: 10},
+            # We associate the NVT names with the finding concept. Confidence is
+            # lower than the OID association though as NVT names are not unique.
+            'nvt-name': {OpenVASBrick.CONCEPT_FINDING: 5},
+            # Associate more properties to the finding concept, all weak identifiers.
+            'nvt-family': {OpenVASBrick.CONCEPT_FINDING: 0},
+            'severity': {OpenVASBrick.CONCEPT_FINDING: 0},
+            'threat': {OpenVASBrick.CONCEPT_FINDING: 0},
+            'summary': {OpenVASBrick.CONCEPT_FINDING: 0},
+            'impact': {OpenVASBrick.CONCEPT_FINDING: 0},
+            'insight': {OpenVASBrick.CONCEPT_FINDING: 0},
+            'solution-type': {OpenVASBrick.CONCEPT_FINDING: 0},
+            'xref': {OpenVASBrick.CONCEPT_FINDING: 0},
+            'qod-type': {OpenVASBrick.CONCEPT_FINDING: 0},
+            'qod-value': {OpenVASBrick.CONCEPT_FINDING: 0},
+
+            # The presence of some properties indicate that the finding is a vulnerability.
+            # We will associate these with the vulnerability concept.
+            # Note: OpenVAS plugins may refer to multiple external vulnerability identifiers,
+            # like CVE numbers. So, OpenVAS plugins conceptually detect meta-vulnerabilities,
+            # which include any of multiple CVE. OpenVAS does not tell us which CVE was
+            # actually detected, so we cannot include the CVE in the computer concept as
+            # a vulnerability of a particular computer.
+            'cve': {OpenVASBrick.CONCEPT_VULNERABILITY: 9},
+            'bid': {OpenVASBrick.CONCEPT_VULNERABILITY: 9},
+            'vulnerability-severity': {OpenVASBrick.CONCEPT_VULNERABILITY: 0},
+            'cvss-base': {OpenVASBrick.CONCEPT_VULNERABILITY: 0},
+            'cvss-score': {OpenVASBrick.CONCEPT_VULNERABILITY: 0},
+        }
+    }
+
+    TYPE_PROPERTY_CONCEPTS_CNP = {
+        'org.openvas.scan.result': {
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'nvt-name': {OpenVASBrick.CONCEPT_FINDING: 192},
+            'nvt-family': {OpenVASBrick.CONCEPT_FINDING: 160},
+        }
+    }
+
+    TYPE_PROPERTY_ATTRIBUTES = {
+        'org.openvas.scan.result': {
+            'nvt-oid': {
+                OpenVASBrick.CONCEPT_FINDING: [
+                    ComputingBrick.OBJECT_OID + ':openvas.plugin', 'OpenVAS detection plugin ID'
+                ]
+            }
+        }
+    }
+
     TYPE_ATTACHMENTS = {
         'org.openvas.scan.result': ['description', 'affected', 'solution', 'input-xml-element']
     }
@@ -315,6 +379,14 @@ class OpenVasResultTranscoder(XmlTranscoder):
         del event['attachment-affected']
         del event['attachment-solution']
 
+        # When severity > 0 we want the event to get associated
+        # with a vulnerability rather than a finding. We do this
+        # by conditionally copying the severity from a property
+        # that is associated with a finding into a property that
+        # is associated with a vulnerability.
+        if float(event.get_any('severity', 0)) > 0:
+            event['vulnerability-severity'] = event['severity']
+
         yield event
 
         # While we use the OpenVasHostTranscoder to generate events that
@@ -350,47 +422,47 @@ class OpenVasResultTranscoder(XmlTranscoder):
 
         result = super().create_event_type(event_type_name, ontology)
 
-        # Associate OpenVAS plugins with the vulnerability concept. This models
-        # the fact that OpenVAS plugin IODs are unique identifiers of a particular
-        # issue.
-        result['nvt-oid'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 10)
+        # Create inter-concept relation between host IP addresses and en OpenVAS plugin
+        # OID, indicating the the host has an OpenVAS finding associated with it.
+        for ip in ('ipv4', 'ipv6'):
+            result['nvt-oid'].relate_inter('was detected on host', 'host-' + ip) \
+                .because(f"OpenVAS plugin [[nvt-oid]] returned a positive result while scanning host [[host-{ip}]]")
 
-        # We associate the NVT names with the vulnerability concept. Confidence is
-        # lower than the OID association though as NVT names are not unique.
-        result['nvt-name'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 5)
+        # Relate the OpenVAS plugin OID to finding attributes
+        result['nvt-oid'].relate_intra('has', 'nvt-name')\
+            .because('OpenVAS plugin [[nvt-oid]] is named [[nvt-name]]')
+        result['nvt-oid'].relate_intra('belongs to', 'nvt-family')\
+            .because('OpenVAS plugin [[nvt-oid]] is from plugin family [[nvt-family]]')
+        result['nvt-oid'].relate_intra('indicates', 'severity')\
+            .because('OpenVAS plugin [[nvt-oid]] considers its issues to be of severity [[severity]]')
+        result['nvt-oid'].relate_intra('indicates', 'threat')\
+            .because('OpenVAS plugin [[nvt-oid]] considers its issues to have threat level [[threat]]')
+        result['nvt-oid'].relate_intra('detects', 'summary')\
+            .because('OpenVAS plugin [[nvt-oid]] summarizes its issues as: [[summary]]')
+        result['nvt-oid'].relate_intra('indicates', 'impact')\
+            .because('OpenVAS plugin [[nvt-oid]] describes the impact of its issues as: [[impact]]')
+        result['nvt-oid'].relate_intra('provides', 'insight')\
+            .because('OpenVAS plugin [[nvt-oid]] provides threat insight: [[insight]]')
+        result['nvt-oid'].relate_intra('suggests', 'solution-type')\
+            .because('OpenVAS plugin [[nvt-oid]] suggests a solution of type [[solution-type]]')
+        result['nvt-oid'].relate_intra('refers to', 'xref')\
+            .because('OpenVAS plugin [[nvt-oid]] refers to [[xref]]')
+        result['nvt-oid'].relate_intra('uses', 'qod-type')\
+            .because('OpenVAS plugin [[nvt-oid]] detects issues using [[qod-type]]')
+        result['nvt-oid'].relate_intra('indicates', 'qod-value')\
+            .because('OpenVAS plugin [[nvt-oid]] indicates its detection quality as [[qod-value]]')
 
-        # OpenVAS plugins may refer to multiple external vulnerability identifiers,
-        # like CVE numbers. So, OpenVAS plugins conceptually detect meta-vulnerabilities,
-        # which include any of multiple CVE. OpenVAS does not tell us which CVE was
-        # actually detected, so we cannot include the CVE in the computer concept as
-        # a vulnerability of a particular computer. We will associate them with the
-        # vulnerability concept. The NVT IOD should be the strongest identifier of
-        # the vulnerability concept, CVE and BID are weaker because one CVE might be
-        # referenced by multiple OpenVAS plugins.
-        result['cve'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 9)
-        result['bid'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 9)
-
-        # The IP address of the host is an identifier of a computer.
-        result['host-ipv4'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
-        result['host-ipv6'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
-
-        # Create inter-concept relation between host IP addresses and en OpenVAS plugin,
-        # indicating the the host is susceptible to the problem that the plugin detects.
-        result['host-ipv4'].relate_inter('is vulnerable to', 'nvt-oid') \
-            .because('OpenVAS plugin [[nvt-oid]] returned a positive result while scanning host [[host-ipv4]]')
-        result['host-ipv6'].relate_inter('is vulnerable to', 'nvt-oid') \
-            .because('OpenVAS plugin [[nvt-oid]] returned a positive result while scanning host [[host-ipv6]]')
-
-        # Create intra-concept relations between the OpenVAS plugin and any associated vulnerability
-        # identifiers, like CVE.
-        result['nvt-oid'].relate_intra('checks for', 'cve') \
-            .because('OpenVAS plugin [[nvt-oid]] mentions CVE [[cve]]')
-        result['nvt-oid'].relate_intra('checks for', 'bid') \
-            .because('OpenVAS plugin [[nvt-oid]] mentions BID [[bid]]')
-
-        # Relate the NVT OID to its name
-        result['nvt-oid'].relate_intra('is named', 'nvt-name') \
-            .because('an OpenVAS result of plugin [[nvt-oid]] is named [[nvt-name]]')
+        # Relate the OpenVAS plugin OID to vulnerability attributes
+        result['nvt-oid'].relate_intra('detects', 'cve')\
+            .because('OpenVAS plugin [[nvt-oid]] detects vulnerability [[cve]]'),
+        result['nvt-oid'].relate_intra('detects', 'bid')\
+            .because('OpenVAS plugin [[nvt-oid]] detects vulnerability [[bid]]'),
+        result['nvt-oid'].relate_intra('indicates', 'vulnerability-severity')\
+            .because('OpenVAS plugin [[nvt-oid]] detects vulnerabilities of severity [[vulnerability-severity]]'),
+        result['nvt-oid'].relate_intra('indicates', 'cvss-base')\
+            .because('OpenVAS plugin [[nvt-oid]] indicates CVSS vector [[cvss-base]]'),
+        result['nvt-oid'].relate_intra('indicates', 'cvss-score')\
+            .because('OpenVAS plugin [[nvt-oid]] indicates CVSS score [[cvss-score]]'),
 
         # Add a hint to relate scan results found by the same OpenVAS plugin and
         # results that concern the same host

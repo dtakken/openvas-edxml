@@ -56,6 +56,38 @@ class OpenVasErrorTranscoder(XmlTranscoder):
         }
     }
 
+    TYPE_PROPERTY_CONCEPTS = {
+        'org.openvas.scan.error': {
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8},
+            # Associate OpenVAS plugins with the finding concept. This models
+            # the fact that OpenVAS plugin IODs are unique identifiers of a particular
+            # type of finding.
+            'nvt-oid': {OpenVASBrick.CONCEPT_FINDING: 10},
+            # We associate the NVT names with the finding concept. Confidence is
+            # lower than the OID association though as NVT names are not unique.
+            'nvt-name': {OpenVASBrick.CONCEPT_FINDING: 5},
+        }
+    }
+
+    TYPE_PROPERTY_CONCEPTS_CNP = {
+        'org.openvas.scan.error': {
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'nvt-name': {OpenVASBrick.CONCEPT_FINDING: 192},
+        }
+    }
+
+    TYPE_PROPERTY_ATTRIBUTES = {
+        'org.openvas.scan.error': {
+            'nvt-oid': {
+                OpenVASBrick.CONCEPT_FINDING: [
+                    ComputingBrick.OBJECT_OID + ':openvas.plugin', 'OpenVAS detection plugin ID'
+                ]
+            }
+        }
+    }
+
     TYPE_OPTIONAL_PROPERTIES = {
         'org.openvas.scan.error': ['host-ipv4', 'host-ipv6']
     }
@@ -139,19 +171,6 @@ class OpenVasErrorTranscoder(XmlTranscoder):
     def create_event_type(cls, event_type_name, ontology):
 
         error = super().create_event_type(event_type_name, ontology)
-
-        # Associate OpenVAS plugins with the vulnerability concept. This models
-        # the fact that OpenVAS plugin IODs are unique identifiers of a particular
-        # issue.
-        error['nvt-oid'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 10)
-
-        # Associate NVT names with the vulnerability concept. Confidence is
-        # lower though as NVT names are not unique.
-        error['nvt-name'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, 5)
-
-        # The IP address of the host is an identifier of a computer.
-        error['host-ipv4'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
-        error['host-ipv6'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
 
         # Relate the NVT OID to its name
         error['nvt-oid'].relate_intra('is named', 'nvt-name') \

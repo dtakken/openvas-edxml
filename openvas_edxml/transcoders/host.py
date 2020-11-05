@@ -378,34 +378,124 @@ class OpenVasHostTranscoder(XmlTranscoder):
 
     TYPE_PROPERTY_CONCEPTS = {
         'org.openvas.scan.nvt': {
-            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 7},
-            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 7}
+            # Associate OpenVAS plugins with the finding concept. This models
+            # the fact that OpenVAS plugin IODs are unique identifiers of a particular
+            # type of finding.
+            'nvt-oid': {OpenVASBrick.CONCEPT_FINDING: 10},
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8}
         },
         'org.openvas.scan.application-detection': {
-            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 7},
-            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 7},
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8},
+            'application': {ComputingBrick.CONCEPT_COMPUTER: 0},
             'port': {ComputingBrick.CONCEPT_COMPUTER: 0}
         },
         'org.openvas.scan.os-detection': {
-            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 7},
-            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 7}
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8},
+            'os': {ComputingBrick.CONCEPT_COMPUTER: 0},
         },
         'org.openvas.scan.ssl-certificate': {
-            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 7},
-            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 7}
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8},
+
+            'host-name': {SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE: 9, ComputingBrick.CONCEPT_COMPUTER: 9},
+            'valid-from': {SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE: 1},
+            'valid-until': {SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE: 1},
+            'fingerprint': {SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE: 10},
+
+            'issuer-domain': {GenericBrick.CONCEPT_ORGANIZATION: 7},
+            'issuer-dn': {GenericBrick.CONCEPT_ORGANIZATION: 8},
+            'issuer-cn': {GenericBrick.CONCEPT_ORGANIZATION: 6},
+            'issuer-country': {GenericBrick.CONCEPT_ORGANIZATION: 1},
+            'issuer-province': {GenericBrick.CONCEPT_ORGANIZATION: 1},
+            'issuer-locality': {GenericBrick.CONCEPT_ORGANIZATION: 1},
+            'issuer-organization': {GenericBrick.CONCEPT_ORGANIZATION: 9},
+            'issuer-unit': {GenericBrick.CONCEPT_ORGANIZATION: 2},
+            'issuer-email': {GenericBrick.CONCEPT_ORGANIZATION: 9},
+            'subject-domain': {GenericBrick.CONCEPT_ORGANIZATION: 7},
+            'subject-dn': {GenericBrick.CONCEPT_ORGANIZATION: 8},
+            'subject-cn': {GenericBrick.CONCEPT_ORGANIZATION: 6},
+            'subject-country': {GenericBrick.CONCEPT_ORGANIZATION: 1},
+            'subject-province': {GenericBrick.CONCEPT_ORGANIZATION: 1},
+            'subject-locality': {GenericBrick.CONCEPT_ORGANIZATION: 1},
+            'subject-organization': {GenericBrick.CONCEPT_ORGANIZATION: 9},
+            'subject-unit': {GenericBrick.CONCEPT_ORGANIZATION: 2},
+            'subject-email': {GenericBrick.CONCEPT_ORGANIZATION: 9},
         },
         'org.openvas.scan.open-ports': {
-            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 7},
-            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 7},
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8},
             'port': {ComputingBrick.CONCEPT_COMPUTER: 0}
         },
-        'org.openvas.scan.routers':
-            {
-                'scanner-ipv4': {SecurityBrick.CONCEPT_VULN_SCANNER: 7},
-                'scanner-ipv6': {SecurityBrick.CONCEPT_VULN_SCANNER: 7},
-                'router-ipv4': {NetworkBrick.CONCEPT_NETWORK_ROUTER: 7},
-                'router-ipv6': {NetworkBrick.CONCEPT_NETWORK_ROUTER: 7}
-            },
+        'org.openvas.scan.routers': {
+            'scanner-ipv4': {SecurityBrick.CONCEPT_VULN_SCANNER: 8},
+            'scanner-ipv6': {SecurityBrick.CONCEPT_VULN_SCANNER: 8},
+            'router-ipv4': {NetworkBrick.CONCEPT_NETWORK_ROUTER: 8},
+            'router-ipv6': {NetworkBrick.CONCEPT_NETWORK_ROUTER: 8}
+        },
+    }
+
+    TYPE_PROPERTY_CONCEPTS_CNP = {
+        'org.openvas.scan.nvt': {
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
+        },
+        'org.openvas.scan.application-detection': {
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
+        },
+        'org.openvas.scan.os-detection': {
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'os': {ComputingBrick.CONCEPT_COMPUTER: 160},
+        },
+        'org.openvas.scan.open-ports': {
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
+        },
+        'org.openvas.scan.routers': {
+            'scanner-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'scanner-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'router-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'router-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
+        },
+        'org.openvas.scan.ssl-certificate': {
+            # Computer:
+            'host-name': {ComputingBrick.CONCEPT_COMPUTER: 192},
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'fingerprint': {ComputingBrick.CONCEPT_COMPUTER: 0},
+            # Organization:
+            'issuer-organization': {GenericBrick.CONCEPT_ORGANIZATION: 192},
+            'subject-organization': {GenericBrick.CONCEPT_ORGANIZATION: 192},
+            'issuer-cn': {GenericBrick.CONCEPT_ORGANIZATION: 180},
+            'subject-cn': {GenericBrick.CONCEPT_ORGANIZATION: 180},
+            'issuer-country': {GenericBrick.CONCEPT_ORGANIZATION: 64},
+            'issuer-email': {GenericBrick.CONCEPT_ORGANIZATION: 0},
+            'subject-email': {GenericBrick.CONCEPT_ORGANIZATION: 0},
+        }
+    }
+
+    TYPE_PROPERTY_ATTRIBUTES = {
+        'org.openvas.scan.nvt': {
+            'nvt-oid': {
+                OpenVASBrick.CONCEPT_FINDING: [
+                    ComputingBrick.OBJECT_OID + ':openvas.plugin', 'OpenVAS detection plugin ID'
+                ]
+            }
+        },
+        'org.openvas.scan.ssl-certificate': {
+            'valid-from': {SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE: ['datetime:valid-from', 'valid from timestamp']},
+            'valid-until': {SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE: ['datetime:valid-until', 'valid until timestamp']}
+        },
+        'org.openvas.scan.application-detection': {
+            'port': {ComputingBrick.CONCEPT_COMPUTER: ['computing.networking.host.port:open', 'open port']}
+        },
+        'org.openvas.scan.open-ports': {
+            'port': {ComputingBrick.CONCEPT_COMPUTER: ['computing.networking.host.port:open', 'open port']}
+        },
     }
 
     # Mapping of certificate name components to partial property names
@@ -538,21 +628,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
 
         event_type = super(OpenVasHostTranscoder, cls).create_event_type(event_type_name, ontology)
 
-        if event_type_name == 'org.openvas.scan.routers':
-            # The IP address of the scanner is an identifier of a vulnerability scanner.
-            event_type['scanner-ipv4'].identifies(SecurityBrick.CONCEPT_VULN_SCANNER, confidence=7)
-            event_type['scanner-ipv6'].identifies(SecurityBrick.CONCEPT_VULN_SCANNER, confidence=7)
-            # The IP addresses of the routers are identifiers of network routers.
-            event_type['router-ipv4'].identifies(NetworkBrick.CONCEPT_NETWORK_ROUTER, confidence=7)
-            event_type['router-ipv6'].identifies(NetworkBrick.CONCEPT_NETWORK_ROUTER, confidence=7)
-        else:
-            # The IP address of the scanned host is an identifier of a computer.
-            event_type['host-ipv4'].identifies(ComputingBrick.CONCEPT_COMPUTER, confidence=7)
-            event_type['host-ipv6'].identifies(ComputingBrick.CONCEPT_COMPUTER, confidence=7)
-
         if 'port' in event_type:
-            # An open port of the host is a weak identifier of a computer.
-            event_type['port'].identifies(ComputingBrick.CONCEPT_COMPUTER, confidence=0)
             if 'host-ipv4' in event_type:
                 # Create intra-concept relation between the host IP and its open ports.
                 event_type['host-ipv4'].relate_intra('exposes', 'port') \
@@ -562,15 +638,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
                 event_type['host-ipv6'].relate_intra('exposes', 'port') \
                     .because('OpenVAS detected that host [[host-ipv6]] exposes network port [[port]]')
 
-        if event_type_name == 'org.openvas.scan.nvt':
-            # Associate OpenVAS plugins with the vulnerability concept. This models
-            # the fact that OpenVAS plugin IODs are unique identifiers of a particular
-            # issue.
-            event_type['nvt-oid'].identifies(OpenVASBrick.CONCEPT_VULNERABILITY, confidence=10)
-
         if event_type_name == 'org.openvas.scan.application-detection':
-            # A detected application is an identifier of a computer, but it is a are weak identifier.
-            event_type['application'].identifies(ComputingBrick.CONCEPT_COMPUTER, confidence=0)
             # Create intra-concept relations between the host IP and any detected applications.
             event_type['host-ipv4'].relate_intra('runs', 'application') \
                 .because('OpenVAS detected [[application]] running on host [[host-ipv4]]')
@@ -578,8 +646,6 @@ class OpenVasHostTranscoder(XmlTranscoder):
                 .because('OpenVAS detected [[application]] running on host [[host-ipv6]]')
 
         if event_type_name == 'org.openvas.scan.os-detection':
-            # The detected operating system is an identifier of a computer, but it is a are weak identifier.
-            event_type['os'].identifies(ComputingBrick.CONCEPT_COMPUTER, confidence=0)
             # Create intra-concept relations between the host IP and any detected OSes.
             event_type['host-ipv4'].relate_intra('runs', 'os') \
                 .because('OpenVAS found evidence that host [[host-ipv4]] runs on [[os]]')
@@ -587,61 +653,83 @@ class OpenVasHostTranscoder(XmlTranscoder):
                 .because('OpenVAS found evidence that host [[host-ipv6]] runs on [[os]]')
 
         if event_type_name == 'org.openvas.scan.ssl-certificate':
-            event_type['issuer-organization'].identifies(GenericBrick.CONCEPT_ORGANIZATION, confidence=9)
-            event_type['subject-organization'].identifies(GenericBrick.CONCEPT_ORGANIZATION, confidence=9)
-            event_type['subject-organization'].identifies(ComputingBrick.CONCEPT_COMPUTER, confidence=0)
-            event_type['issuer-country'].identifies(GenericBrick.CONCEPT_ORGANIZATION, confidence=0)
-            event_type['issuer-email'].identifies(GenericBrick.CONCEPT_ORGANIZATION, confidence=9)
-            event_type['subject-email'].identifies(GenericBrick.CONCEPT_ORGANIZATION, confidence=9)
-            event_type['subject-email'].identifies(ComputingBrick.CONCEPT_COMPUTER, confidence=0)
-            event_type['host-name'].identifies(ComputingBrick.CONCEPT_COMPUTER, confidence=9)
-            event_type['fingerprint'].identifies(ComputingBrick.CONCEPT_COMPUTER, confidence=1)
+            # Relate issuer DN to other attributes of the organization that issued the certificate
+            event_type['issuer-dn'].relate_intra('has', 'issuer-domain')\
+                .because('an SSL certificate issued by [[issuer-dn]] contains [[issuer-domain]]')
+            event_type['issuer-dn'].relate_intra('is named', 'issuer-cn')\
+                .because('an SSL certificate issued by [[issuer-dn]] contains [[issuer-cn]]')
+            event_type['issuer-dn'].relate_intra('located in', 'issuer-country')\
+                .because('an SSL certificate issued by [[issuer-dn]] contains [[issuer-country]]')
+            event_type['issuer-dn'].relate_intra('located in', 'issuer-province')\
+                .because('an SSL certificate issued by [[issuer-dn]] contains [[issuer-province]]')
+            event_type['issuer-dn'].relate_intra('located in', 'issuer-locality')\
+                .because('an SSL certificate issued by [[issuer-dn]] contains [[issuer-locality]]')
+            event_type['issuer-dn'].relate_intra('is named', 'issuer-organization')\
+                .because('an SSL certificate issued by [[issuer-dn]] contains [[issuer-organization]]')
+            event_type['issuer-dn'].relate_intra('comprises', 'issuer-unit')\
+                .because('an SSL certificate issued by [[issuer-dn]] contains [[issuer-unit]]')
+            event_type['issuer-dn'].relate_intra('reachable at', 'issuer-email')\
+                .because('an SSL certificate issued by [[issuer-dn]] contains [[issuer-email]]')
 
-            event_type['fingerprint'].relate_intra('protects', 'host-ipv4')\
-                .because('OpenVAS found an SSL certificate on host [[host-ipv4]] having finger print [[fingerprint]]')
-            event_type['fingerprint'].relate_intra('protects', 'host-ipv6')\
-                .because('OpenVAS found an SSL certificate on host [[host-ipv6]] having finger print [[fingerprint]]')
+            # Relate subject DN to other attributes of the organization that the certificate was issued for
+            event_type['subject-dn'].relate_intra('has', 'subject-domain')\
+                .because('an SSL certificate issued for [[subject-dn]] contains [[subject-domain]]')
+            event_type['subject-dn'].relate_intra('is named', 'subject-cn')\
+                .because('an SSL certificate issued for [[subject-dn]] contains [[subject-cn]]')
+            event_type['subject-dn'].relate_intra('located in', 'subject-country')\
+                .because('an SSL certificate issued for [[subject-dn]] contains [[subject-country]]')
+            event_type['subject-dn'].relate_intra('located in', 'subject-province')\
+                .because('an SSL certificate issued for [[subject-dn]] contains [[subject-province]]')
+            event_type['subject-dn'].relate_intra('located in', 'subject-locality')\
+                .because('an SSL certificate issued for [[subject-dn]] contains [[subject-locality]]')
+            event_type['subject-dn'].relate_intra('is named', 'subject-organization').\
+                because('an SSL certificate issued for [[subject-dn]] contains [[subject-organization]]')
+            event_type['subject-dn'].relate_intra('comprises', 'subject-unit')\
+                .because('an SSL certificate issued for [[subject-dn]] contains [[subject-unit]]')
+            event_type['subject-dn'].relate_intra('reachable at', 'subject-email')\
+                .because('an SSL certificate issued for [[subject-dn]] contains [[subject-email]]')
 
-            # Relate the subject organization to the computer as owner.
-            event_type['host-name'].relate_intra('is associated with', 'host-ipv4')\
-                .because('OpenVAS found an SSL certificate on host [[host-ipv4]] containing [[host-name]] as subject')
-            event_type['host-name'].relate_intra('is associated with', 'host-ipv6')\
-                .because('OpenVAS found an SSL certificate on host [[host-ipv6]] containing [[host-name]] as subject')
+            # Relate certificates to issuer organization
+            event_type['fingerprint'].relate_inter('issued by', 'issuer-dn')\
+                .because('OpenVAS found an SSL certificate issued by [[issuer-dn]] having [[fingerprint]]')
+            event_type['fingerprint'].relate_inter('issued for', 'subject-dn')\
+                .because('OpenVAS found an SSL certificate issued for [[subject-dn]] having [[fingerprint]]')
 
-            # Relate the subject organization to the computer as owner.
-            event_type['subject-organization'].relate_inter(
-                'owns', 'host-ipv4', source_concept_name=GenericBrick.CONCEPT_ORGANIZATION)\
-                .because('OpenVAS found an SSL certificate on host [[host-ipv4]] issued for [[subject-organization]]')
-            event_type['subject-organization'].relate_inter(
-                'owns', 'host-ipv6', source_concept_name=GenericBrick.CONCEPT_ORGANIZATION)\
-                .because('OpenVAS found an SSL certificate on host [[host-ipv6]] issued for [[subject-organization]]')
+            # Relate certificates to subject organization
+            event_type['fingerprint'].relate_inter('protects', 'host-ipv4')\
+                .because('OpenVAS found an SSL certificate on [[host-ipv4]] having [[fingerprint]]')
+            event_type['fingerprint'].relate_inter('protects', 'host-ipv6')\
+                .because('OpenVAS found an SSL certificate on [[host-ipv6]] having [[fingerprint]]')
 
-            # Relate the subject organization as an attribute of the computer.
-            event_type['subject-organization'].relate_intra(
-                'owns', 'host-ipv4', source_concept_name=ComputingBrick.CONCEPT_COMPUTER)\
-                .because('OpenVAS found an SSL certificate on host [[host-ipv4]] issued for [[subject-organization]]')
-            event_type['subject-organization'].relate_intra(
-                'owns', 'host-ipv6', source_concept_name=ComputingBrick.CONCEPT_COMPUTER)\
-                .because('OpenVAS found an SSL certificate on host [[host-ipv6]] issued for [[subject-organization]]')
+            # Relate certificate fingerprint to other certificate attributes
+            event_type['fingerprint'].relate_intra('is valid from', 'valid-from')\
+                .because(
+                'OpenVAS found an SSL certificate having [[fingerprint]] which contains [[valid-from]]')
+            event_type['fingerprint'].relate_intra('is valid until', 'valid-until')\
+                .because(
+                'OpenVAS found an SSL certificate having [[fingerprint]] which contains [[valid-until]]')
+            event_type['fingerprint'].relate_intra(
+                'protects', 'host-name', target_concept_name=SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE
+            ).because(
+                'OpenVAS found an SSL certificate having [[fingerprint]] which protects [[host-name]]'
+            )
 
-            # The subject email is probably the administrative contact for the computer.
-            event_type['subject-email'].relate_intra(
-                'is administering', 'host-ipv4', source_concept_name=ComputingBrick.CONCEPT_COMPUTER)\
-                .because('OpenVAS found an SSL certificate on host [[host-ipv4]] issued for [[subject-email]]')
-            event_type['subject-email'].relate_intra(
-                'is administering', 'host-ipv6', source_concept_name=ComputingBrick.CONCEPT_COMPUTER)\
-                .because('OpenVAS found an SSL certificate on host [[host-ipv6]] issued for [[subject-email]]')
+            # Relate certificate host names to computers
+            event_type['fingerprint'].relate_inter(
+                'protects', 'host-name', target_concept_name=ComputingBrick.CONCEPT_COMPUTER
+            ).because(
+                'OpenVAS found an SSL certificate having [[fingerprint]] which protects [[host-name]]'
+            )
 
-            # The issuer is responsible for protecting SSL traffic of the computer.
-            event_type['issuer-organization'].relate_inter('protects', 'host-ipv4')\
-                .because('OpenVAS found an SSL certificate on host [[host-ipv4]] issued by [[issuer-organization]]')
-            event_type['issuer-organization'].relate_inter('protects', 'host-ipv6')\
-                .because('OpenVAS found an SSL certificate on host [[host-ipv6]] issued by [[issuer-organization]]')
-
-            event_type['issuer-email'].relate_intra('is used by', 'issuer-organization')\
-                .because('OpenVAS found an SSL certificate linking [[issuer-organization]] to [[issuer-email]]')
-
-            event_type['issuer-organization'].relate_intra('is located in', 'issuer-country')\
-                .because('OpenVAS found an SSL certificate issed by [[issuer-organization]] in [[issuer-country]]')
+            # Relate the subject host name to the IP address of the computer. Note that this relation
+            # does not guarantee that the host actually has that host name. The same certificate may
+            # be used on multiple machines, each having a different host name. The reduced confidence
+            # reflects that.
+            event_type['host-name'].relate_intra(
+                'is associated with', 'host-ipv4', confidence=7, source_concept_name=ComputingBrick.CONCEPT_COMPUTER
+            ).because('OpenVAS found an SSL certificate on host [[host-ipv4]] containing [[host-name]]')
+            event_type['host-name'].relate_intra(
+                'is associated with', 'host-ipv6', confidence=7, source_concept_name=ComputingBrick.CONCEPT_COMPUTER
+            ).because('OpenVAS found an SSL certificate on host [[host-ipv6]] containing [[host-name]]')
 
         return event_type

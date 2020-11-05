@@ -62,6 +62,20 @@ class OpenVasReportTranscoder(XmlTranscoder):
         }
     }
 
+    TYPE_PROPERTY_CONCEPTS = {
+        'org.openvas.scan.result': {
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8}
+        },
+    }
+
+    TYPE_PROPERTY_CONCEPTS_CNP = {
+        'org.openvas.scan.result': {
+            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
+        }
+    }
+
     TYPE_OPTIONAL_PROPERTIES = {
         'org.openvas.scan': ['host-ipv4', 'host-ipv6', 'time-end']
     }
@@ -108,17 +122,6 @@ class OpenVasReportTranscoder(XmlTranscoder):
     }
 
     TYPE_TIMESPANS = {'org.openvas.scan': ('time-start', 'time-end')}
-
-    @classmethod
-    def create_event_type(cls, event_type_name, ontology):
-
-        scan = super().create_event_type(event_type_name, ontology)
-
-        # The IP address of the scanned host is an identifier of a computer.
-        scan['host-ipv4'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
-        scan['host-ipv6'].identifies(ComputingBrick.CONCEPT_COMPUTER, 7)
-
-        return scan
 
     def post_process(self, event, input_element):
 

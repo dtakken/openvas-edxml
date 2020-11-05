@@ -26,6 +26,7 @@ class OpenVASBrick(Brick):
     OBJECT_XREF = 'org.openvas.result.xref'
 
     CONCEPT_VULNERABILITY = 'threat.vulnerability'
+    CONCEPT_FINDING = 'openvas.finding'
 
     # Known possible values of the QoD (Quality of Detection)
     # of an OpenVAS result.
@@ -115,6 +116,10 @@ class OpenVASBrick(Brick):
 
     @classmethod
     def generate_concepts(cls, target_ontology):
+
+        yield target_ontology.create_concept(cls.CONCEPT_FINDING) \
+            .set_display_name('OpenVAS finding') \
+            .set_description('OpenVAS detection result')
 
         # This is an extension of the 'threat' concept from
         # the computer security brick.
