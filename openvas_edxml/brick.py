@@ -81,7 +81,7 @@ class OpenVASBrick(Brick):
 
         yield target_ontology.create_object_type(cls.OBJECT_SEVERITY) \
             .set_description('severity of an OpenVAS detection result')\
-            .set_data_type(DataType.decimal(total_digits=3, fractional_digits=1, signed=False))\
+            .set_data_type(DataType.decimal(total_digits=3, fractional_digits=1))\
             .set_display_name('OpenVAS vulnerability severity', 'OpenVAS vulnerability severities')
 
         yield target_ontology.create_object_type(cls.OBJECT_THREAT) \
