@@ -137,6 +137,11 @@ def main():
             print(mediator.describe_transcoder('`OpenVAS <http://www.openvas.org/>`_ XML reports'))
         return
 
+    if args.dump_ontology:
+        with OpenVasTranscoderMediator(sys.stdout.buffer, args.uri, args.desc, args.have_response_tag) as mediator:
+            openvas_edxml.register_transcoders(mediator, args.have_response_tag)
+        return
+
     if args.dump_concept_graph:
         with OpenVasTranscoderMediator(open(os.devnull, 'wb')) as mediator:
             openvas_edxml.register_transcoders(mediator, args.have_response_tag)
@@ -146,11 +151,9 @@ def main():
 
     with OpenVasTranscoderMediator(sys.stdout.buffer, args.uri, args.desc, args.have_response_tag) as mediator:
         openvas_edxml.register_transcoders(mediator, args.have_response_tag)
-
         mediator.debug(warn_fallback=False, warn_no_transcoder=False)
         mediator.ignore_invalid_objects()
-        if not args.dump_ontology:
-            mediator.parse(openvas_input)
+        mediator.parse(openvas_input)
 
 
 if __name__ == "__main__":
