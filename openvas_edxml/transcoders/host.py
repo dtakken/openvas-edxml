@@ -631,7 +631,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
     @classmethod
     def create_event_type(cls, event_type_name, ontology):
 
-        event_type = super(OpenVasHostTranscoder, cls).create_event_type(event_type_name, ontology)
+        event_type = super().create_event_type(event_type_name, ontology)
 
         if 'port' in event_type:
             if 'host-ipv4' in event_type:
