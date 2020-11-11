@@ -9,7 +9,6 @@ from edxml.event import EventElement
 from openvas_edxml.brick import OpenVASBrick
 from openvas_edxml.logger import log
 
-from edxml.ontology import EventProperty
 from edxml.transcode.xml import XmlTranscoder
 
 from edxml_bricks.generic import GenericBrick
