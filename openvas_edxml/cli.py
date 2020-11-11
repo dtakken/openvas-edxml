@@ -101,6 +101,9 @@ def main():
                                       'input will be read from the file at specified path.'
     )
     arg_parser.add_argument(
+        '--dump-concept-graph', help='Write PNG image to specified file showing concept relations'
+    )
+    arg_parser.add_argument(
         '--dump-ontology', action='store_true', help='Output EDXML containing only the ontology.'
     )
     arg_parser.add_argument(
@@ -132,6 +135,13 @@ def main():
         with OpenVasTranscoderMediator(open(os.devnull, 'wb'), args.uri, args.desc, args.have_response_tag) as mediator:
             openvas_edxml.register_transcoders(mediator, args.have_response_tag)
             print(mediator.describe_transcoder('`OpenVAS <http://www.openvas.org/>`_ XML reports'))
+        return
+
+    if args.dump_concept_graph:
+        with OpenVasTranscoderMediator(open(os.devnull, 'wb')) as mediator:
+            openvas_edxml.register_transcoders(mediator, args.have_response_tag)
+            graph = mediator.generate_graphviz_concept_relations()
+            graph.render(filename=args.dump_concept_graph, format='png', cleanup=True)
         return
 
     with OpenVasTranscoderMediator(sys.stdout.buffer, args.uri, args.desc, args.have_response_tag) as mediator:
