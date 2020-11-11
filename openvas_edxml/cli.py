@@ -51,7 +51,6 @@ class OpenVasTranscoderMediator(XmlTranscoderMediator):
 
             # We set the source URI that we just added to allow the mediator
             # to automatically set it for all output events.
-            self.add_event_source(source.get_uri())
             self.set_event_source(source.get_uri())
 
         return super().process(element, tree)
