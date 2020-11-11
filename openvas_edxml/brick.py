@@ -19,7 +19,6 @@ class OpenVASBrick(Brick):
     OBJECT_QOD_VALUE = 'org.openvas.result.qod.value'
     OBJECT_SEVERITY = 'org.openvas.result.severity'
     OBJECT_THREAT = 'org.openvas.result.threat'
-    OBJECT_SUMMARY = 'org.openvas.result.summary'
     OBJECT_IMPACT = 'org.openvas.result.impact'
     OBJECT_INSIGHT = 'org.openvas.result.insight'
     OBJECT_SOLUTION_TYPE = 'org.openvas.result.solution-type'
@@ -88,11 +87,6 @@ class OpenVASBrick(Brick):
             .set_description('threat level of an OpenVAS detection result')\
             .set_data_type(DataType.enum('High', 'Medium', 'Low', 'Alarm', 'Log', 'Debug'))\
             .set_display_name('OpenVAS threat level')
-
-        yield target_ontology.create_object_type(cls.OBJECT_SUMMARY) \
-            .set_description('summary of an issue detected by OpenVAS')\
-            .set_data_type(DataType.string())\
-            .set_display_name('OpenVAS issue summary', 'OpenVAS issue summaries')
 
         yield target_ontology.create_object_type(cls.OBJECT_IMPACT) \
             .set_description('description of the impact of an issue detected by OpenVAS')\

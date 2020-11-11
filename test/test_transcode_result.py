@@ -36,7 +36,6 @@ def test_result(harness):
     assert result['port'] == {'443/TCP'}
     assert result['qod-type'] == {'remote_banner'}
     assert result['qod-value'] == {'80'}
-    assert result['summary'] == {'Test summary'}
     assert result['cvss-base'] == {'AV:N/AC:L/Au:N/C:N/I:N/A:N'}
     assert result['solution-type'] == {'Test solution type'}
     assert result['xref'] == {'http://test1/', 'http://test2/'}
@@ -48,6 +47,7 @@ def test_result(harness):
     assert result.get_attachments()['description'] == 'Test description'
     assert result.get_attachments()['solution'] == 'Test solution  '
     assert result.get_attachments()['affected'] == '  Test affected '
+    assert result.get_attachments()['summary'] == 'Test summary  '
     assert result.get_attachments()['input-xml-element'].startswith('<result id="d37be786-a052-433e-9ecf-28babfaea2ac"')
 
     nvt = harness.events.filter_type('org.openvas.scan.nvt')[0]

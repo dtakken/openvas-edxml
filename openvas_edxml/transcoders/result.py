@@ -65,11 +65,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
             'qod/type': 'qod-type',
             'qod/value': 'qod-value',
             (r'ws_normalize('
-             '  openvas_normalize('
-             '    findall(./nvt/tags, "(?:^|\\|)summary=([^|]*)", %d)'
-             '  )'
-             ')') % re.IGNORECASE: 'summary',
-            (r'ws_normalize('
              '  ctrl_strip('
              '    findall(./nvt/tags, "(?:^|\\|)cvss_base_vector=([^|]*)", %d)'
              '  )'
@@ -108,6 +103,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
             # The last couple of entries are intended to be
             # moved into event attachments.
             'description': 'attachment-description',
+            r'findall(./nvt/tags, "(?:^|\\|)summary=([^|]*)", %d)' % re.IGNORECASE: 'attachment-summary',
             r'findall(./nvt/tags, "(?:^|\\|)solution=([^|]*)", %d)' % re.IGNORECASE: 'attachment-solution',
             r'findall(./nvt/tags, "(?:^|\\|)affected=([^|]*)", %d)' % re.IGNORECASE: 'attachment-affected',
         }
@@ -132,7 +128,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
             ' The issue was found by an OpenVAS plugin from the [[nvt-family]] family, titled "[[nvt-name]]".'
             '{ OpenVAS indicates a severity of [[severity]], threat level [[threat]].}'
             '{ The CVSS base score is [[cvss-score]] (base vector [[cvss-base]]).}'
-            '{ The result is summarized as:\n"[[summary]]"\n}'
             ' The problem is with [[qod-value]]% certainty applicable to this host, '
             'based on [[qod-type]].'
             '{ The impact is described as follows:\n"[[impact]]"\n}'
@@ -155,7 +150,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
             'severity': OpenVASBrick.OBJECT_SEVERITY,
             'vulnerability-severity': OpenVASBrick.OBJECT_SEVERITY,
             'threat': OpenVASBrick.OBJECT_THREAT,
-            'summary': OpenVASBrick.OBJECT_SUMMARY,
             'impact': OpenVASBrick.OBJECT_IMPACT,
             'insight': OpenVASBrick.OBJECT_INSIGHT,
             'qod-type': OpenVASBrick.OBJECT_QOD_TYPE,
@@ -257,7 +251,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
             'nvt-family': {OpenVASBrick.CONCEPT_FINDING: 0},
             'severity': {OpenVASBrick.CONCEPT_FINDING: 0},
             'threat': {OpenVASBrick.CONCEPT_FINDING: 0},
-            'summary': {OpenVASBrick.CONCEPT_FINDING: 0},
             'impact': {OpenVASBrick.CONCEPT_FINDING: 0},
             'insight': {OpenVASBrick.CONCEPT_FINDING: 0},
             'solution-type': {OpenVASBrick.CONCEPT_FINDING: 0},
@@ -300,7 +293,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
     }
 
     TYPE_ATTACHMENTS = {
-        'org.openvas.scan.result': ['description', 'affected', 'solution', 'input-xml-element']
+        'org.openvas.scan.result': ['description', 'affected', 'solution', 'summary', 'input-xml-element']
     }
 
     TYPE_ATTACHMENT_MEDIA_TYPES = {
@@ -313,6 +306,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
         'org.openvas.scan.result': {
             'input-xml-element': 'original OpenVAS data record',
             'affected': 'finding scope',
+            'summary': ['finding summary', 'finding summaries']
         }
     }
 
@@ -363,20 +357,24 @@ class OpenVasResultTranscoder(XmlTranscoder):
         if event.get_any('attachment-description'):
             attachments['description'] = event.get_any('attachment-description')
 
-        # The description of affected systems and proposed solution can
-        # both be multi-line texts containing formatting like itemized lists.
-        # We store these as attachments as well.
+        # Some result fields like the description of affected systems and
+        # proposed solution can be multi-line texts containing formatting
+        # like itemized lists. We store these as attachments as well.
         if event.get_any('attachment-affected'):
             attachments['affected'] = event.get_any('attachment-affected')
 
         if event.get_any('attachment-solution'):
             attachments['solution'] = event.get_any('attachment-solution')
 
+        if event.get_any('attachment-summary'):
+            attachments['summary'] = event.get_any('attachment-summary')
+
         event.set_attachments(attachments)
 
         del event['attachment-description']
         del event['attachment-affected']
         del event['attachment-solution']
+        del event['attachment-summary']
 
         # When severity > 0 we want the event to get associated
         # with a vulnerability rather than a finding. We do this
@@ -436,8 +434,6 @@ class OpenVasResultTranscoder(XmlTranscoder):
             .because('OpenVAS plugin [[nvt-oid]] considers its issues to be of severity [[severity]]')
         result['nvt-oid'].relate_intra('indicates', 'threat')\
             .because('OpenVAS plugin [[nvt-oid]] considers its issues to have threat level [[threat]]')
-        result['nvt-oid'].relate_intra('detects', 'summary')\
-            .because('OpenVAS plugin [[nvt-oid]] summarizes its issues as: [[summary]]')
         result['nvt-oid'].relate_intra('indicates', 'impact')\
             .because('OpenVAS plugin [[nvt-oid]] describes the impact of its issues as: [[impact]]')
         result['nvt-oid'].relate_intra('provides', 'insight')\
