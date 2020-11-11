@@ -618,9 +618,14 @@ class OpenVasHostTranscoder(XmlTranscoder):
                 [attrib.value for attrib in cert.subject.get_attributes_for_oid(NameOID.DOMAIN_COMPONENT)])
             ))
 
+        # Below we copy some of the subject domains into a separate
+        # property. This property has different semantics: It contains
+        # possible names of the host on which the certificate is installed.
+        # As such, we use the property values as identifiers for computers.
         for domain in event['subject-domain']:
-            if domain != '' and '*' not in domain:
-                # Subject domain is not a wildcard
+            if domain != '' and domain != 'localhost' and '*' not in domain:
+                # Subject domain looks like a proper host name which can be used
+                # to identify the host in the network.
                 event['host-name'].add(domain)
 
     @classmethod
