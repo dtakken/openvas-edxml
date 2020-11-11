@@ -20,7 +20,7 @@ def register_transcoders(mediator, have_response_tag=False):
     """
     root = '/get_reports_response/report/report' if have_response_tag else '/report/report'
 
-    mediator.register(root + '', OpenVasReportTranscoder)
-    mediator.register(root + '/results/result', OpenVasResultTranscoder)
-    mediator.register(root + '/host', OpenVasHostTranscoder)
-    mediator.register(root + '/errors/error', OpenVasErrorTranscoder)
+    mediator.register(root + '', OpenVasReportTranscoder())
+    mediator.register(root + '/results/result', OpenVasResultTranscoder())
+    mediator.register(root + '/host', OpenVasHostTranscoder())
+    mediator.register(root + '/errors/error', OpenVasErrorTranscoder())
