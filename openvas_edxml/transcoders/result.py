@@ -115,11 +115,11 @@ class OpenVasResultTranscoder(XmlTranscoder):
     }
 
     TYPE_DESCRIPTIONS = {
-        'org.openvas.scan.result': 'OpenVAS vulnerability detection result'
+        'org.openvas.scan.result': 'OpenVAS detection result'
     }
 
     TYPE_DISPLAY_NAMES = {
-        'org.openvas.scan.result': ['vulnerability detection']
+        'org.openvas.scan.result': ['OpenVAS finding']
     }
 
     TYPE_SUMMARIES = {
@@ -173,7 +173,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
     TYPE_OPTIONAL_PROPERTIES = {
         'org.openvas.scan.result': [
             'host-ipv4', 'host-ipv6', 'port', 'xref', 'cvss-base', 'cvss-score', 'cve', 'bid',
-            'impact', 'insight', 'solution-type'
+            'impact', 'insight', 'solution-type', 'vulnerability-severity'
         ]
     }
 
@@ -228,7 +228,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
     ]
 
     CHILDREN_SIBLINGS = [
-        ['org.openvas.scan.result', 'detected in', 'org.openvas.scan']
+        ['org.openvas.scan.result', 'produced by', 'org.openvas.scan']
     ]
 
     PARENT_MAPPINGS = {
@@ -313,7 +313,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
     TYPE_ATTACHMENT_DISPLAY_NAMES = {
         'org.openvas.scan.result': {
             'input-xml-element': 'original OpenVAS data record',
-            'affected': 'vulnerability scope',
+            'affected': 'finding scope',
         }
     }
 

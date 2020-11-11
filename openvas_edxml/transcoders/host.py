@@ -290,7 +290,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
         'org.openvas.scan.nvt': ['nvt-oid'],
         'org.openvas.scan.routers': ['router-ipv4', 'router-ipv6'],
         'org.openvas.scan.application-detection': ['port', 'application'],
-        'org.openvas.scan.ssl-certificate': ['host-name', 'subject-domain'],
+        'org.openvas.scan.ssl-certificate': ['host-name', 'subject-domain', 'issuer-cn', 'subject-cn', 'subject-unit'],
         'org.openvas.scan.open-ports': ['port']
     }
 
