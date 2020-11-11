@@ -151,8 +151,6 @@ def main():
 
     with OpenVasTranscoderMediator(sys.stdout.buffer, args.uri, args.desc, args.have_response_tag) as mediator:
         openvas_edxml.register_transcoders(mediator, args.have_response_tag)
-        mediator.debug(warn_fallback=False, warn_no_transcoder=False)
-        mediator.ignore_invalid_objects()
         mediator.parse(openvas_input)
 
 
