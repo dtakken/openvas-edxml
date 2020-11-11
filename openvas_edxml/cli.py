@@ -152,6 +152,11 @@ def main():
     with OpenVasTranscoderMediator(sys.stdout.buffer, args.uri, args.desc, args.have_response_tag) as mediator:
         openvas_edxml.register_transcoders(mediator, args.have_response_tag)
         mediator.parse(openvas_input)
+        if mediator._num_input_records_processed == 0:
+            raise Exception(
+                'Failed to find any matching XML elements in OpenVAS report. '
+                'Please verify if the --have-response-tag CLI option is used correctly.'
+            )
 
 
 if __name__ == "__main__":
