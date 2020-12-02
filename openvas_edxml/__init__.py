@@ -9,7 +9,7 @@ from openvas_edxml.transcoders.result import OpenVasResultTranscoder
 
 def register_transcoders(mediator, have_response_tag=False):
     """
-    Registers the transcoders with a transcoder mediator.
+    Registers the record transcoders with a transcoding mediator.
 
     When parsing OpenVAS reports wrapped in a get_reports_response
     the have_response_tag must be set to True.
