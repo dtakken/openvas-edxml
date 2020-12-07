@@ -45,6 +45,10 @@ def post_process_xref(xref):
     yield xref
 
 
+def post_process_threat(threat):
+    yield threat.lower()
+
+
 class OpenVasResultTranscoder(XmlTranscoder):
 
     TYPE_MAP = {'.': 'org.openvas.scan.result'}

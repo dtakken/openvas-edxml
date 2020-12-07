@@ -31,7 +31,7 @@ def test_result(harness):
     assert result['cvss.score'] == {'5.0'}
     assert result['time'] == {'2019-01-02T12:01:01.000000Z'}
     assert result['severity'] == {'6.0'}
-    assert result['threat'] == {'Log'}
+    assert result['threat'] == {'log'}
     assert result['host.ipv4'] == {'10.0.0.1'}
     assert result['port'] == {'443/TCP'}
     assert result['qod.type'] == {'remote_banner'}

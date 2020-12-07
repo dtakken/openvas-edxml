@@ -85,7 +85,7 @@ class OpenVASBrick(Brick):
 
         yield target_ontology.create_object_type(cls.OBJECT_THREAT) \
             .set_description('threat level of an OpenVAS detection result')\
-            .set_data_type(DataType.enum('High', 'Medium', 'Low', 'Alarm', 'Log', 'Debug'))\
+            .set_data_type(DataType.enum('high', 'medium', 'low', 'alarm', 'log', 'debug'))\
             .set_display_name('threat level')
 
         yield target_ontology.create_object_type(cls.OBJECT_IMPACT) \
