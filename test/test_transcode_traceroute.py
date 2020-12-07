@@ -27,8 +27,8 @@ def test_traceroute(harness):
     result = harness.events.filter_type('org.openvas.scan.routers').pop()
 
     assert result['scan-id'] == {'fb167629-3bdf-4ab1-ae7d-c64a0d7ad595'}
-    assert result['scanner-ipv4'] == {'192.168.0.1'}
-    assert result['router-ipv4'] == {'10.0.0.1'}
+    assert result['scanner.ipv4'] == {'192.168.0.1'}
+    assert result['router.ipv4'] == {'10.0.0.1'}
 
     assert result.get_attachments() == {}
 
@@ -42,7 +42,7 @@ def test_traceroute_ipv6(harness):
 
     result = harness.events.filter_type('org.openvas.scan.routers').pop()
 
-    assert result['scanner-ipv6'] == {'0000:0000:0000:0000:0000:ffff:c0a8:0001'}
-    assert result['router-ipv6'] == {'0000:0000:0000:0000:0000:ffff:0a00:0001'}
+    assert result['scanner.ipv6'] == {'0000:0000:0000:0000:0000:ffff:c0a8:0001'}
+    assert result['router.ipv6'] == {'0000:0000:0000:0000:0000:ffff:0a00:0001'}
 
     assert result.get_attachments() == {}

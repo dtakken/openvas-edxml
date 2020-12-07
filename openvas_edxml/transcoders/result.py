@@ -53,22 +53,22 @@ class OpenVasResultTranscoder(XmlTranscoder):
         'org.openvas.scan.result': {
             '@id': 'id',
             '../../../report/@id': 'scan-id',
-            'nvt/name': 'nvt-name',
-            'nvt/family': 'nvt-family',
-            'nvt/cvss_base': 'cvss-score',
-            'nvt/@oid': 'nvt-oid',
+            'nvt/name': 'nvt.name',
+            'nvt/family': 'nvt.family',
+            'nvt/cvss_base': 'cvss.score',
+            'nvt/@oid': 'nvt.oid',
             'creation_time': 'time',
             'severity': 'severity',
             'threat': 'threat',
-            'ws_normalize(host)': ['host-ipv4', 'host-ipv6'],
+            'ws_normalize(host)': ['host.ipv4', 'host.ipv6'],
             'port': 'port',
-            'qod/type': 'qod-type',
-            'qod/value': 'qod-value',
+            'qod/type': 'qod.type',
+            'qod/value': 'qod.value',
             (r'ws_normalize('
              '  ctrl_strip('
              '    findall(./nvt/tags, "(?:^|\\|)cvss_base_vector=([^|]*)", %d)'
              '  )'
-             ')') % re.IGNORECASE: 'cvss-base',
+             ')') % re.IGNORECASE: 'cvss.base',
             (r'ws_normalize('
              '  ctrl_strip('
              '    findall(./nvt/tags, "(?:^|\\|)solution_type=([^|]*)", %d)'
@@ -118,18 +118,18 @@ class OpenVasResultTranscoder(XmlTranscoder):
     }
 
     TYPE_SUMMARIES = {
-        'org.openvas.scan.result': 'OpenVAS result: [[nvt-family]]'
+        'org.openvas.scan.result': 'OpenVAS result: [[nvt.family]]'
     }
 
     TYPE_STORIES = {
         'org.openvas.scan.result':
             'On [[FULLDATETIME:time]], OpenVAS detected a possible security issue related to host '
-            '{[[host-ipv4]]}{[[host-ipv6]]}{, on port [[port]]}.'
-            ' The issue was found by an OpenVAS plugin from the [[nvt-family]] family, titled "[[nvt-name]]".'
+            '{[[host.ipv4]]}{[[host.ipv6]]}{, on port [[port]]}.'
+            ' The issue was found by an OpenVAS plugin from the [[nvt.family]] family, titled "[[nvt.name]]".'
             '{ OpenVAS indicates a severity of [[severity]], threat level [[threat]].}'
-            '{ The CVSS base score is [[cvss-score]] (base vector [[cvss-base]]).}'
-            ' The problem is with [[qod-value]]% certainty applicable to this host, '
-            'based on [[qod-type]].'
+            '{ The CVSS base score is [[cvss.score]] (base vector [[cvss.base]]).}'
+            ' The problem is with [[qod.value]]% certainty applicable to this host, '
+            'based on [[qod.type]].'
             '{ The impact is described as follows:\n"[[impact]]"\n}'
             '{ Technical details about the problem:\n"[[insight]]"\n}'
             '{ Solution is of type([[solution-type]])"}'
@@ -141,23 +141,23 @@ class OpenVasResultTranscoder(XmlTranscoder):
             'id': ComputingBrick.OBJECT_UUID,
             'scan-id': ComputingBrick.OBJECT_UUID,
             'time': GenericBrick.OBJECT_DATETIME,
-            'host-ipv4': NetworkBrick.OBJECT_HOST_IPV4,
-            'host-ipv6': NetworkBrick.OBJECT_HOST_IPV6,
+            'host.ipv4': NetworkBrick.OBJECT_HOST_IPV4,
+            'host.ipv6': NetworkBrick.OBJECT_HOST_IPV6,
             'port': NetworkBrick.OBJECT_HOST_PORT,
-            'nvt-name': OpenVASBrick.OBJECT_NVT_NAME,
-            'nvt-family': OpenVASBrick.OBJECT_NVT_FAMILY,
-            'nvt-oid': ComputingBrick.OBJECT_OID,
+            'nvt.name': OpenVASBrick.OBJECT_NVT_NAME,
+            'nvt.family': OpenVASBrick.OBJECT_NVT_FAMILY,
+            'nvt.oid': ComputingBrick.OBJECT_OID,
             'severity': OpenVASBrick.OBJECT_SEVERITY,
             'vulnerability-severity': OpenVASBrick.OBJECT_SEVERITY,
             'threat': OpenVASBrick.OBJECT_THREAT,
             'impact': OpenVASBrick.OBJECT_IMPACT,
             'insight': OpenVASBrick.OBJECT_INSIGHT,
-            'qod-type': OpenVASBrick.OBJECT_QOD_TYPE,
-            'qod-value': OpenVASBrick.OBJECT_QOD_VALUE,
+            'qod.type': OpenVASBrick.OBJECT_QOD_TYPE,
+            'qod.value': OpenVASBrick.OBJECT_QOD_VALUE,
             'solution-type': OpenVASBrick.OBJECT_SOLUTION_TYPE,
             'xref': OpenVASBrick.OBJECT_XREF,
-            'cvss-base': SecurityBrick.OBJECT_CVSS_VECTOR,
-            'cvss-score': SecurityBrick.OBJECT_CVSS_SCORE,
+            'cvss.base': SecurityBrick.OBJECT_CVSS_VECTOR,
+            'cvss.score': SecurityBrick.OBJECT_CVSS_SCORE,
             'cve': SecurityBrick.OBJECT_CVE,
             'bid': SecurityBrick.OBJECT_BID
         }
@@ -165,7 +165,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
 
     TYPE_OPTIONAL_PROPERTIES = {
         'org.openvas.scan.result': [
-            'host-ipv4', 'host-ipv6', 'port', 'xref', 'cvss-base', 'cvss-score', 'cve', 'bid',
+            'host.ipv4', 'host.ipv6', 'port', 'xref', 'cvss.base', 'cvss.score', 'cve', 'bid',
             'impact', 'insight', 'solution-type', 'vulnerability-severity'
         ]
     }
@@ -175,17 +175,17 @@ class OpenVasResultTranscoder(XmlTranscoder):
             'id': 'result UUID',
             'scan-id': 'scan UUID',
             'time': 'detection time',
-            'host-ipv4': 'scanned host (IPv4)',
-            'host-ipv6': 'scanned host (IPv6)',
+            'host.ipv4': 'scanned host (IPv4)',
+            'host.ipv6': 'scanned host (IPv6)',
             'port': 'scanned port',
-            'nvt-name': 'plugin name',
-            'nvt-family': 'plugin family',
-            'nvt-oid': 'OpenVAS plugin',
-            'qod-type': 'QoD type',
-            'qod-value': 'QoD value',
+            'nvt.name': 'plugin name',
+            'nvt.family': 'plugin family',
+            'nvt.oid': 'OpenVAS plugin',
+            'qod.type': 'QoD type',
+            'qod.value': 'QoD value',
             'xref': 'cross reference',
-            'cvss-base': 'CVSS base vector',
-            'cvss-score': 'CVSS base score',
+            'cvss.base': 'CVSS base vector',
+            'cvss.score': 'CVSS base score',
             'cve': 'associated CVE',
             'bid': 'associated BID'
         }
@@ -196,24 +196,25 @@ class OpenVasResultTranscoder(XmlTranscoder):
     }
 
     TYPE_HASHED_PROPERTIES = {
-        'org.openvas.scan.result': ['scan-id', 'nvt-oid', 'host-ipv4', 'host-ipv6', 'port']
+        'org.openvas.scan.result': ['scan-id', 'nvt.oid', 'host.ipv4', 'host.ipv6', 'port']
     }
 
     TYPE_PROPERTY_POST_PROCESSORS = {
         'org.openvas.scan.result': {
             'port': post_process_port,
             'xref': post_process_xref,
-            'host-ipv4': post_process_ip,
-            'host-ipv6': post_process_ip,
+            'host.ipv4': post_process_ip,
+            'host.ipv6': post_process_ip,
+            'threat': post_process_threat,
         }
     }
 
     TYPE_AUTO_REPAIR_NORMALIZE = {
-        'org.openvas.scan.result': ['cve', 'time', 'host-ipv4', 'host-ipv6']
+        'org.openvas.scan.result': ['cve', 'time', 'host.ipv4', 'host.ipv6']
     }
 
     TYPE_AUTO_REPAIR_DROP = {
-        'org.openvas.scan.result': ['host-ipv4', 'host-ipv6']
+        'org.openvas.scan.result': ['host.ipv4', 'host.ipv6']
     }
 
     PARENTS_CHILDREN = [
@@ -235,28 +236,28 @@ class OpenVasResultTranscoder(XmlTranscoder):
 
             # The IP address of the host is an identifier of a computer. IP addresses
             # are not always unique, so we will not make them really strong identifiers.
-            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
-            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8},
+            'host.ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
+            'host.ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8},
             # Open ports are weak identifiers of computers.
             'port': {ComputingBrick.CONCEPT_COMPUTER: 0},
 
             # Associate OpenVAS plugins with the finding concept. This models
             # the fact that OpenVAS plugin IODs are unique identifiers of a particular
             # type of finding.
-            'nvt-oid': {OpenVASBrick.CONCEPT_FINDING: 10},
+            'nvt.oid': {OpenVASBrick.CONCEPT_FINDING: 10},
             # We associate the NVT names with the finding concept. Confidence is
             # lower than the OID association though as NVT names are not unique.
-            'nvt-name': {OpenVASBrick.CONCEPT_FINDING: 5},
+            'nvt.name': {OpenVASBrick.CONCEPT_FINDING: 5},
             # Associate more properties to the finding concept, all weak identifiers.
-            'nvt-family': {OpenVASBrick.CONCEPT_FINDING: 0},
+            'nvt.family': {OpenVASBrick.CONCEPT_FINDING: 0},
             'severity': {OpenVASBrick.CONCEPT_FINDING: 0},
             'threat': {OpenVASBrick.CONCEPT_FINDING: 0},
             'impact': {OpenVASBrick.CONCEPT_FINDING: 0},
             'insight': {OpenVASBrick.CONCEPT_FINDING: 0},
             'solution-type': {OpenVASBrick.CONCEPT_FINDING: 0},
             'xref': {OpenVASBrick.CONCEPT_FINDING: 0},
-            'qod-type': {OpenVASBrick.CONCEPT_FINDING: 0},
-            'qod-value': {OpenVASBrick.CONCEPT_FINDING: 0},
+            'qod.type': {OpenVASBrick.CONCEPT_FINDING: 0},
+            'qod.value': {OpenVASBrick.CONCEPT_FINDING: 0},
 
             # The presence of some properties indicate that the finding is a vulnerability.
             # We will associate these with the vulnerability concept.
@@ -268,23 +269,23 @@ class OpenVasResultTranscoder(XmlTranscoder):
             'cve': {OpenVASBrick.CONCEPT_VULNERABILITY: 9},
             'bid': {OpenVASBrick.CONCEPT_VULNERABILITY: 9},
             'vulnerability-severity': {OpenVASBrick.CONCEPT_VULNERABILITY: 0},
-            'cvss-base': {OpenVASBrick.CONCEPT_VULNERABILITY: 0},
-            'cvss-score': {OpenVASBrick.CONCEPT_VULNERABILITY: 0},
+            'cvss.base': {OpenVASBrick.CONCEPT_VULNERABILITY: 0},
+            'cvss.score': {OpenVASBrick.CONCEPT_VULNERABILITY: 0},
         }
     }
 
     TYPE_PROPERTY_CONCEPTS_CNP = {
         'org.openvas.scan.result': {
-            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
-            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
-            'nvt-name': {OpenVASBrick.CONCEPT_FINDING: 192},
-            'nvt-family': {OpenVASBrick.CONCEPT_FINDING: 160},
+            'host.ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'host.ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'nvt.name': {OpenVASBrick.CONCEPT_FINDING: 192},
+            'nvt.family': {OpenVASBrick.CONCEPT_FINDING: 160},
         }
     }
 
     TYPE_PROPERTY_ATTRIBUTES = {
         'org.openvas.scan.result': {
-            'nvt-oid': {
+            'nvt.oid': {
                 OpenVASBrick.CONCEPT_FINDING: [
                     ComputingBrick.OBJECT_OID + ':openvas.plugin', 'OpenVAS detection plugin ID'
                 ]
@@ -391,7 +392,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
         # section in OpenVAS reports only contains NVT that were successfully
         # executed without yielding any results. To complete the NVT lists, we
         # need to generate an org.openvas.scan.nvt event from each scan result
-        # as well. This is what we do below. Note that the nvt-oid property has
+        # as well. This is what we do below. Note that the nvt.oid property has
         # its merge strategy set to 'add', which means that the full list of
         # executed NVTs can be readily aggregated from multiple org.openvas.scan.nvt
         # output events.
@@ -406,9 +407,9 @@ class OpenVasResultTranscoder(XmlTranscoder):
             event,
             {
                 'scan-id': 'scan-id',
-                'host-ipv4': 'host-ipv4',
-                'host-ipv6': 'host-ipv6',
-                'nvt-oid': 'nvt-oid'
+                'host.ipv4': 'host.ipv4',
+                'host.ipv6': 'host.ipv6',
+                'nvt.oid': 'nvt.oid'
             }
         )
 
@@ -422,47 +423,47 @@ class OpenVasResultTranscoder(XmlTranscoder):
         # Create inter-concept relation between host IP addresses and en OpenVAS plugin
         # OID, indicating the the host has an OpenVAS finding associated with it.
         for ip in ('ipv4', 'ipv6'):
-            result['nvt-oid'].relate_inter('was detected on host', 'host-' + ip) \
-                .because(f"OpenVAS plugin [[nvt-oid]] returned a positive result while scanning host [[host-{ip}]]")
+            result['nvt.oid'].relate_inter('was detected on host', 'host.' + ip) \
+                .because(f"OpenVAS plugin [[nvt.oid]] returned a positive result while scanning host [[host.{ip}]]")
 
         # Relate the OpenVAS plugin OID to finding attributes
-        result['nvt-oid'].relate_intra('has', 'nvt-name')\
-            .because('OpenVAS plugin [[nvt-oid]] is named [[nvt-name]]')
-        result['nvt-oid'].relate_intra('belongs to', 'nvt-family')\
-            .because('OpenVAS plugin [[nvt-oid]] is from plugin family [[nvt-family]]')
-        result['nvt-oid'].relate_intra('indicates', 'severity')\
-            .because('OpenVAS plugin [[nvt-oid]] considers its issues to be of severity [[severity]]')
-        result['nvt-oid'].relate_intra('indicates', 'threat')\
-            .because('OpenVAS plugin [[nvt-oid]] considers its issues to have threat level [[threat]]')
-        result['nvt-oid'].relate_intra('indicates', 'impact')\
-            .because('OpenVAS plugin [[nvt-oid]] describes the impact of its issues as: [[impact]]')
-        result['nvt-oid'].relate_intra('provides', 'insight')\
-            .because('OpenVAS plugin [[nvt-oid]] provides threat insight: [[insight]]')
-        result['nvt-oid'].relate_intra('suggests', 'solution-type')\
-            .because('OpenVAS plugin [[nvt-oid]] suggests a solution of type [[solution-type]]')
-        result['nvt-oid'].relate_intra('refers to', 'xref')\
-            .because('OpenVAS plugin [[nvt-oid]] refers to [[xref]]')
-        result['nvt-oid'].relate_intra('uses', 'qod-type')\
-            .because('OpenVAS plugin [[nvt-oid]] detects issues using [[qod-type]]')
-        result['nvt-oid'].relate_intra('indicates', 'qod-value')\
-            .because('OpenVAS plugin [[nvt-oid]] indicates its detection quality as [[qod-value]]')
+        result['nvt.oid'].relate_intra('has', 'nvt.name')\
+            .because('OpenVAS plugin [[nvt.oid]] is named [[nvt.name]]')
+        result['nvt.oid'].relate_intra('belongs to', 'nvt.family')\
+            .because('OpenVAS plugin [[nvt.oid]] is from plugin family [[nvt.family]]')
+        result['nvt.oid'].relate_intra('indicates', 'severity')\
+            .because('OpenVAS plugin [[nvt.oid]] considers its issues to be of severity [[severity]]')
+        result['nvt.oid'].relate_intra('indicates', 'threat')\
+            .because('OpenVAS plugin [[nvt.oid]] considers its issues to have threat level [[threat]]')
+        result['nvt.oid'].relate_intra('indicates', 'impact')\
+            .because('OpenVAS plugin [[nvt.oid]] describes the impact of its issues as: [[impact]]')
+        result['nvt.oid'].relate_intra('provides', 'insight')\
+            .because('OpenVAS plugin [[nvt.oid]] provides threat insight: [[insight]]')
+        result['nvt.oid'].relate_intra('suggests', 'solution-type')\
+            .because('OpenVAS plugin [[nvt.oid]] suggests a solution of type [[solution-type]]')
+        result['nvt.oid'].relate_intra('refers to', 'xref')\
+            .because('OpenVAS plugin [[nvt.oid]] refers to [[xref]]')
+        result['nvt.oid'].relate_intra('uses', 'qod.type')\
+            .because('OpenVAS plugin [[nvt.oid]] detects issues using [[qod.type]]')
+        result['nvt.oid'].relate_intra('indicates', 'qod.value')\
+            .because('OpenVAS plugin [[nvt.oid]] indicates its detection quality as [[qod.value]]')
 
         # Relate the OpenVAS plugin OID to vulnerability attributes
-        result['nvt-oid'].relate_intra('detects', 'cve')\
-            .because('OpenVAS plugin [[nvt-oid]] detects vulnerability [[cve]]'),
-        result['nvt-oid'].relate_intra('detects', 'bid')\
-            .because('OpenVAS plugin [[nvt-oid]] detects vulnerability [[bid]]'),
-        result['nvt-oid'].relate_intra('indicates', 'vulnerability-severity')\
-            .because('OpenVAS plugin [[nvt-oid]] detects vulnerabilities of severity [[vulnerability-severity]]'),
-        result['nvt-oid'].relate_intra('indicates', 'cvss-base')\
-            .because('OpenVAS plugin [[nvt-oid]] indicates CVSS vector [[cvss-base]]'),
-        result['nvt-oid'].relate_intra('indicates', 'cvss-score')\
-            .because('OpenVAS plugin [[nvt-oid]] indicates CVSS score [[cvss-score]]'),
+        result['nvt.oid'].relate_intra('detects', 'cve')\
+            .because('OpenVAS plugin [[nvt.oid]] detects vulnerability [[cve]]'),
+        result['nvt.oid'].relate_intra('detects', 'bid')\
+            .because('OpenVAS plugin [[nvt.oid]] detects vulnerability [[bid]]'),
+        result['nvt.oid'].relate_intra('indicates', 'vulnerability-severity')\
+            .because('OpenVAS plugin [[nvt.oid]] detects vulnerabilities of severity [[vulnerability-severity]]'),
+        result['nvt.oid'].relate_intra('indicates', 'cvss.base')\
+            .because('OpenVAS plugin [[nvt.oid]] indicates CVSS vector [[cvss.base]]'),
+        result['nvt.oid'].relate_intra('indicates', 'cvss.score')\
+            .because('OpenVAS plugin [[nvt.oid]] indicates CVSS score [[cvss.score]]'),
 
         # Add a hint to relate scan results found by the same OpenVAS plugin and
         # results that concern the same host
-        result['nvt-oid'].hint_similar('found by')
-        result['host-ipv4'].hint_similar('concerning')
-        result['host-ipv6'].hint_similar('concerning')
+        result['nvt.oid'].hint_similar('found by')
+        result['host.ipv4'].hint_similar('concerning')
+        result['host.ipv6'].hint_similar('concerning')
 
         return result

@@ -19,9 +19,9 @@ class OpenVasErrorTranscoder(XmlTranscoder):
     PROPERTY_MAP = {
         'org.openvas.scan.error': {
             '../../../report/@id': 'scan-id',
-            'host': ['host-ipv4', 'host-ipv6'],
-            'nvt/@oid': 'nvt-oid',
-            'nvt/name': 'nvt-name',
+            'host': ['host.ipv4', 'host.ipv6'],
+            'nvt/@oid': 'nvt.oid',
+            'nvt/name': 'nvt.name',
             'description': 'message',
         }
     }
@@ -35,52 +35,52 @@ class OpenVasErrorTranscoder(XmlTranscoder):
     }
 
     TYPE_SUMMARIES = {
-        'org.openvas.scan.error': 'OpenVAS failure while testing [[host-ipv4]][[host-ipv6]]'
+        'org.openvas.scan.error': 'OpenVAS failure while testing [[host.ipv4]][[host.ipv6]]'
     }
 
     TYPE_STORIES = {
         'org.openvas.scan.error':
-            'During OpenVAS scan [[scan-id]], host [[host-ipv4]][[host-ipv6]] was tested using a '
-            'plugin titled [[nvt-name]] (NVT OID [[nvt-oid]]). '
+            'During OpenVAS scan [[scan-id]], host [[host.ipv4]][[host.ipv6]] was tested using a '
+            'plugin titled [[nvt.name]] (NVT OID [[nvt.oid]]). '
             'Unfortunately, the test failed with error message "[[message]]".'
     }
 
     TYPE_PROPERTIES = {
         'org.openvas.scan.error': {
             'scan-id': ComputingBrick.OBJECT_UUID,
-            'host-ipv4': NetworkBrick.OBJECT_HOST_IPV4,
-            'host-ipv6': NetworkBrick.OBJECT_HOST_IPV6,
-            'nvt-oid': ComputingBrick.OBJECT_OID,
-            'nvt-name': OpenVASBrick.OBJECT_NVT_NAME,
+            'host.ipv4': NetworkBrick.OBJECT_HOST_IPV4,
+            'host.ipv6': NetworkBrick.OBJECT_HOST_IPV6,
+            'nvt.oid': ComputingBrick.OBJECT_OID,
+            'nvt.name': OpenVASBrick.OBJECT_NVT_NAME,
             'message': OpenVASBrick.OBJECT_ERROR_MESSAGE,
         }
     }
 
     TYPE_PROPERTY_CONCEPTS = {
         'org.openvas.scan.error': {
-            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
-            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8},
+            'host.ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
+            'host.ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8},
             # Associate OpenVAS plugins with the finding concept. This models
             # the fact that OpenVAS plugin IODs are unique identifiers of a particular
             # type of finding.
-            'nvt-oid': {OpenVASBrick.CONCEPT_FINDING: 10},
+            'nvt.oid': {OpenVASBrick.CONCEPT_FINDING: 10},
             # We associate the NVT names with the finding concept. Confidence is
             # lower than the OID association though as NVT names are not unique.
-            'nvt-name': {OpenVASBrick.CONCEPT_FINDING: 5},
+            'nvt.name': {OpenVASBrick.CONCEPT_FINDING: 5},
         }
     }
 
     TYPE_PROPERTY_CONCEPTS_CNP = {
         'org.openvas.scan.error': {
-            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
-            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
-            'nvt-name': {OpenVASBrick.CONCEPT_FINDING: 192},
+            'host.ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'host.ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'nvt.name': {OpenVASBrick.CONCEPT_FINDING: 192},
         }
     }
 
     TYPE_PROPERTY_ATTRIBUTES = {
         'org.openvas.scan.error': {
-            'nvt-oid': {
+            'nvt.oid': {
                 OpenVASBrick.CONCEPT_FINDING: [
                     ComputingBrick.OBJECT_OID + ':openvas.plugin', 'OpenVAS detection plugin ID'
                 ]
@@ -89,36 +89,36 @@ class OpenVasErrorTranscoder(XmlTranscoder):
     }
 
     TYPE_OPTIONAL_PROPERTIES = {
-        'org.openvas.scan.error': ['host-ipv4', 'host-ipv6']
+        'org.openvas.scan.error': ['host.ipv4', 'host.ipv6']
     }
 
     TYPE_PROPERTY_DESCRIPTIONS = {
         'org.openvas.scan.error': {
             'scan-id': 'scan UUID',
-            'host-ipv4': 'target host (IPv4)',
-            'host-ipv6': 'target host (IPv6)',
-            'nvt-oid': 'OpenVAS plugin ID',
-            'nvt-name': 'OpenVAS plugin name',
+            'host.ipv4': 'target host (IPv4)',
+            'host.ipv6': 'target host (IPv6)',
+            'nvt.oid': 'OpenVAS plugin ID',
+            'nvt.name': 'OpenVAS plugin name',
         }
     }
 
     TYPE_PROPERTY_POST_PROCESSORS = {
         'org.openvas.scan.error': {
-            'host-ipv4': post_process_ip,
-            'host-ipv6': post_process_ip,
+            'host.ipv4': post_process_ip,
+            'host.ipv6': post_process_ip,
         }
     }
 
     TYPE_HASHED_PROPERTIES = {
-        'org.openvas.scan.error': ['scan-id', 'host-ipv4', 'host-ipv6', 'nvt-oid']
+        'org.openvas.scan.error': ['scan-id', 'host.ipv4', 'host.ipv6', 'nvt.oid']
     }
 
     TYPE_AUTO_REPAIR_NORMALIZE = {
-        'org.openvas.scan.error': ['host-ipv4', 'host-ipv6']
+        'org.openvas.scan.error': ['host.ipv4', 'host.ipv6']
     }
 
     TYPE_AUTO_REPAIR_DROP = {
-        'org.openvas.scan.error': ['host-ipv4', 'host-ipv6']
+        'org.openvas.scan.error': ['host.ipv4', 'host.ipv6']
     }
 
     PARENTS_CHILDREN = [
@@ -144,7 +144,7 @@ class OpenVasErrorTranscoder(XmlTranscoder):
         # section in OpenVAS reports only contains NVT that were successfully
         # executed without yielding any results. To complete the NVT lists, we
         # need to generate an org.openvas.scan.nvt event from each failed test
-        # as well. This is what we do below. Note that the nvt-oid property has
+        # as well. This is what we do below. Note that the nvt.oid property has
         # its merge strategy set to 'add', which means that the full list of
         # executed NVTs can be readily aggregated from multiple org.openvas.scan.nvt
         # output events.
@@ -159,9 +159,9 @@ class OpenVasErrorTranscoder(XmlTranscoder):
             event,
             {
                 'scan-id': 'scan-id',
-                'host-ipv4': 'host-ipv4',
-                'host-ipv6': 'host-ipv6',
-                'nvt-oid': 'nvt-oid'
+                'host.ipv4': 'host.ipv4',
+                'host.ipv6': 'host.ipv6',
+                'nvt.oid': 'nvt.oid'
             }
         )
 
@@ -173,7 +173,7 @@ class OpenVasErrorTranscoder(XmlTranscoder):
         error = super().create_event_type(event_type_name, ontology)
 
         # Relate the NVT OID to its name
-        error['nvt-oid'].relate_intra('is named', 'nvt-name') \
-            .because('an OpenVAS result of plugin [[nvt-oid]] is named [[nvt-name]]')
+        error['nvt.oid'].relate_intra('is named', 'nvt.name') \
+            .because('an OpenVAS result of plugin [[nvt.oid]] is named [[nvt.name]]')
 
         return error

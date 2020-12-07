@@ -29,7 +29,7 @@ def test_application_detection(harness):
 
     for result in harness.events.filter_type('org.openvas.scan.application-detection'):
         assert result['scan-id'] == {'fb167629-3bdf-4ab1-ae7d-c64a0d7ad595'}
-        assert result['host-ipv4'] == {'10.0.0.1'}
+        assert result['host.ipv4'] == {'10.0.0.1'}
         assert result['port'].intersection(ports) != {}
         assert result['application'].intersection(cpe) != {}
 
@@ -44,4 +44,4 @@ def test_application_detection_ipv6(harness):
     )
 
     for result in harness.events.filter_type('org.openvas.scan.application-detection'):
-        assert result['host-ipv6'] == {'2001:0db8:0000:0000:0000:8a2e:0370:7334'}
+        assert result['host.ipv6'] == {'2001:0db8:0000:0000:0000:8a2e:0370:7334'}

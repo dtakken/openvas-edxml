@@ -25,18 +25,18 @@ def test_result(harness):
 
     assert result['id'] == {'d37be786-a052-433e-9ecf-28babfaea2ac'}
     assert result['scan-id'] == {'fb167629-3bdf-4ab1-ae7d-c64a0d7ad595'}
-    assert result['nvt-oid'] == {'1.3.6.1.4.1.25623.1.0.112081'}
-    assert result['nvt-name'] == {'HTTP Security Headers Detection'}
-    assert result['nvt-family'] == {'General'}
-    assert result['cvss-score'] == {'5.0'}
+    assert result['nvt.oid'] == {'1.3.6.1.4.1.25623.1.0.112081'}
+    assert result['nvt.name'] == {'HTTP Security Headers Detection'}
+    assert result['nvt.family'] == {'General'}
+    assert result['cvss.score'] == {'5.0'}
     assert result['time'] == {'2019-01-02T12:01:01.000000Z'}
     assert result['severity'] == {'6.0'}
     assert result['threat'] == {'Log'}
-    assert result['host-ipv4'] == {'10.0.0.1'}
+    assert result['host.ipv4'] == {'10.0.0.1'}
     assert result['port'] == {'443/TCP'}
-    assert result['qod-type'] == {'remote_banner'}
-    assert result['qod-value'] == {'80'}
-    assert result['cvss-base'] == {'AV:N/AC:L/Au:N/C:N/I:N/A:N'}
+    assert result['qod.type'] == {'remote_banner'}
+    assert result['qod.value'] == {'80'}
+    assert result['cvss.base'] == {'AV:N/AC:L/Au:N/C:N/I:N/A:N'}
     assert result['solution-type'] == {'Test solution type'}
     assert result['xref'] == {'http://test1/', 'http://test2/'}
     assert result['insight'] == {'Test insight'}
@@ -53,8 +53,8 @@ def test_result(harness):
     nvt = harness.events.filter_type('org.openvas.scan.nvt')[0]
 
     assert nvt['scan-id'] == {'fb167629-3bdf-4ab1-ae7d-c64a0d7ad595'}
-    assert nvt['nvt-oid'] == {'1.3.6.1.4.1.25623.1.0.112081'}
-    assert nvt['host-ipv4'] == {'10.0.0.1'}
+    assert nvt['nvt.oid'] == {'1.3.6.1.4.1.25623.1.0.112081'}
+    assert nvt['host.ipv4'] == {'10.0.0.1'}
 
 
 def test_result_ipv6(harness):
@@ -65,11 +65,11 @@ def test_result_ipv6(harness):
 
     result = harness.events.filter_type('org.openvas.scan.result')[0]
 
-    assert result['host-ipv6'] == {'2001:0db8:0000:0000:0000:8a2e:0370:7334'}
+    assert result['host.ipv6'] == {'2001:0db8:0000:0000:0000:8a2e:0370:7334'}
 
     nvt = harness.events.filter_type('org.openvas.scan.nvt')[0]
 
-    assert nvt['host-ipv6'] == {'2001:0db8:0000:0000:0000:8a2e:0370:7334'}
+    assert nvt['host.ipv6'] == {'2001:0db8:0000:0000:0000:8a2e:0370:7334'}
 
 
 def test_result_non_numeric_port(harness):

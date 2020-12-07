@@ -27,8 +27,8 @@ def test_nvt_listings(harness):
     result = harness.events.filter_type('org.openvas.scan.nvt').pop()
 
     assert result['scan-id'] == {'fb167629-3bdf-4ab1-ae7d-c64a0d7ad595'}
-    assert result['host-ipv4'] == {'10.0.0.1'}
-    assert result['nvt-oid'] == {'1.3.6.1.4.1.25623.1.0.103028', '1.3.6.1.4.1.25623.1.0.803197'}
+    assert result['host.ipv4'] == {'10.0.0.1'}
+    assert result['nvt.oid'] == {'1.3.6.1.4.1.25623.1.0.103028', '1.3.6.1.4.1.25623.1.0.803197'}
 
     assert result.get_attachments() == {}
 
@@ -42,4 +42,4 @@ def test_nvt_listings_ipv6(harness):
 
     result = harness.events.filter_type('org.openvas.scan.nvt').pop()
 
-    assert result['host-ipv6'] == {'2001:0db8:0000:0000:0000:8a2e:0370:7334'}
+    assert result['host.ipv6'] == {'2001:0db8:0000:0000:0000:8a2e:0370:7334'}

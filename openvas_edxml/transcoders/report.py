@@ -21,7 +21,7 @@ class OpenVasReportTranscoder(XmlTranscoder):
         'org.openvas.scan': {
             '@id': 'id',
             '../task/name': 'name',
-            'ports/port/host': ['host-ipv4', 'host-ipv6'],
+            'ports/port/host': ['host.ipv4', 'host.ipv6'],
             'hosts/count': 'host-count',
             'vulns/count': 'vuln-count',
             'scan_start': 'time-start',
@@ -46,15 +46,15 @@ class OpenVasReportTranscoder(XmlTranscoder):
             'On [[FULLDATETIME:time-start]] an OpenVAS vulnerability scan{ ([[name]])} was initiated, targeting '
             '[[host-count]] hosts. The scan was completed in [[DURATION:time-start,time-end]] yielding [[vuln-count]] '
             'findings{ and was assigned UUID [[id]]}.{ The IP addresses of the scan targets are '
-            '[[MERGE:host-ipv4,host-ipv6]].}'
+            '[[MERGE:host.ipv4,host.ipv6]].}'
     }
 
     TYPE_PROPERTIES = {
         'org.openvas.scan': {
             'id': ComputingBrick.OBJECT_UUID,
             'name': OpenVASBrick.OBJECT_SCAN_NAME,
-            'host-ipv4': NetworkBrick.OBJECT_HOST_IPV4,
-            'host-ipv6': NetworkBrick.OBJECT_HOST_IPV6,
+            'host.ipv4': NetworkBrick.OBJECT_HOST_IPV4,
+            'host.ipv6': NetworkBrick.OBJECT_HOST_IPV6,
             'host-count': GenericBrick.OBJECT_COUNT_LARGE,
             'vuln-count': GenericBrick.OBJECT_COUNT_LARGE,
             'time-start': GenericBrick.OBJECT_DATETIME,
@@ -64,31 +64,31 @@ class OpenVasReportTranscoder(XmlTranscoder):
 
     TYPE_PROPERTY_CONCEPTS = {
         'org.openvas.scan.result': {
-            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
-            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8}
+            'host.ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
+            'host.ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8}
         },
     }
 
     TYPE_PROPERTY_CONCEPTS_CNP = {
         'org.openvas.scan.result': {
-            'host-ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
-            'host-ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'host.ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
+            'host.ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
         }
     }
 
     TYPE_OPTIONAL_PROPERTIES = {
-        'org.openvas.scan': ['host-ipv4', 'host-ipv6', 'time-end']
+        'org.openvas.scan': ['host.ipv4', 'host.ipv6', 'time-end']
     }
 
     TYPE_MULTI_VALUED_PROPERTIES = {
-        'org.openvas.scan': ['host-ipv4', 'host-ipv6']
+        'org.openvas.scan': ['host.ipv4', 'host.ipv6']
     }
 
     TYPE_PROPERTY_DESCRIPTIONS = {
         'org.openvas.scan': {
             'id': 'OpenVAS UUID',
-            'host-ipv4': 'target host (IPv4)',
-            'host-ipv6': 'target host (IPv6)',
+            'host.ipv4': 'target host (IPv4)',
+            'host.ipv6': 'target host (IPv6)',
             'vuln-count': 'vulnerability count',
             'time-start': 'starting time',
             'time-end': 'completion time',
@@ -101,8 +101,8 @@ class OpenVasReportTranscoder(XmlTranscoder):
 
     TYPE_PROPERTY_MERGE_STRATEGIES = {
         'org.openvas.scan': {
-            'host-ipv4': EventProperty.MERGE_ADD,
-            'host-ipv6': EventProperty.MERGE_ADD,
+            'host.ipv4': EventProperty.MERGE_ADD,
+            'host.ipv6': EventProperty.MERGE_ADD,
             'host-count': EventProperty.MERGE_MAX,
             'vuln-count': EventProperty.MERGE_MAX,
             'time-end': EventProperty.MERGE_SET
@@ -110,15 +110,15 @@ class OpenVasReportTranscoder(XmlTranscoder):
     }
 
     TYPE_PROPERTY_POST_PROCESSORS = {
-        'org.openvas.scan': {'host-ipv4': post_process_ip, 'host-ipv6': post_process_ip}
+        'org.openvas.scan': {'host.ipv4': post_process_ip, 'host.ipv6': post_process_ip}
     }
 
     TYPE_AUTO_REPAIR_NORMALIZE = {
-        'org.openvas.scan': ['host-ipv4', 'host-ipv6', 'time-start', 'time-end']
+        'org.openvas.scan': ['host.ipv4', 'host.ipv6', 'time-start', 'time-end']
     }
 
     TYPE_AUTO_REPAIR_DROP = {
-        'org.openvas.scan': ['host-ipv4', 'host-ipv6']
+        'org.openvas.scan': ['host.ipv4', 'host.ipv6']
     }
 
     TYPE_TIMESPANS = {'org.openvas.scan': ('time-start', 'time-end')}
