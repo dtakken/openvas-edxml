@@ -399,7 +399,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'host.ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
             'host.ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8},
 
-            'host.name': {SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE: 9, ComputingBrick.CONCEPT_COMPUTER: 9},
+            'host.name': {SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE: 8, ComputingBrick.CONCEPT_COMPUTER: 8},
             'cert.valid.from': {SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE: 1},
             'cert.valid.until': {SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE: 1},
             'cert.fingerprint': {SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE: 10},
