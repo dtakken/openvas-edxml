@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from edxml.event import EventElement
 from openvas_edxml.brick import OpenVASBrick
 

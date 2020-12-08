@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from urllib.parse import urlsplit
 from lxml import etree
 

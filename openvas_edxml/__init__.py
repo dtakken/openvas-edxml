@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from openvas_edxml.transcoders.error import OpenVasErrorTranscoder
 from openvas_edxml.transcoders.host import OpenVasHostTranscoder
 from openvas_edxml.transcoders.report import OpenVasReportTranscoder

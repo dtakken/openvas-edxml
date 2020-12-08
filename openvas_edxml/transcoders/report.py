@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from openvas_edxml.logger import log
-
 from openvas_edxml.brick import OpenVASBrick
 from openvas_edxml.transcoders import post_process_ip
 
