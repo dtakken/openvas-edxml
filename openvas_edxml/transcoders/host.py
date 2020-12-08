@@ -164,7 +164,8 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'cert.issuer.organization': GenericBrick.OBJECT_ORGANIZATION_NAME,
             'cert.issuer.unit': GenericBrick.OBJECT_ORGANIZATION_UNIT_NAME,
             'cert.issuer.email': EmailBrick.OBJECT_EMAIL_ADDRESS,
-            'cert.subject.domain': NetworkBrick.OBJECT_HOST_NAME_WILDCARD,
+            'cert.subject.domain': NetworkBrick.OBJECT_HOST_NAME,
+            'cert.subject.domain-wildcard': NetworkBrick.OBJECT_HOST_NAME_WILDCARD,
             'cert.subject.dn': CryptoBrick.OBJECT_SSL_CERTIFICATE_DN,
             'cert.subject.cn': CryptoBrick.OBJECT_SSL_CERTIFICATE_CN,
             'cert.subject.country': GeoBrick.OBJECT_COUNTRYCODE_ALPHA2,
@@ -288,7 +289,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
         'org.openvas.scan.nvt': ['nvt.oid'],
         'org.openvas.scan.routers': ['router.ipv4', 'router.ipv6'],
         'org.openvas.scan.application-detection': ['port', 'application'],
-        'org.openvas.scan.ssl-certificate': ['host.name', 'cert.subject.domain', 'cert.issuer.cn', 'cert.subject.cn', 'cert.subject.unit'],
+        'org.openvas.scan.ssl-certificate': ['host.name', 'cert.subject.domain', 'cert.subject.domain-wildcard', 'cert.issuer.cn', 'cert.subject.cn', 'cert.subject.unit'],
         'org.openvas.scan.open-ports': ['port']
     }
 
@@ -413,6 +414,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'cert.issuer.unit': {GenericBrick.CONCEPT_ORGANIZATION: 2},
             'cert.issuer.email': {GenericBrick.CONCEPT_ORGANIZATION: 9},
             'cert.subject.domain': {GenericBrick.CONCEPT_ORGANIZATION: 7},
+            'cert.subject.domain-wildcard': {GenericBrick.CONCEPT_ORGANIZATION: 7},
             'cert.subject.dn': {GenericBrick.CONCEPT_ORGANIZATION: 8},
             'cert.subject.cn': {GenericBrick.CONCEPT_ORGANIZATION: 6},
             'cert.subject.country': {GenericBrick.CONCEPT_ORGANIZATION: 1},
@@ -620,15 +622,25 @@ class OpenVasHostTranscoder(XmlTranscoder):
                 [attrib.value for attrib in cert.subject.get_attributes_for_oid(NameOID.DOMAIN_COMPONENT)])
             ))
 
+        for issuer_subject in ['issuer', 'subject']:
+            for domain in list(event[f"cert.{issuer_subject}.domain"]):
+                if domain == '' or domain == 'localhost':
+                    # Domain does not look like a useful host identifier.
+                    event[f"cert.{issuer_subject}.domain"].remove(domain)
+                    continue
+                if '*' in domain:
+                    # Wildcard domain, move to appropriate property.
+                    event[f"cert.{issuer_subject}.domain"].remove(domain)
+                    event[f"cert.{issuer_subject}.domain-wildcard"].add(domain)
+
         # Below we copy some of the subject domains into a separate
         # property. This property has different semantics: It contains
         # possible names of the host on which the certificate is installed.
         # As such, we use the property values as identifiers for computers.
         for domain in event['cert.subject.domain']:
-            if domain != '' and domain != 'localhost' and '*' not in domain:
-                # Subject domain looks like a proper host name which can be used
-                # to identify the host in the network.
-                event['host.name'].add(domain)
+            # Subject is not a wildcard domain, copy it to the host names that
+            # are protected by the certificate.
+            event['host.name'].add(domain)
 
     @classmethod
     def create_event_type(cls, event_type_name, ontology):
@@ -681,6 +693,8 @@ class OpenVasHostTranscoder(XmlTranscoder):
             # Relate subject DN to other attributes of the organization that the certificate was issued for
             event_type['cert.subject.dn'].relate_intra('has', 'cert.subject.domain')\
                 .because('an SSL certificate issued for [[cert.subject.dn]] contains [[cert.subject.domain]]')
+            event_type['cert.subject.dn'].relate_intra('has', 'cert.subject.domain-wildcard')\
+                .because('an SSL certificate issued for [[cert.subject.dn]] contains [[cert.subject.domain-wildcard]]')
             event_type['cert.subject.dn'].relate_intra('has', 'cert.subject.cn')\
                 .because('an SSL certificate issued for [[cert.subject.dn]] contains [[cert.subject.cn]]')
             event_type['cert.subject.dn'].relate_intra('located in', 'cert.subject.country')\
