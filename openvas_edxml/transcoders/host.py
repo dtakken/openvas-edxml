@@ -602,7 +602,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
             ext = cert.extensions.get_extension_for_oid(ExtensionOID.SUBJECT_ALTERNATIVE_NAME)
             # DNS names found in this extension might contain names that are NOT among the subject
             # CN names, providing additional hosts names. We add them to the subject domain.
-            event['cert.subject.domain'].update(ext.value.get_values_for_type(x509.DNSName))
+            event['cert.subject.domain'].update([name.lower() for name in ext.value.get_values_for_type(x509.DNSName)])
         except ExtensionNotFound:
             pass
 
@@ -614,12 +614,12 @@ class OpenVasHostTranscoder(XmlTranscoder):
 
         event['cert.issuer.domain'].add(
             '.'.join(reversed(
-                [attrib.value for attrib in cert.issuer.get_attributes_for_oid(NameOID.DOMAIN_COMPONENT)])
+                [attrib.value.lower() for attrib in cert.issuer.get_attributes_for_oid(NameOID.DOMAIN_COMPONENT)])
             ))
 
         event['cert.subject.domain'].add(
             '.'.join(reversed(
-                [attrib.value for attrib in cert.subject.get_attributes_for_oid(NameOID.DOMAIN_COMPONENT)])
+                [attrib.value.lower() for attrib in cert.subject.get_attributes_for_oid(NameOID.DOMAIN_COMPONENT)])
             ))
 
         if event['cert.issuer.dn'] == event['cert.subject.dn']:
