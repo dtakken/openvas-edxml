@@ -3,7 +3,7 @@ from os.path import dirname
 import pytest
 from edxml.transcode.xml import XmlTranscoderTestHarness
 
-from openvas_edxml import register_transcoders, OpenVasResultTranscoder, OpenVasReportTranscoder
+from openvas_edxml import register_transcoders, OpenVasReportTranscoder
 
 
 @pytest.fixture()
