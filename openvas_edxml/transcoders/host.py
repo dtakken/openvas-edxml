@@ -209,7 +209,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
 
     TYPE_MANDATORY_PROPERTIES = {
         'org.openvas.scan.ssl-certificate': [
-            'scan-id', 'cert.valid.from', 'cert.valid.until', 'cert.fingerprint', 'cert.issuer.dn', 'cert.subject.dn'
+            'scan-id', 'cert.valid.from', 'cert.valid.until', 'cert.fingerprint', 'cert.subject.dn'
         ],
         'org.openvas.scan.routers': ['scan-id']
     }
@@ -621,6 +621,15 @@ class OpenVasHostTranscoder(XmlTranscoder):
             '.'.join(reversed(
                 [attrib.value for attrib in cert.subject.get_attributes_for_oid(NameOID.DOMAIN_COMPONENT)])
             ))
+
+        if event['cert.issuer.dn'] == event['cert.subject.dn']:
+            # We have a self-signed certificate. In that case we
+            # omit the cert.issuer. We do that because the issuer is
+            # associated with the organization concept, we do not
+            # want hosts to be mistaken for organizations.
+            for property_name in event.keys():
+                if property_name.startswith('cert.issuer.'):
+                    del event[property_name]
 
         for issuer_subject in ['issuer', 'subject']:
             for domain in list(event[f"cert.{issuer_subject}.domain"]):
