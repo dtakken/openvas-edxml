@@ -125,7 +125,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
 
     TYPE_STORIES = {
         'org.openvas.scan.result':
-            'On [[FULLDATETIME:time]], OpenVAS detected a possible security issue related to host '
+            'On [[DATETIME:time,second]], OpenVAS detected a possible security issue related to host '
             '{[[host.ipv4]]}{[[host.ipv6]]}{, on port [[port]]}.'
             ' The issue was found by an OpenVAS plugin from the [[nvt.family]] family, titled "[[nvt.name]]".'
             '{ OpenVAS indicates a severity of [[severity]], threat level [[threat]].}'
