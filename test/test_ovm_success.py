@@ -8,14 +8,17 @@ from openvas_edxml import register_transcoders, OpenVasReportTranscoder
 
 @pytest.fixture()
 def harness():
-    harness = XmlTranscoderTestHarness(dirname(__file__) + '/fixtures', OpenVasReportTranscoder())
+    harness = XmlTranscoderTestHarness(
+        fixtures_path=dirname(__file__) + '/fixtures',
+        transcoder=OpenVasReportTranscoder(),
+        transcoder_root='/get_reports_response/report/report',
+        register=False
+    )
     register_transcoders(harness, have_response_tag=True)
-    harness.add_event_source('/some/source/')
-    harness.set_event_source('/some/source/')
     return harness
 
 
 def test_parse_response_tag(harness):
-    harness.process_xml('ovm-success-response.xml', transcoder_root='/get_reports_response/report/report')
+    harness.process_xml('ovm-success-response.xml')
 
     assert len(harness.events) > 0

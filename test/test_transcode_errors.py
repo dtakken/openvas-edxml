@@ -8,17 +8,19 @@ from openvas_edxml import register_transcoders, OpenVasErrorTranscoder
 
 @pytest.fixture()
 def harness():
-    harness = XmlTranscoderTestHarness(dirname(__file__) + '/fixtures', OpenVasErrorTranscoder())
+    harness = XmlTranscoderTestHarness(
+        fixtures_path=dirname(__file__) + '/fixtures',
+        transcoder=OpenVasErrorTranscoder(),
+        transcoder_root='/report/report/errors/error',
+        register=False
+    )
     register_transcoders(harness)
-    harness.add_event_source('/some/source/')
-    harness.set_event_source('/some/source/')
     return harness
 
 
 def test_detection_errors(harness):
     harness.process_xml(
         'errors.xml',
-        transcoder_root='/report/report/errors/error',
         element_root='.'
     )
 
@@ -38,7 +40,6 @@ def test_detection_errors(harness):
 def test_detection_errors_ipv6(harness):
     harness.process_xml(
         'errors-ipv6.xml',
-        transcoder_root='/report/report/errors/error',
         element_root='.'
     )
 

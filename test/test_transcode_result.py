@@ -8,15 +8,18 @@ from openvas_edxml import OpenVasResultTranscoder, register_transcoders
 
 @pytest.fixture()
 def harness():
-    harness = XmlTranscoderTestHarness(dirname(__file__) + '/fixtures', OpenVasResultTranscoder())
+    harness = XmlTranscoderTestHarness(
+        fixtures_path=dirname(__file__) + '/fixtures',
+        transcoder=OpenVasResultTranscoder(),
+        transcoder_root='/report/report/results/result',
+        register=False
+    )
     register_transcoders(harness)
-    harness.add_event_source('/some/source/')
-    harness.set_event_source('/some/source/')
     return harness
 
 
 def test_result(harness):
-    harness.process_xml('result.xml', transcoder_root='/report/report/results/result')
+    harness.process_xml('result.xml')
 
     assert len(harness.events.filter_type('org.openvas.scan.nvt')) == 1
     assert len(harness.events.filter_type('org.openvas.scan.result')) == 1
@@ -58,7 +61,7 @@ def test_result(harness):
 
 
 def test_result_ipv6(harness):
-    harness.process_xml('result-ipv6.xml', transcoder_root='/report/report/results/result')
+    harness.process_xml('result-ipv6.xml')
 
     assert len(harness.events.filter_type('org.openvas.scan.nvt')) == 1
     assert len(harness.events.filter_type('org.openvas.scan.result')) == 1
@@ -73,7 +76,7 @@ def test_result_ipv6(harness):
 
 
 def test_result_non_numeric_port(harness):
-    harness.process_xml('result-non-numerical-port.xml', transcoder_root='/report/report/results/result')
+    harness.process_xml('result-non-numerical-port.xml')
 
     assert len(harness.events.filter_type('org.openvas.scan.nvt')) == 1
     assert len(harness.events.filter_type('org.openvas.scan.result')) == 1
@@ -84,7 +87,7 @@ def test_result_non_numeric_port(harness):
 
 
 def test_result_terse(harness):
-    harness.process_xml('result-terse.xml', transcoder_root='/report/report/results/result')
+    harness.process_xml('result-terse.xml')
 
     # No need to add any assertions here, we only test that a result that is
     # missing a lot of information will transcode without any errors.

@@ -8,17 +8,19 @@ from openvas_edxml import register_transcoders, OpenVasHostTranscoder
 
 @pytest.fixture()
 def harness():
-    harness = XmlTranscoderTestHarness(dirname(__file__) + '/fixtures', OpenVasHostTranscoder())
+    harness = XmlTranscoderTestHarness(
+        fixtures_path=dirname(__file__) + '/fixtures',
+        transcoder=OpenVasHostTranscoder(),
+        transcoder_root='/report/report/host',
+        register=False
+    )
     register_transcoders(harness)
-    harness.add_event_source('/some/source/')
-    harness.set_event_source('/some/source/')
     return harness
 
 
 def test_nvt_listings(harness):
     harness.process_xml(
         'nvt-listing.xml',
-        transcoder_root='/report/report/host',
         element_root='detail/name[text() = "EXIT_CODE"]/../..'
     )
 
@@ -36,7 +38,6 @@ def test_nvt_listings(harness):
 def test_nvt_listings_ipv6(harness):
     harness.process_xml(
         'nvt-listing-ipv6.xml',
-        transcoder_root='/report/report/host',
         element_root='detail/name[text() = "EXIT_CODE"]/../..'
     )
 

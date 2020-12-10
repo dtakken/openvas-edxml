@@ -6,15 +6,18 @@ from openvas_edxml import register_transcoders, OpenVasReportTranscoder
 
 @pytest.fixture()
 def harness():
-    harness = XmlTranscoderTestHarness(dirname(__file__) + '/fixtures', OpenVasReportTranscoder())
+    harness = XmlTranscoderTestHarness(
+        fixtures_path=dirname(__file__) + '/fixtures',
+        transcoder=OpenVasReportTranscoder(),
+        transcoder_root='/report/report',
+        register=False
+    )
     register_transcoders(harness)
-    harness.add_event_source('/some/source/')
-    harness.set_event_source('/some/source/')
     return harness
 
 
 def test_report(harness):
-    harness.process_xml('report.xml', transcoder_root='/report/report')
+    harness.process_xml('report.xml')
 
     assert len(harness.events.filter_type('org.openvas.scan')) == 1
 
@@ -30,7 +33,7 @@ def test_report(harness):
 
 
 def test_report_ipv6(harness):
-    harness.process_xml('report-ipv6.xml', transcoder_root='/report/report')
+    harness.process_xml('report-ipv6.xml')
 
     assert len(harness.events.filter_type('org.openvas.scan')) == 1
 
@@ -40,7 +43,7 @@ def test_report_ipv6(harness):
 
 
 def test_incomplete_report(harness, caplog):
-    harness.process_xml('incomplete-report.xml', transcoder_root='/report/report')
+    harness.process_xml('incomplete-report.xml')
 
     assert len(harness.events.filter_type('org.openvas.scan')) == 1
 
@@ -51,7 +54,7 @@ def test_incomplete_report(harness, caplog):
 
 
 def test_unfinished_report(harness, caplog):
-    harness.process_xml('unfinished-report.xml', transcoder_root='/report/report')
+    harness.process_xml('unfinished-report.xml')
 
     assert len(harness.events.filter_type('org.openvas.scan')) == 1
 

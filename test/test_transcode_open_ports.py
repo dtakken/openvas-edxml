@@ -8,17 +8,19 @@ from openvas_edxml import register_transcoders, OpenVasHostTranscoder
 
 @pytest.fixture()
 def harness():
-    harness = XmlTranscoderTestHarness(dirname(__file__) + '/fixtures', OpenVasHostTranscoder())
+    harness = XmlTranscoderTestHarness(
+        fixtures_path=dirname(__file__) + '/fixtures',
+        transcoder=OpenVasHostTranscoder(),
+        transcoder_root='/report/report/host',
+        register=False
+    )
     register_transcoders(harness)
-    harness.add_event_source('/some/source/')
-    harness.set_event_source('/some/source/')
     return harness
 
 
 def test_open_port_detection(harness):
     harness.process_xml(
         'open-ports.xml',
-        transcoder_root='/report/report/host',
         element_root='detail/source/name[text() = "1.3.6.1.4.1.25623.1.0.900239"]/../../..'
     )
 
@@ -36,7 +38,6 @@ def test_open_port_detection(harness):
 def test_open_port_detection_ipv6(harness):
     harness.process_xml(
         'open-ports-ipv6.xml',
-        transcoder_root='/report/report/host',
         element_root='detail/source/name[text() = "1.3.6.1.4.1.25623.1.0.900239"]/../../..'
     )
 
