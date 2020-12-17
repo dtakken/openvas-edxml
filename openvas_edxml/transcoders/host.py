@@ -703,11 +703,11 @@ class OpenVasHostTranscoder(XmlTranscoder):
                 .because('an SSL certificate issued by [[cert.issuer.dn]] contains [[cert.issuer.domain]]')
             event_type['cert.issuer.dn'].relate_intra('has', 'cert.issuer.cn')\
                 .because('an SSL certificate issued by [[cert.issuer.dn]] contains [[cert.issuer.cn]]')
-            event_type['cert.issuer.dn'].relate_intra('located in', 'cert.issuer.country')\
+            event_type['cert.issuer.dn'].relate_intra('is located in', 'cert.issuer.country')\
                 .because('an SSL certificate issued by [[cert.issuer.dn]] contains [[cert.issuer.country]]')
-            event_type['cert.issuer.dn'].relate_intra('located in', 'cert.issuer.province')\
+            event_type['cert.issuer.dn'].relate_intra('is located in', 'cert.issuer.province')\
                 .because('an SSL certificate issued by [[cert.issuer.dn]] contains [[cert.issuer.province]]')
-            event_type['cert.issuer.dn'].relate_intra('located in', 'cert.issuer.locality')\
+            event_type['cert.issuer.dn'].relate_intra('is located in', 'cert.issuer.locality')\
                 .because('an SSL certificate issued by [[cert.issuer.dn]] contains [[cert.issuer.locality]]')
             event_type['cert.issuer.dn'].relate_intra('has', 'cert.issuer.organization')\
                 .because('an SSL certificate issued by [[cert.issuer.dn]] contains [[cert.issuer.organization]]')
@@ -723,11 +723,11 @@ class OpenVasHostTranscoder(XmlTranscoder):
                 .because('an SSL certificate issued for [[cert.subject.dn]] contains [[cert.subject.domain-wildcard]]')
             event_type['cert.subject.dn'].relate_intra('has', 'cert.subject.cn')\
                 .because('an SSL certificate issued for [[cert.subject.dn]] contains [[cert.subject.cn]]')
-            event_type['cert.subject.dn'].relate_intra('located in', 'cert.subject.country')\
+            event_type['cert.subject.dn'].relate_intra('is located in', 'cert.subject.country')\
                 .because('an SSL certificate issued for [[cert.subject.dn]] contains [[cert.subject.country]]')
-            event_type['cert.subject.dn'].relate_intra('located in', 'cert.subject.province')\
+            event_type['cert.subject.dn'].relate_intra('is located in', 'cert.subject.province')\
                 .because('an SSL certificate issued for [[cert.subject.dn]] contains [[cert.subject.province]]')
-            event_type['cert.subject.dn'].relate_intra('located in', 'cert.subject.locality')\
+            event_type['cert.subject.dn'].relate_intra('is located in', 'cert.subject.locality')\
                 .because('an SSL certificate issued for [[cert.subject.dn]] contains [[cert.subject.locality]]')
             event_type['cert.subject.dn'].relate_intra('has', 'cert.subject.organization').\
                 because('an SSL certificate issued for [[cert.subject.dn]] contains [[cert.subject.organization]]')
