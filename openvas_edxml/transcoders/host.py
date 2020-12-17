@@ -190,6 +190,23 @@ class OpenVasHostTranscoder(XmlTranscoder):
         },
     }
 
+    TYPE_UNIVERSALS_NAMES = {
+        'org.openvas.scan.ssl-certificate': {
+            'cert.issuer.dn': 'cert.issuer.organization',
+        },
+    }
+
+    TYPE_UNIVERSALS_CONTAINERS = {
+        'org.openvas.scan.ssl-certificate': {
+            'cert.issuer.unit': 'cert.issuer.organization',
+            'cert.subject.unit': 'cert.subject.organization',
+            'cert.issuer.province': 'cert.issuer.country',
+            'cert.issuer.locality': 'cert.issuer.province',
+            'cert.subject.province': 'cert.subject.country',
+            'cert.subject.locality': 'cert.subject.province',
+        },
+    }
+
     TYPE_PROPERTY_POST_PROCESSORS = {
         'org.openvas.scan.nvt': {'host.ipv4': post_process_ip, 'host.ipv6': post_process_ip},
         'org.openvas.scan.application-detection': {'host.ipv4': post_process_ip, 'host.ipv6': post_process_ip},

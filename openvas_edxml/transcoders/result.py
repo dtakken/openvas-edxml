@@ -165,6 +165,18 @@ class OpenVasResultTranscoder(XmlTranscoder):
         }
     }
 
+    TYPE_UNIVERSALS_NAMES = {
+        'org.openvas.scan.result': {
+            'nvt.oid': 'nvt.name'
+        }
+    }
+
+    TYPE_UNIVERSALS_CONTAINERS = {
+        'org.openvas.scan.result': {
+            'nvt.name': 'nvt.family'
+        }
+    }
+
     TYPE_OPTIONAL_PROPERTIES = {
         'org.openvas.scan.result': [
             'host.ipv4', 'host.ipv6', 'port', 'xref', 'cvss.base', 'cvss.score', 'cve', 'bid',

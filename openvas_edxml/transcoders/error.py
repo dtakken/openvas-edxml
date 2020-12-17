@@ -54,6 +54,12 @@ class OpenVasErrorTranscoder(XmlTranscoder):
         }
     }
 
+    TYPE_UNIVERSALS_NAMES = {
+        'org.openvas.scan.error': {
+            'nvt.oid': 'nvt.name'
+        }
+    }
+
     TYPE_PROPERTY_CONCEPTS = {
         'org.openvas.scan.error': {
             'host.ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
