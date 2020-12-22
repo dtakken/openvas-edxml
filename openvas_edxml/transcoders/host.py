@@ -154,10 +154,10 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'host.name': NetworkBrick.OBJECT_HOST_NAME,
             'cert.valid.from': GenericBrick.OBJECT_DATETIME,
             'cert.valid.until': GenericBrick.OBJECT_DATETIME,
-            'cert.fingerprint': CryptoBrick.OBJECT_SSL_CERTIFICATE_FINGERPRINT_SHA1,
+            'cert.fingerprint': CryptoBrick.OBJECT_CERTIFICATE_FINGERPRINT_SHA1,
             'cert.issuer.domain': NetworkBrick.OBJECT_HOST_NAME,
-            'cert.issuer.dn': CryptoBrick.OBJECT_SSL_CERTIFICATE_DN,
-            'cert.issuer.cn': CryptoBrick.OBJECT_SSL_CERTIFICATE_CN,
+            'cert.issuer.dn': CryptoBrick.OBJECT_CERTIFICATE_DN,
+            'cert.issuer.cn': CryptoBrick.OBJECT_CERTIFICATE_CN,
             'cert.issuer.country': GeoBrick.OBJECT_COUNTRYCODE_ALPHA2,
             'cert.issuer.province': GeoBrick.OBJECT_REGION,
             'cert.issuer.locality': GeoBrick.OBJECT_CITY,
@@ -166,8 +166,8 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'cert.issuer.email': EmailBrick.OBJECT_EMAIL_ADDRESS,
             'cert.subject.domain': NetworkBrick.OBJECT_HOST_NAME,
             'cert.subject.domain-wildcard': NetworkBrick.OBJECT_HOST_NAME_WILDCARD,
-            'cert.subject.dn': CryptoBrick.OBJECT_SSL_CERTIFICATE_DN,
-            'cert.subject.cn': CryptoBrick.OBJECT_SSL_CERTIFICATE_CN,
+            'cert.subject.dn': CryptoBrick.OBJECT_CERTIFICATE_DN,
+            'cert.subject.cn': CryptoBrick.OBJECT_CERTIFICATE_CN,
             'cert.subject.country': GeoBrick.OBJECT_COUNTRYCODE_ALPHA2,
             'cert.subject.province': GeoBrick.OBJECT_REGION,
             'cert.subject.locality': GeoBrick.OBJECT_CITY,
@@ -416,10 +416,10 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'host.ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
             'host.ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8},
 
-            'host.name': {SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE: 8, ComputingBrick.CONCEPT_COMPUTER: 8},
-            'cert.valid.from': {SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE: 1},
-            'cert.valid.until': {SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE: 1},
-            'cert.fingerprint': {SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE: 10},
+            'host.name': {CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: 8, ComputingBrick.CONCEPT_COMPUTER: 8},
+            'cert.valid.from': {CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: 1},
+            'cert.valid.until': {CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: 1},
+            'cert.fingerprint': {CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: 10},
 
             'cert.issuer.domain': {GenericBrick.CONCEPT_ORGANIZATION: 7},
             'cert.issuer.dn': {GenericBrick.CONCEPT_ORGANIZATION: 8},
@@ -505,10 +505,10 @@ class OpenVasHostTranscoder(XmlTranscoder):
         },
         'org.openvas.scan.ssl-certificate': {
             'cert.valid.from': {
-                SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE: ['datetime:cert.valid.from', 'valid from timestamp']
+                CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: ['datetime:cert.valid.from', 'valid from timestamp']
             },
             'cert.valid.until': {
-                SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE: ['datetime:cert.valid.until', 'valid until timestamp']
+                CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: ['datetime:cert.valid.until', 'valid until timestamp']
             }
         },
         'org.openvas.scan.application-detection': {
@@ -756,7 +756,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
                 .because(
                 'OpenVAS found an SSL certificate having [[cert.fingerprint]] which contains [[cert.valid.until]]')
             event_type['cert.fingerprint'].relate_intra(
-                'protects', 'host.name', target_concept_name=SecurityBrick.CONCEPT_PUBKEY_CERTIFICATE
+                'protects', 'host.name', target_concept_name=CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE
             ).because(
                 'OpenVAS found an SSL certificate having [[cert.fingerprint]] which protects [[host.name]]'
             )
