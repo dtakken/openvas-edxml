@@ -40,10 +40,10 @@ class OpenVasReportTranscoder(XmlTranscoder):
 
     TYPE_STORIES = {
         'org.openvas.scan':
-            'On [[DATETIME:time-start,minute]] an OpenVAS vulnerability scan{ ([[name]])} was initiated, targeting '
-            '[[host-count]] hosts. The scan was completed in [[DURATION:time-start,time-end]] yielding [[vuln-count]] '
+            'On [[date_time:time-start,minute]] an OpenVAS vulnerability scan{ ([[name]])} was initiated, targeting '
+            '[[host-count]] hosts. The scan was completed in [[duration:time-start,time-end]] yielding [[vuln-count]] '
             'findings{ and was assigned UUID [[id]]}.{ The IP addresses of the scan targets are '
-            '[[MERGE:host.ipv4,host.ipv6]].}'
+            '[[merge:host.ipv4,host.ipv6]].}'
     }
 
     TYPE_PROPERTIES = {
