@@ -427,7 +427,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'cert.fingerprint': {CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: 10},
 
             'cert.issuer.domain': {GenericBrick.CONCEPT_ORGANIZATION: 7},
-            'cert.issuer.dn': {GenericBrick.CONCEPT_ORGANIZATION: 8},
+            'cert.issuer.dn': {GenericBrick.CONCEPT_ORGANIZATION: 9},
             'cert.issuer.cn': {GenericBrick.CONCEPT_ORGANIZATION: 6},
             'cert.issuer.country': {GenericBrick.CONCEPT_ORGANIZATION: 1},
             'cert.issuer.province': {GenericBrick.CONCEPT_ORGANIZATION: 1},
