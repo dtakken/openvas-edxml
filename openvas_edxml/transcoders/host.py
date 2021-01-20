@@ -511,17 +511,17 @@ class OpenVasHostTranscoder(XmlTranscoder):
         },
         'org.openvas.scan.ssl-certificate': {
             'cert.valid.from': {
-                CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: ['datetime:cert.valid.from', 'valid from timestamp']
+                CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: ['datetime:cert.valid.from', '"valid from" timestamp']
             },
             'cert.valid.until': {
-                CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: ['datetime:cert.valid.until', 'valid until timestamp']
+                CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: ['datetime:cert.valid.until', '"valid until" timestamp']
             }
         },
         'org.openvas.scan.application-detection': {
-            'port': {ComputingBrick.CONCEPT_COMPUTER: ['computing.networking.host.port:open', 'open port']}
+            'port': {ComputingBrick.CONCEPT_COMPUTER: ['computing.networking.host.port:open', 'open TCP/IP port']}
         },
         'org.openvas.scan.open-ports': {
-            'port': {ComputingBrick.CONCEPT_COMPUTER: ['computing.networking.host.port:open', 'open port']}
+            'port': {ComputingBrick.CONCEPT_COMPUTER: ['computing.networking.host.port:open', 'open TCP/IP port']}
         },
     }
 
