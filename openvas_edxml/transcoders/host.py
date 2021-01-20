@@ -332,7 +332,9 @@ class OpenVasHostTranscoder(XmlTranscoder):
         'org.openvas.scan.application-detection': ['port', 'host.ipv4', 'host.ipv6'],
         'org.openvas.scan.os-detection': ['host.ipv4', 'host.ipv6'],
         'org.openvas.scan.ssl-certificate': [
-            'host.ipv4', 'host.ipv6', 'cert.issuer.domain', 'cert.subject.domain', 'cert.subject.country', 'cert.issuer.country'
+            'host.ipv4', 'host.ipv6',
+            'cert.issuer.domain', 'cert.subject.domain',
+            'cert.subject.country', 'cert.issuer.country'
         ],
         'org.openvas.scan.open-ports': ['host.ipv4', 'host.ipv6'],
     }
@@ -742,11 +744,9 @@ class OpenVasHostTranscoder(XmlTranscoder):
                 .because('OpenVAS found an SSL certificate on [[host.ipv6]] having [[cert.fingerprint]]')
 
             # Relate certificate cert.fingerprint to other certificate attributes
-            event_type['cert.fingerprint'].relate_intra('is valid from', 'cert.valid.from')\
-                .because(
+            event_type['cert.fingerprint'].relate_intra('is valid from', 'cert.valid.from').because(
                 'OpenVAS found an SSL certificate having [[cert.fingerprint]] which contains [[cert.valid.from]]')
-            event_type['cert.fingerprint'].relate_intra('is valid until', 'cert.valid.until')\
-                .because(
+            event_type['cert.fingerprint'].relate_intra('is valid until', 'cert.valid.until').because(
                 'OpenVAS found an SSL certificate having [[cert.fingerprint]] which contains [[cert.valid.until]]')
             event_type['cert.fingerprint'].relate_intra(
                 'protects', 'cert.subject.domain', target_concept_name=CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE).because(
