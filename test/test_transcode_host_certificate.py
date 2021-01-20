@@ -61,7 +61,6 @@ def test_nist_pkits_host_certificate(harness):
     assert cert_b['cert.subject.locality'] == {'Austin'}
     assert cert_b['cert.subject.domain'] == {'langui.sh', 'saseliminator.com'}
     assert cert_b['cert.subject.domain-wildcard'] == {'*.langui.sh', '*.saseliminator.com'}
-    assert cert_b['host.name'] == {'langui.sh', 'saseliminator.com'}
 
 
 def test_nist_pkits_host_certificate_ipv6(harness):

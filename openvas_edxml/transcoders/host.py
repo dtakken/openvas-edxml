@@ -151,7 +151,6 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'scan-id': ComputingBrick.OBJECT_UUID,
             'host.ipv4': NetworkBrick.OBJECT_HOST_IPV4,
             'host.ipv6': NetworkBrick.OBJECT_HOST_IPV6,
-            'host.name': NetworkBrick.OBJECT_HOST_NAME,
             'cert.valid.from': GenericBrick.OBJECT_DATETIME,
             'cert.valid.until': GenericBrick.OBJECT_DATETIME,
             'cert.fingerprint': CryptoBrick.OBJECT_CERTIFICATE_FINGERPRINT_SHA1,
@@ -306,7 +305,10 @@ class OpenVasHostTranscoder(XmlTranscoder):
         'org.openvas.scan.nvt': ['nvt.oid'],
         'org.openvas.scan.routers': ['router.ipv4', 'router.ipv6'],
         'org.openvas.scan.application-detection': ['port', 'application'],
-        'org.openvas.scan.ssl-certificate': ['host.name', 'cert.subject.domain', 'cert.subject.domain-wildcard', 'cert.issuer.cn', 'cert.subject.cn', 'cert.subject.unit'],
+        'org.openvas.scan.ssl-certificate': [
+            'cert.subject.domain', 'cert.subject.domain-wildcard', 'cert.issuer.cn',
+            'cert.subject.cn', 'cert.subject.unit'
+        ],
         'org.openvas.scan.open-ports': ['port']
     }
 
@@ -316,8 +318,10 @@ class OpenVasHostTranscoder(XmlTranscoder):
         'org.openvas.scan.application-detection': ['host.ipv4', 'host.ipv6'],
         'org.openvas.scan.os-detection': ['host.ipv4', 'host.ipv6'],
         'org.openvas.scan.ssl-certificate': [
-            'host.ipv4', 'host.ipv6', 'cert.valid.from', 'cert.valid.until', 'cert.issuer.country', 'cert.subject.country',
-            'host.name', 'cert.issuer.domain', 'cert.subject.domain'
+            'host.ipv4', 'host.ipv6',
+            'cert.valid.from', 'cert.valid.until',
+            'cert.issuer.country', 'cert.subject.country',
+            'cert.issuer.domain', 'cert.subject.domain'
         ],
         'org.openvas.scan.open-ports': ['host.ipv4', 'host.ipv6'],
     }
@@ -416,7 +420,6 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'host.ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
             'host.ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8},
 
-            'host.name': {CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: 8, ComputingBrick.CONCEPT_COMPUTER: 8},
             'cert.valid.from': {CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: 1},
             'cert.valid.until': {CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: 1},
             'cert.fingerprint': {CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: 10},
@@ -430,10 +433,11 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'cert.issuer.organization': {GenericBrick.CONCEPT_ORGANIZATION: 9},
             'cert.issuer.unit': {GenericBrick.CONCEPT_ORGANIZATION: 2},
             'cert.issuer.email': {GenericBrick.CONCEPT_ORGANIZATION: 9},
-            'cert.subject.domain': {GenericBrick.CONCEPT_ORGANIZATION: 7},
-            'cert.subject.domain-wildcard': {GenericBrick.CONCEPT_ORGANIZATION: 7},
-            'cert.subject.dn': {GenericBrick.CONCEPT_ORGANIZATION: 8},
-            'cert.subject.cn': {GenericBrick.CONCEPT_ORGANIZATION: 6},
+
+            'cert.subject.domain': {CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: 8, ComputingBrick.CONCEPT_COMPUTER: 8},
+            'cert.subject.domain-wildcard': {ComputingBrick.CONCEPT_COMPUTER: 1},
+            'cert.subject.dn': {CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: 9},
+            'cert.subject.cn': {CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: 6},
             'cert.subject.country': {GenericBrick.CONCEPT_ORGANIZATION: 1},
             'cert.subject.province': {GenericBrick.CONCEPT_ORGANIZATION: 1},
             'cert.subject.locality': {GenericBrick.CONCEPT_ORGANIZATION: 1},
@@ -480,7 +484,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
         },
         'org.openvas.scan.ssl-certificate': {
             # Computer:
-            'host.name': {ComputingBrick.CONCEPT_COMPUTER: 192},
+            'cert.subject.domain': {ComputingBrick.CONCEPT_COMPUTER: 192},
             'host.ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
             'host.ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
             'cert.fingerprint': {ComputingBrick.CONCEPT_COMPUTER: 0},
@@ -659,15 +663,6 @@ class OpenVasHostTranscoder(XmlTranscoder):
                     event[f"cert.{issuer_subject}.domain"].remove(domain)
                     event[f"cert.{issuer_subject}.domain-wildcard"].add(domain)
 
-        # Below we copy some of the subject domains into a separate
-        # property. This property has different semantics: It contains
-        # possible names of the host on which the certificate is installed.
-        # As such, we use the property values as identifiers for computers.
-        for domain in event['cert.subject.domain']:
-            # Subject is not a wildcard domain, copy it to the host names that
-            # are protected by the certificate.
-            event['host.name'].add(domain)
-
     @classmethod
     def create_event_type(cls, event_type_name, ontology):
 
@@ -716,33 +711,31 @@ class OpenVasHostTranscoder(XmlTranscoder):
             event_type['cert.issuer.dn'].relate_intra('reachable at', 'cert.issuer.email')\
                 .because('an SSL certificate issued by [[cert.issuer.dn]] contains [[cert.issuer.email]]')
 
-            # Relate subject DN to other attributes of the organization that the certificate was issued for
-            event_type['cert.subject.dn'].relate_intra('has', 'cert.subject.domain')\
-                .because('an SSL certificate issued for [[cert.subject.dn]] contains [[cert.subject.domain]]')
-            event_type['cert.subject.dn'].relate_intra('has', 'cert.subject.domain-wildcard')\
-                .because('an SSL certificate issued for [[cert.subject.dn]] contains [[cert.subject.domain-wildcard]]')
-            event_type['cert.subject.dn'].relate_intra('has', 'cert.subject.cn')\
-                .because('an SSL certificate issued for [[cert.subject.dn]] contains [[cert.subject.cn]]')
-            event_type['cert.subject.dn'].relate_intra('is located in', 'cert.subject.country')\
-                .because('an SSL certificate issued for [[cert.subject.dn]] contains [[cert.subject.country]]')
-            event_type['cert.subject.dn'].relate_intra('is located in', 'cert.subject.province')\
-                .because('an SSL certificate issued for [[cert.subject.dn]] contains [[cert.subject.province]]')
-            event_type['cert.subject.dn'].relate_intra('is located in', 'cert.subject.locality')\
-                .because('an SSL certificate issued for [[cert.subject.dn]] contains [[cert.subject.locality]]')
-            event_type['cert.subject.dn'].relate_intra('has', 'cert.subject.organization').\
-                because('an SSL certificate issued for [[cert.subject.dn]] contains [[cert.subject.organization]]')
-            event_type['cert.subject.dn'].relate_intra('comprises', 'cert.subject.unit')\
-                .because('an SSL certificate issued for [[cert.subject.dn]] contains [[cert.subject.unit]]')
-            event_type['cert.subject.dn'].relate_intra('reachable at', 'cert.subject.email')\
-                .because('an SSL certificate issued for [[cert.subject.dn]] contains [[cert.subject.email]]')
+            # Relate subject organization name to other attributes of the organization
+            event_type['cert.subject.organization'].relate_intra('is located in', 'cert.subject.country')\
+                .because('an SSL certificate issued for [[cert.subject.organization]] mentions '
+                         '[[cert.subject.country]] in its subject information')
+            event_type['cert.subject.organization'].relate_intra('is located in', 'cert.subject.province')\
+                .because('an SSL certificate issued for [[cert.subject.organization]] mentions '
+                         '[[cert.subject.province]] in its subject information')
+            event_type['cert.subject.organization'].relate_intra('is located in', 'cert.subject.locality')\
+                .because('an SSL certificate issued for [[cert.subject.organization]] mentions '
+                         '[[cert.subject.locality]] in its subject information')
+            event_type['cert.subject.organization'].relate_intra('comprises', 'cert.subject.unit')\
+                .because('an SSL certificate issued for [[cert.subject.organization]] mentions '
+                         '[[cert.subject.unit]] in its subject information')
+            event_type['cert.subject.organization'].relate_intra('reachable at', 'cert.subject.email')\
+                .because('an SSL certificate issued for [[cert.subject.organization]] mentions '
+                         '[[cert.subject.email]] in its subject information')
 
-            # Relate certificates to issuer organization
+            # Relate certificates to issuer and subject organizations
             event_type['cert.fingerprint'].relate_inter('issued by', 'cert.issuer.dn')\
                 .because('OpenVAS found an SSL certificate issued by [[cert.issuer.dn]] having [[cert.fingerprint]]')
-            event_type['cert.fingerprint'].relate_inter('issued for', 'cert.subject.dn')\
-                .because('OpenVAS found an SSL certificate issued for [[cert.subject.dn]] having [[cert.fingerprint]]')
+            event_type['cert.fingerprint'].relate_inter('issued for', 'cert.subject.organization')\
+                .because('OpenVAS found an SSL certificate issued for [[cert.subject.organization]] '
+                         'having [[cert.fingerprint]]')
 
-            # Relate certificates to subject organization
+            # Relate certificates to the host it is found on.
             event_type['cert.fingerprint'].relate_inter('protects', 'host.ipv4')\
                 .because('OpenVAS found an SSL certificate on [[host.ipv4]] having [[cert.fingerprint]]')
             event_type['cert.fingerprint'].relate_inter('protects', 'host.ipv6')\
@@ -756,27 +749,29 @@ class OpenVasHostTranscoder(XmlTranscoder):
                 .because(
                 'OpenVAS found an SSL certificate having [[cert.fingerprint]] which contains [[cert.valid.until]]')
             event_type['cert.fingerprint'].relate_intra(
-                'protects', 'host.name', target_concept_name=CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE
-            ).because(
-                'OpenVAS found an SSL certificate having [[cert.fingerprint]] which protects [[host.name]]'
+                'protects', 'cert.subject.domain', target_concept_name=CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE).because(
+                'OpenVAS found an SSL certificate having [[cert.fingerprint]] '
+                'which was issued for [[cert.subject.domain]]'
             )
-
-            # Relate certificate host names to computers
-            event_type['cert.fingerprint'].relate_inter(
-                'protects', 'host.name', target_concept_name=ComputingBrick.CONCEPT_COMPUTER
-            ).because(
-                'OpenVAS found an SSL certificate having [[cert.fingerprint]] which protects [[host.name]]'
+            event_type['cert.fingerprint'].relate_intra(
+                'protects', 'cert.subject.domain-wildcard').because(
+                'OpenVAS found an SSL certificate having [[cert.fingerprint]] '
+                'which was issued for [[cert.subject.domain-wildcard]]'
             )
+            event_type['cert.fingerprint'].relate_intra('protects', 'cert.subject.dn').because(
+                'OpenVAS found an SSL certificate having [[cert.fingerprint]] which is issued for [[cert.subject.dn]]')
+            event_type['cert.fingerprint'].relate_intra('protects', 'cert.subject.cn').because(
+                'OpenVAS found an SSL certificate having [[cert.fingerprint]] which is issued for [[cert.subject.cn]]')
 
             # Relate the subject host name to the IP address of the computer. Note that this relation
             # does not guarantee that the host actually has that host name. The same certificate may
             # be used on multiple machines, each having a different host name. The reduced confidence
             # reflects that.
-            event_type['host.name'].relate_intra(
+            event_type['cert.subject.domain'].relate_intra(
                 'is associated with', 'host.ipv4', confidence=7, source_concept_name=ComputingBrick.CONCEPT_COMPUTER
-            ).because('OpenVAS found an SSL certificate on host [[host.ipv4]] containing [[host.name]]')
-            event_type['host.name'].relate_intra(
+            ).because('OpenVAS found an SSL certificate issued for [[cert.subject.domain]] on host [[host.ipv4]]')
+            event_type['cert.subject.domain'].relate_intra(
                 'is associated with', 'host.ipv6', confidence=7, source_concept_name=ComputingBrick.CONCEPT_COMPUTER
-            ).because('OpenVAS found an SSL certificate on host [[host.ipv6]] containing [[host.name]]')
+            ).because('OpenVAS found an SSL certificate issued for [[cert.subject.domain]] on host [[host.ipv6]]')
 
         return event_type
