@@ -51,7 +51,7 @@ def test_nist_pkits_host_certificate(harness):
     assert cert_a['cert.issuer.organization'] == {'Test Certificates 2011'}
     assert cert_a['cert.subject.organization'] == {'Test Certificates 2011'}
 
-    assert cert_a.get_attachments()['certificate'].startswith('MIIDfDCCAm')
+    assert cert_a.attachments['certificate']['certificate'].startswith('MIIDfDCCAm')
 
     assert cert_b['scan-id'] == {'fb167629-3bdf-4ab1-ae7d-c64a0d7ad595'}
     assert cert_b['host.ipv4'] == {'10.0.0.1'}

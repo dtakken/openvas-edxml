@@ -47,11 +47,12 @@ def test_result(harness):
     assert result['cve'] == {'CVE-2014-3566', 'CVE-2016-0800'}
     assert result['bid'] == {'9506', '9561'}
 
-    assert result.get_attachments()['description'] == 'Test description'
-    assert result.get_attachments()['solution'] == 'Test solution  '
-    assert result.get_attachments()['affected'] == '  Test affected '
-    assert result.get_attachments()['summary'] == 'Test summary  '
-    assert result.get_attachments()['input-xml-element'].startswith('<result id="d37be786-a052-433e-9ecf-28babfaea2ac"')
+    assert result.attachments['description'] == {'description': 'Test description'}
+    assert result.attachments['solution'] == {'solution': 'Test solution  '}
+    assert result.attachments['affected'] == {'affected': '  Test affected '}
+    assert result.attachments['summary'] == {'summary': 'Test summary  '}
+    assert result.attachments['input-xml-element']['input-xml-element'].startswith(
+        '<result id="d37be786-a052-433e-9ecf-28babfaea2ac"')
 
     nvt = harness.events.filter_type('org.openvas.scan.nvt')[0]
 

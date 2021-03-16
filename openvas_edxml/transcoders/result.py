@@ -364,27 +364,24 @@ class OpenVasResultTranscoder(XmlTranscoder):
         # We store the original OpenVAS XML element, allowing
         # us to re-process it using future transcoder versions even
         # when the original data is no longer available.
-        attachments = {
-            'input-xml-element': etree.tostring(input_element).decode('utf-8')
-        }
+        event.attachments['input-xml-element']['input-xml-element'] = etree.tostring(input_element).decode('utf-8')
+
         # The description field may contain fairy long descriptions
         # of what has been found. We store it as event attachment.
         if event.get_any('attachment-description'):
-            attachments['description'] = event.get_any('attachment-description')
+            event.attachments['description']['description'] = event.get_any('attachment-description')
 
         # Some result fields like the description of affected systems and
         # proposed solution can be multi-line texts containing formatting
         # like itemized lists. We store these as attachments as well.
         if event.get_any('attachment-affected'):
-            attachments['affected'] = event.get_any('attachment-affected')
+            event.attachments['affected']['affected'] = event.get_any('attachment-affected')
 
         if event.get_any('attachment-solution'):
-            attachments['solution'] = event.get_any('attachment-solution')
+            event.attachments['solution']['solution'] = event.get_any('attachment-solution')
 
         if event.get_any('attachment-summary'):
-            attachments['summary'] = event.get_any('attachment-summary')
-
-        event.set_attachments(attachments)
+            event.attachments['summary']['summary'] = event.get_any('attachment-summary')
 
         del event['attachment-description']
         del event['attachment-affected']

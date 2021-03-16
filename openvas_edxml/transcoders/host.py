@@ -613,7 +613,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
         # The SSL certificates stored in OpenVAS reports are DER encoded, then base64 encoded.
         cert = x509.load_der_x509_certificate(base64.decodebytes(certificate.encode('utf-8')), default_backend())
 
-        event.set_attachments({'certificate': certificate.strip()})
+        event.attachments['certificate']['certificate'] = certificate.strip()
 
         event['cert.valid.from'] = cert.not_valid_before
         event['cert.valid.until'] = cert.not_valid_after
