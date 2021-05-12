@@ -453,8 +453,8 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'port': {ComputingBrick.CONCEPT_COMPUTER: 0}
         },
         'org.openvas.scan.routers': {
-            'scanner.ipv4': {SecurityBrick.CONCEPT_VULN_SCANNER: 8},
-            'scanner.ipv6': {SecurityBrick.CONCEPT_VULN_SCANNER: 8},
+            'scanner.ipv4': {SecurityBrick.CONCEPT_VULNERABILITY_SCANNER: 8},
+            'scanner.ipv6': {SecurityBrick.CONCEPT_VULNERABILITY_SCANNER: 8},
             'router.ipv4': {NetworkingBrick.CONCEPT_NETWORK_ROUTER: 8},
             'router.ipv6': {NetworkingBrick.CONCEPT_NETWORK_ROUTER: 8}
         },
