@@ -21,7 +21,7 @@ class OpenVASBrick(Brick):
     OBJECT_INSIGHT = 'org.openvas.result.insight'
     OBJECT_SOLUTION_TYPE = 'org.openvas.result.solution-type'
 
-    CONCEPT_FINDING = 'openvas.finding'
+    CONCEPT_FINDING = 'entity.abstraction.psychological-feature.event.act.discovery.finding.openvas-finding'
 
     # Known possible values of the QoD (Quality of Detection)
     # of an OpenVAS result.
