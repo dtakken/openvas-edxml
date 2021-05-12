@@ -20,9 +20,7 @@ class OpenVASBrick(Brick):
     OBJECT_IMPACT = 'org.openvas.result.impact'
     OBJECT_INSIGHT = 'org.openvas.result.insight'
     OBJECT_SOLUTION_TYPE = 'org.openvas.result.solution-type'
-    OBJECT_XREF = 'org.openvas.result.xref'
 
-    CONCEPT_VULNERABILITY = 'threat.vulnerability'
     CONCEPT_FINDING = 'openvas.finding'
 
     # Known possible values of the QoD (Quality of Detection)
@@ -101,23 +99,12 @@ class OpenVASBrick(Brick):
             .set_data_type(DataType.string(255))\
             .set_display_name('solution type')
 
-        yield target_ontology.create_object_type(cls.OBJECT_XREF) \
-            .set_description('URL to reference material about an issue detected by OpenVAS')\
-            .set_data_type(DataType.uri())\
-            .set_display_name('cross reference')
-
     @classmethod
     def generate_concepts(cls, target_ontology):
 
         yield target_ontology.create_concept(cls.CONCEPT_FINDING) \
             .set_display_name('OpenVAS finding') \
             .set_description('OpenVAS detection result')
-
-        # This is an extension of the 'threat' concept from
-        # the computer security brick.
-        yield target_ontology.create_concept(cls.CONCEPT_VULNERABILITY) \
-            .set_display_name('vulnerability', 'vulnerabilities') \
-            .set_description('security defect reducing a systems\'s information assurance')
 
 
 edxml.ontology.Ontology.register_brick(OpenVASBrick)

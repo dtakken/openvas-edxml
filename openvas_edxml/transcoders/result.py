@@ -12,6 +12,7 @@ from edxml.transcode.xml import XmlTranscoder
 from edxml_bricks.generic import GenericBrick
 from edxml_bricks.computing.generic import ComputingBrick
 from edxml_bricks.computing.networking.generic import NetworkBrick
+from edxml_bricks.computing.networking.http import HttpBrick
 from edxml_bricks.computing.security import SecurityBrick
 from openvas_edxml.transcoders import post_process_ip
 
@@ -157,7 +158,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
             'qod.type': OpenVASBrick.OBJECT_QOD_TYPE,
             'qod.value': OpenVASBrick.OBJECT_QOD_VALUE,
             'solution-type': OpenVASBrick.OBJECT_SOLUTION_TYPE,
-            'xref': OpenVASBrick.OBJECT_XREF,
+            'xref': HttpBrick.OBJECT_HTTP_URL,
             'cvss.base': SecurityBrick.OBJECT_CVSS_VECTOR,
             'cvss.score': SecurityBrick.OBJECT_CVSS_SCORE,
             'cve': SecurityBrick.OBJECT_CVE,
@@ -280,11 +281,11 @@ class OpenVasResultTranscoder(XmlTranscoder):
             # which include any of multiple CVE. OpenVAS does not tell us which CVE was
             # actually detected, so we cannot include the CVE in the computer concept as
             # a vulnerability of a particular computer.
-            'cve': {OpenVASBrick.CONCEPT_VULNERABILITY: 9},
-            'bid': {OpenVASBrick.CONCEPT_VULNERABILITY: 9},
-            'vulnerability-severity': {OpenVASBrick.CONCEPT_VULNERABILITY: 0},
-            'cvss.base': {OpenVASBrick.CONCEPT_VULNERABILITY: 0},
-            'cvss.score': {OpenVASBrick.CONCEPT_VULNERABILITY: 0},
+            'cve': {SecurityBrick.CONCEPT_VULNERABILITY: 9},
+            'bid': {SecurityBrick.CONCEPT_VULNERABILITY: 9},
+            'vulnerability-severity': {SecurityBrick.CONCEPT_VULNERABILITY: 0},
+            'cvss.base': {SecurityBrick.CONCEPT_VULNERABILITY: 0},
+            'cvss.score': {SecurityBrick.CONCEPT_VULNERABILITY: 0},
         }
     }
 
