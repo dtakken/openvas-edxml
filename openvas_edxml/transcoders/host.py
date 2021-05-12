@@ -139,13 +139,13 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'host.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
             'host.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
             'port': NetworkingBrick.OBJECT_HOST_PORT,
-            'application': SecurityBrick.OBJECT_CPE_URI,
+            'application': ComputingBrick.OBJECT_CPE_URI,
         },
         'org.openvas.scan.os-detection': {
             'scan-id': ComputingBrick.OBJECT_UUID,
             'host.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
             'host.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
-            'os': SecurityBrick.OBJECT_CPE_URI,
+            'os': ComputingBrick.OBJECT_CPE_URI,
         },
         'org.openvas.scan.ssl-certificate': {
             'scan-id': ComputingBrick.OBJECT_UUID,
