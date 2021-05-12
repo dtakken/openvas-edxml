@@ -52,8 +52,8 @@ class OpenVasReportTranscoder(XmlTranscoder):
             'name': OpenVASBrick.OBJECT_SCAN_NAME,
             'host.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
             'host.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
-            'host-count': GenericBrick.OBJECT_COUNT_LARGE,
-            'vuln-count': GenericBrick.OBJECT_COUNT_LARGE,
+            'host-count': GenericBrick.OBJECT_COUNT_BIG,
+            'vuln-count': GenericBrick.OBJECT_COUNT_BIG,
             'time-start': GenericBrick.OBJECT_DATETIME,
             'time-end': GenericBrick.OBJECT_DATETIME,
         }
