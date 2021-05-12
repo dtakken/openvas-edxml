@@ -618,8 +618,12 @@ class OpenVasHostTranscoder(XmlTranscoder):
         event['cert.valid.from'] = cert.not_valid_before
         event['cert.valid.until'] = cert.not_valid_after
         event['cert.fingerprint'] = codecs.encode(cert.fingerprint(hashes.SHA1()), 'hex').decode('utf-8')
-        event['cert.issuer.dn'] = cert.issuer.rfc4514_string()
-        event['cert.subject.dn'] = cert.subject.rfc4514_string()
+
+        # Below we sort the components of the distinguished names. We do that because the ordering
+        # of the components in the RFC 4514 string varies between Python runs. We want the DN strings
+        # to come out the same way each time.
+        event['cert.issuer.dn'] = ','.join(sorted(cert.issuer.rfc4514_string().split(',')))
+        event['cert.subject.dn'] = ','.join(sorted(cert.subject.rfc4514_string().split(',')))
 
         try:
             ext = cert.extensions.get_extension_for_oid(ExtensionOID.SUBJECT_ALTERNATIVE_NAME)

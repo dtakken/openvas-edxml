@@ -42,8 +42,8 @@ def test_nist_pkits_host_certificate(harness):
     assert cert_a['cert.valid.from'] == {'2010-01-01T08:30:00.000000Z'}
     assert cert_a['cert.valid.until'] == {'2030-12-31T08:30:00.000000Z'}
     assert cert_a['cert.fingerprint'] == {'6f49779533d565e8b7c1062503eab41492c38e4d'}
-    assert cert_a['cert.issuer.dn'] == {'C=US,O=Test Certificates 2011,CN=Trust Anchor'}
-    assert cert_a['cert.subject.dn'] == {'C=US,O=Test Certificates 2011,CN=Good CA'}
+    assert cert_a['cert.issuer.dn'] == {'C=US,CN=Trust Anchor,O=Test Certificates 2011'}
+    assert cert_a['cert.subject.dn'] == {'C=US,CN=Good CA,O=Test Certificates 2011'}
     assert cert_a['cert.issuer.cn'] == {'Trust Anchor'}
     assert cert_a['cert.subject.cn'] == {'Good CA'}
     assert cert_a['cert.issuer.country'] == {'US'}
