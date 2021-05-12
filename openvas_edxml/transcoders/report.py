@@ -7,7 +7,7 @@ from edxml.transcode.xml import XmlTranscoder
 
 from edxml_bricks.generic import GenericBrick
 from edxml_bricks.computing.generic import ComputingBrick
-from edxml_bricks.computing.networking.generic import NetworkBrick
+from edxml_bricks.computing.networking.generic import NetworkingBrick
 
 
 class OpenVasReportTranscoder(XmlTranscoder):
@@ -50,8 +50,8 @@ class OpenVasReportTranscoder(XmlTranscoder):
         'org.openvas.scan': {
             'id': ComputingBrick.OBJECT_UUID,
             'name': OpenVASBrick.OBJECT_SCAN_NAME,
-            'host.ipv4': NetworkBrick.OBJECT_HOST_IPV4,
-            'host.ipv6': NetworkBrick.OBJECT_HOST_IPV6,
+            'host.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
+            'host.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
             'host-count': GenericBrick.OBJECT_COUNT_LARGE,
             'vuln-count': GenericBrick.OBJECT_COUNT_LARGE,
             'time-start': GenericBrick.OBJECT_DATETIME,

@@ -11,7 +11,7 @@ from edxml.transcode.xml import XmlTranscoder
 
 from edxml_bricks.generic import GenericBrick
 from edxml_bricks.computing.generic import ComputingBrick
-from edxml_bricks.computing.networking.generic import NetworkBrick
+from edxml_bricks.computing.networking.generic import NetworkingBrick
 from edxml_bricks.computing.networking.http import HttpBrick
 from edxml_bricks.computing.security import SecurityBrick
 from openvas_edxml.transcoders import post_process_ip
@@ -144,9 +144,9 @@ class OpenVasResultTranscoder(XmlTranscoder):
             'id': ComputingBrick.OBJECT_UUID,
             'scan-id': ComputingBrick.OBJECT_UUID,
             'time': GenericBrick.OBJECT_DATETIME,
-            'host.ipv4': NetworkBrick.OBJECT_HOST_IPV4,
-            'host.ipv6': NetworkBrick.OBJECT_HOST_IPV6,
-            'port': NetworkBrick.OBJECT_HOST_PORT,
+            'host.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
+            'host.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
+            'port': NetworkingBrick.OBJECT_HOST_PORT,
             'nvt.name': OpenVASBrick.OBJECT_NVT_NAME,
             'nvt.family': OpenVASBrick.OBJECT_NVT_FAMILY,
             'nvt.oid': ComputingBrick.OBJECT_OID,

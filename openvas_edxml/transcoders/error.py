@@ -4,7 +4,7 @@ from openvas_edxml.brick import OpenVASBrick
 from edxml.transcode.xml import XmlTranscoder
 
 from edxml_bricks.computing.generic import ComputingBrick
-from edxml_bricks.computing.networking.generic import NetworkBrick
+from edxml_bricks.computing.networking.generic import NetworkingBrick
 from openvas_edxml.transcoders import post_process_ip
 
 
@@ -46,8 +46,8 @@ class OpenVasErrorTranscoder(XmlTranscoder):
     TYPE_PROPERTIES = {
         'org.openvas.scan.error': {
             'scan-id': ComputingBrick.OBJECT_UUID,
-            'host.ipv4': NetworkBrick.OBJECT_HOST_IPV4,
-            'host.ipv6': NetworkBrick.OBJECT_HOST_IPV6,
+            'host.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
+            'host.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
             'nvt.oid': ComputingBrick.OBJECT_OID,
             'nvt.name': OpenVASBrick.OBJECT_NVT_NAME,
             'message': OpenVASBrick.OBJECT_ERROR_MESSAGE,

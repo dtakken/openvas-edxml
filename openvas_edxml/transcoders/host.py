@@ -17,7 +17,7 @@ from edxml.ontology import EventProperty
 from edxml.transcode.xml import XmlTranscoder
 
 from edxml_bricks.computing.generic import ComputingBrick
-from edxml_bricks.computing.networking.generic import NetworkBrick
+from edxml_bricks.computing.networking.generic import NetworkingBrick
 from openvas_edxml.logger import log
 from openvas_edxml.transcoders import post_process_ip
 
@@ -130,31 +130,31 @@ class OpenVasHostTranscoder(XmlTranscoder):
     TYPE_PROPERTIES = {
         'org.openvas.scan.nvt': {
             'scan-id': ComputingBrick.OBJECT_UUID,
-            'host.ipv4': NetworkBrick.OBJECT_HOST_IPV4,
-            'host.ipv6': NetworkBrick.OBJECT_HOST_IPV6,
+            'host.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
+            'host.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
             'nvt.oid': ComputingBrick.OBJECT_OID,
         },
         'org.openvas.scan.application-detection': {
             'scan-id': ComputingBrick.OBJECT_UUID,
-            'host.ipv4': NetworkBrick.OBJECT_HOST_IPV4,
-            'host.ipv6': NetworkBrick.OBJECT_HOST_IPV6,
-            'port': NetworkBrick.OBJECT_HOST_PORT,
+            'host.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
+            'host.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
+            'port': NetworkingBrick.OBJECT_HOST_PORT,
             'application': SecurityBrick.OBJECT_CPE_URI,
         },
         'org.openvas.scan.os-detection': {
             'scan-id': ComputingBrick.OBJECT_UUID,
-            'host.ipv4': NetworkBrick.OBJECT_HOST_IPV4,
-            'host.ipv6': NetworkBrick.OBJECT_HOST_IPV6,
+            'host.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
+            'host.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
             'os': SecurityBrick.OBJECT_CPE_URI,
         },
         'org.openvas.scan.ssl-certificate': {
             'scan-id': ComputingBrick.OBJECT_UUID,
-            'host.ipv4': NetworkBrick.OBJECT_HOST_IPV4,
-            'host.ipv6': NetworkBrick.OBJECT_HOST_IPV6,
+            'host.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
+            'host.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
             'cert.valid.from': GenericBrick.OBJECT_DATETIME,
             'cert.valid.until': GenericBrick.OBJECT_DATETIME,
             'cert.fingerprint': CryptoBrick.OBJECT_CERTIFICATE_FINGERPRINT_SHA1,
-            'cert.issuer.domain': NetworkBrick.OBJECT_HOST_NAME,
+            'cert.issuer.domain': NetworkingBrick.OBJECT_HOST_NAME,
             'cert.issuer.dn': CryptoBrick.OBJECT_CERTIFICATE_DN,
             'cert.issuer.cn': CryptoBrick.OBJECT_CERTIFICATE_CN,
             'cert.issuer.country': GeoBrick.OBJECT_COUNTRYCODE_ALPHA2,
@@ -163,8 +163,8 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'cert.issuer.organization': GenericBrick.OBJECT_ORGANIZATION_NAME,
             'cert.issuer.unit': GenericBrick.OBJECT_ORGANIZATION_UNIT_NAME,
             'cert.issuer.email': EmailBrick.OBJECT_EMAIL_ADDRESS,
-            'cert.subject.domain': NetworkBrick.OBJECT_HOST_NAME,
-            'cert.subject.domain-wildcard': NetworkBrick.OBJECT_HOST_NAME_WILDCARD,
+            'cert.subject.domain': NetworkingBrick.OBJECT_HOST_NAME,
+            'cert.subject.domain-wildcard': NetworkingBrick.OBJECT_HOST_NAME_WILDCARD,
             'cert.subject.dn': CryptoBrick.OBJECT_CERTIFICATE_DN,
             'cert.subject.cn': CryptoBrick.OBJECT_CERTIFICATE_CN,
             'cert.subject.country': GeoBrick.OBJECT_COUNTRYCODE_ALPHA2,
@@ -176,16 +176,16 @@ class OpenVasHostTranscoder(XmlTranscoder):
         },
         'org.openvas.scan.open-ports': {
             'scan-id': ComputingBrick.OBJECT_UUID,
-            'host.ipv4': NetworkBrick.OBJECT_HOST_IPV4,
-            'host.ipv6': NetworkBrick.OBJECT_HOST_IPV6,
-            'port': NetworkBrick.OBJECT_HOST_PORT
+            'host.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
+            'host.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
+            'port': NetworkingBrick.OBJECT_HOST_PORT
         },
         'org.openvas.scan.routers': {
             'scan-id': ComputingBrick.OBJECT_UUID,
-            'scanner.ipv4': NetworkBrick.OBJECT_HOST_IPV4,
-            'scanner.ipv6': NetworkBrick.OBJECT_HOST_IPV6,
-            'router.ipv4': NetworkBrick.OBJECT_HOST_IPV4,
-            'router.ipv6': NetworkBrick.OBJECT_HOST_IPV6,
+            'scanner.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
+            'scanner.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
+            'router.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
+            'router.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
         },
     }
 
@@ -455,8 +455,8 @@ class OpenVasHostTranscoder(XmlTranscoder):
         'org.openvas.scan.routers': {
             'scanner.ipv4': {SecurityBrick.CONCEPT_VULN_SCANNER: 8},
             'scanner.ipv6': {SecurityBrick.CONCEPT_VULN_SCANNER: 8},
-            'router.ipv4': {NetworkBrick.CONCEPT_NETWORK_ROUTER: 8},
-            'router.ipv6': {NetworkBrick.CONCEPT_NETWORK_ROUTER: 8}
+            'router.ipv4': {NetworkingBrick.CONCEPT_NETWORK_ROUTER: 8},
+            'router.ipv6': {NetworkingBrick.CONCEPT_NETWORK_ROUTER: 8}
         },
     }
 
