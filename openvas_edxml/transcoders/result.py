@@ -50,6 +50,8 @@ def post_process_threat(threat):
 
 class OpenVasResultTranscoder(XmlTranscoder):
 
+    TYPES = ['org.openvas.scan.result']
+
     TYPE_MAP = {'.': 'org.openvas.scan.result'}
 
     PROPERTY_MAP = {

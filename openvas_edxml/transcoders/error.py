@@ -10,6 +10,8 @@ from openvas_edxml.transcoders import post_process_ip
 
 class OpenVasErrorTranscoder(XmlTranscoder):
 
+    TYPES = ['org.openvas.scan.error']
+
     TYPE_MAP = {
         '.': 'org.openvas.scan.error'
     }

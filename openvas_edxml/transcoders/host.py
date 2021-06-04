@@ -24,6 +24,15 @@ from openvas_edxml.transcoders import post_process_ip
 
 class OpenVasHostTranscoder(XmlTranscoder):
 
+    TYPES = [
+        'org.openvas.scan.nvt',
+        'org.openvas.scan.application-detection',
+        'org.openvas.scan.os-detection',
+        'org.openvas.scan.ssl-certificate',
+        'org.openvas.scan.open-ports',
+        'org.openvas.scan.routers'
+    ]
+
     # Note how we extract events from host details in two different ways. Either we
     # make the XPath expression yield one hit for all <detail> children of a host, or
     # we make it match each individual <detail> child.
