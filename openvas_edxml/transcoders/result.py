@@ -421,6 +421,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
             event,
             {
                 'scan-id': 'scan-id',
+                'time': 'time',
                 'host.ipv4': 'host.ipv4',
                 'host.ipv6': 'host.ipv6',
                 'nvt.oid': 'nvt.oid'

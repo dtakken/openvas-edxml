@@ -3,6 +3,8 @@
     <omp>
       <version>7.0</version>
     </omp>
+    <scan_start>2019-01-01T12:01:01Z</scan_start>
+    <scan_end>2019-01-02T12:01:01Z</scan_end>
     <host>
       <ip>2001:db8::8a2e:370:7334</ip>
         <detail>

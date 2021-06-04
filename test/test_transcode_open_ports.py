@@ -29,6 +29,7 @@ def test_open_port_detection(harness):
     result = harness.events.filter_type('org.openvas.scan.open-ports').pop()
 
     assert result['scan-id'] == {'fb167629-3bdf-4ab1-ae7d-c64a0d7ad595'}
+    assert result['time'] == {'2019-01-01T12:01:01.000000Z'}
     assert result['host.ipv4'] == {'10.0.0.1'}
     assert result['port'] == {'443/TCP', '22/TCP', '80/TCP'}
 

@@ -61,31 +61,37 @@ class OpenVasHostTranscoder(XmlTranscoder):
             '../../@id': 'scan-id',
             'ip': ['host.ipv4', 'host.ipv6'],
             'detail/name[text() = "EXIT_CODE"]/../source/name': 'nvt.oid',
+            '../scan_start': 'time'
         },
         'org.openvas.scan.application-detection': {
             '../../@id': 'scan-id',
             '../ip': ['host.ipv4', 'host.ipv6'],
             'name': 'application',
             'value': 'port',
+            '../../scan_start': 'time'
         },
         'org.openvas.scan.os-detection': {
             '../../@id': 'scan-id',
             '../ip': ['host.ipv4', 'host.ipv6'],
             'name': 'os',
+            '../../scan_start': 'time'
         },
         'org.openvas.scan.ssl-certificate': {
             '../../@id': 'scan-id',
             'ip|../ip': ['host.ipv4', 'host.ipv6'],
             'value': 'certificates',
+            '../../scan_start': 'time'
         },
         'org.openvas.scan.open-ports': {
             '../../@id': 'scan-id',
             'ip|../ip': ['host.ipv4', 'host.ipv6'],
             'detail/source/name[text() = "1.3.6.1.4.1.25623.1.0.900239"]/../../value': 'port',
+            '../scan_start': 'time'
         },
         'org.openvas.scan.routers': {
             '../../@id': 'scan-id',
-            'value': 'host'
+            'value': 'host',
+            '../../scan_start': 'time'
         }
     }
 
@@ -118,33 +124,39 @@ class OpenVasHostTranscoder(XmlTranscoder):
 
     TYPE_STORIES = {
         'org.openvas.scan.nvt':
-            'OpenVAS scan [[scan-id]] performed the following tests on '
+            'OpenVAS scan [[scan-id]], which started on [[date_time:time,minute]], performed the following tests on '
             'host [[host.ipv4]][[host.ipv6]]: [[nvt.oid]].',
         'org.openvas.scan.application-detection':
-            'OpenVAS scan [[scan-id]] detected application [[application]] running on '
-            'host [[host.ipv4]][[host.ipv6]]{ port [[port]]}.',
+            'OpenVAS scan [[scan-id]], which started on [[date_time:time,minute]], detected application '
+            '[[application]] running on host [[host.ipv4]][[host.ipv6]]{ port [[port]]}.',
         'org.openvas.scan.os-detection':
-            'OpenVAS scan [[scan-id]] detected operating system [[os]] running on '
-            'host [[host.ipv4]][[host.ipv6]].',
+            'OpenVAS scan [[scan-id]], which started on [[date_time:time,minute]], detected operating system [[os]] '
+            'running on host [[host.ipv4]][[host.ipv6]].',
         'org.openvas.scan.ssl-certificate':
-            'OpenVAS scan [[scan-id]] discovered an SSL certificate on host [[host.ipv4]][[host.ipv6]].',
+            # TODO: Clarify that the certificate is used for the host(s) having any of the domain names
+            #       found in the subject of the certificate, so the host containing the certificate may have
+            #       any of these domain names.
+            'OpenVAS scan [[scan-id]], which started on [[date_time:time,minute]], discovered an SSL certificate on '
+            'host [[host.ipv4]][[host.ipv6]].',
         'org.openvas.scan.open-ports':
-            'OpenVAS scan [[scan-id]] detected the following open TCP/IP ports on '
-            'host [[host.ipv4]][[host.ipv6]]: [[port]].',
+            'OpenVAS scan [[scan-id]], which started on [[date_time:time,minute]], detected the following open '
+            'TCP/IP ports on host [[host.ipv4]][[host.ipv6]]: [[port]].',
         'org.openvas.scan.routers':
-            'OpenVAS scan [[scan-id]] was executed from the scanner at [[scanner.ipv4]][[scanner.ipv6]] which detected '
-            'a network router at IP [[router.ipv4]][[router.ipv6]].',
+            'OpenVAS scan [[scan-id]], which started on [[date_time:time,minute]], was executed from the scanner at '
+            '[[scanner.ipv4]][[scanner.ipv6]] which detected a network router at IP [[router.ipv4]][[router.ipv6]].',
     }
 
     TYPE_PROPERTIES = {
         'org.openvas.scan.nvt': {
             'scan-id': ComputingBrick.OBJECT_UUID,
+            'time': GenericBrick.OBJECT_DATETIME,
             'host.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
             'host.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
             'nvt.oid': ComputingBrick.OBJECT_OID,
         },
         'org.openvas.scan.application-detection': {
             'scan-id': ComputingBrick.OBJECT_UUID,
+            'time': GenericBrick.OBJECT_DATETIME,
             'host.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
             'host.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
             'port': NetworkingBrick.OBJECT_HOST_PORT,
@@ -152,12 +164,14 @@ class OpenVasHostTranscoder(XmlTranscoder):
         },
         'org.openvas.scan.os-detection': {
             'scan-id': ComputingBrick.OBJECT_UUID,
+            'time': GenericBrick.OBJECT_DATETIME,
             'host.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
             'host.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
             'os': ComputingBrick.OBJECT_CPE_URI,
         },
         'org.openvas.scan.ssl-certificate': {
             'scan-id': ComputingBrick.OBJECT_UUID,
+            'time': GenericBrick.OBJECT_DATETIME,
             'host.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
             'host.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
             'cert.valid.from': GenericBrick.OBJECT_DATETIME,
@@ -185,12 +199,14 @@ class OpenVasHostTranscoder(XmlTranscoder):
         },
         'org.openvas.scan.open-ports': {
             'scan-id': ComputingBrick.OBJECT_UUID,
+            'time': GenericBrick.OBJECT_DATETIME,
             'host.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
             'host.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
-            'port': NetworkingBrick.OBJECT_HOST_PORT
+            'port': NetworkingBrick.OBJECT_HOST_PORT,
         },
         'org.openvas.scan.routers': {
             'scan-id': ComputingBrick.OBJECT_UUID,
+            'time': GenericBrick.OBJECT_DATETIME,
             'scanner.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
             'scanner.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
             'router.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
@@ -322,17 +338,18 @@ class OpenVasHostTranscoder(XmlTranscoder):
     }
 
     TYPE_AUTO_REPAIR_NORMALIZE = {
-        'org.openvas.scan.nvt': ['host.ipv4', 'host.ipv6'],
-        'org.openvas.scan.routers': ['scanner.ipv4', 'scanner.ipv6', 'router.ipv4', 'router.ipv6'],
-        'org.openvas.scan.application-detection': ['host.ipv4', 'host.ipv6'],
-        'org.openvas.scan.os-detection': ['host.ipv4', 'host.ipv6'],
+        'org.openvas.scan.nvt': ['host.ipv4', 'host.ipv6', 'time'],
+        'org.openvas.scan.routers': ['scanner.ipv4', 'scanner.ipv6', 'router.ipv4', 'router.ipv6', 'time'],
+        'org.openvas.scan.application-detection': ['host.ipv4', 'host.ipv6', 'time'],
+        'org.openvas.scan.os-detection': ['host.ipv4', 'host.ipv6', 'time'],
         'org.openvas.scan.ssl-certificate': [
             'host.ipv4', 'host.ipv6',
             'cert.valid.from', 'cert.valid.until',
             'cert.issuer.country', 'cert.subject.country',
-            'cert.issuer.domain', 'cert.subject.domain'
+            'cert.issuer.domain', 'cert.subject.domain',
+            'time'
         ],
-        'org.openvas.scan.open-ports': ['host.ipv4', 'host.ipv6'],
+        'org.openvas.scan.open-ports': ['host.ipv4', 'host.ipv6', 'time'],
     }
 
     TYPE_AUTO_REPAIR_DROP = {

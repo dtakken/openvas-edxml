@@ -1,4 +1,5 @@
 from edxml.event import EventElement
+from edxml_bricks.generic import GenericBrick
 from openvas_edxml.brick import OpenVASBrick
 
 from edxml.transcode.xml import XmlTranscoder
@@ -19,6 +20,7 @@ class OpenVasErrorTranscoder(XmlTranscoder):
     PROPERTY_MAP = {
         'org.openvas.scan.error': {
             '../../../report/@id': 'scan-id',
+            '../../scan_start': 'time',
             'host': ['host.ipv4', 'host.ipv6'],
             'nvt/@oid': 'nvt.oid',
             'nvt/name': 'nvt.name',
@@ -40,7 +42,8 @@ class OpenVasErrorTranscoder(XmlTranscoder):
 
     TYPE_STORIES = {
         'org.openvas.scan.error':
-            'During OpenVAS scan [[scan-id]], host [[host.ipv4]][[host.ipv6]] was tested using a '
+            'During OpenVAS scan [[scan-id]], which started on [[date_time:time,minute]], host '
+            '[[host.ipv4]][[host.ipv6]] was tested using a '
             'plugin titled [[nvt.name]] (NVT OID [[nvt.oid]]). '
             'Unfortunately, the test failed with error message "[[message]]".'
     }
@@ -48,6 +51,7 @@ class OpenVasErrorTranscoder(XmlTranscoder):
     TYPE_PROPERTIES = {
         'org.openvas.scan.error': {
             'scan-id': ComputingBrick.OBJECT_UUID,
+            'time': GenericBrick.OBJECT_DATETIME,
             'host.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
             'host.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
             'nvt.oid': ComputingBrick.OBJECT_OID,
@@ -120,7 +124,7 @@ class OpenVasErrorTranscoder(XmlTranscoder):
     }
 
     TYPE_AUTO_REPAIR_NORMALIZE = {
-        'org.openvas.scan.error': ['host.ipv4', 'host.ipv6']
+        'org.openvas.scan.error': ['host.ipv4', 'host.ipv6', 'time']
     }
 
     TYPE_AUTO_REPAIR_DROP = {
@@ -165,6 +169,7 @@ class OpenVasErrorTranscoder(XmlTranscoder):
             event,
             {
                 'scan-id': 'scan-id',
+                'time': 'time',
                 'host.ipv4': 'host.ipv4',
                 'host.ipv6': 'host.ipv6',
                 'nvt.oid': 'nvt.oid'

@@ -29,6 +29,7 @@ def test_detection_errors(harness):
     result = harness.events.filter_type('org.openvas.scan.error').pop()
 
     assert result['scan-id'] == {'fb167629-3bdf-4ab1-ae7d-c64a0d7ad595'}
+    assert result['time'] == {'2019-01-01T12:01:01.000000Z'}
     assert result['nvt.oid'] == {'1.3.6.1.4.1.25623.1.0.804489'}
     assert result['nvt.name'] == {'GNU Bash Environment Variable Handling Shell Remote Command Execution Vulnerability'}
     assert result['message'] == {'NVT timed out after 320 seconds.'}

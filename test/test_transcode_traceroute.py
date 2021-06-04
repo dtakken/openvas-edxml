@@ -29,6 +29,7 @@ def test_traceroute(harness):
     result = harness.events.filter_type('org.openvas.scan.routers').pop()
 
     assert result['scan-id'] == {'fb167629-3bdf-4ab1-ae7d-c64a0d7ad595'}
+    assert result['time'] == {'2019-01-01T12:01:01.000000Z'}
     assert result['scanner.ipv4'] == {'192.168.0.1'}
     assert result['router.ipv4'] == {'10.0.0.1'}
 

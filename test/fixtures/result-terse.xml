@@ -3,6 +3,8 @@
     <omp>
       <version>7.0</version>
     </omp>
+    <scan_start>2019-01-01T12:01:01Z</scan_start>
+    <scan_end>2019-01-02T12:01:01Z</scan_end>
     <results max="-1" start="1">
       <result id="d37be786-a052-433e-9ecf-28babfaea2ac">
         <!-- A scan result that omits all information that may be

@@ -38,6 +38,7 @@ def test_nist_pkits_host_certificate(harness):
         cert_b = tmp
 
     assert cert_a['scan-id'] == {'fb167629-3bdf-4ab1-ae7d-c64a0d7ad595'}
+    assert cert_a['time'] == {'2019-01-01T12:01:01.000000Z'}
     assert cert_a['host.ipv4'] == {'10.0.0.1'}
     assert cert_a['cert.valid.from'] == {'2010-01-01T08:30:00.000000Z'}
     assert cert_a['cert.valid.until'] == {'2030-12-31T08:30:00.000000Z'}
