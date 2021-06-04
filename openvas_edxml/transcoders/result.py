@@ -475,6 +475,11 @@ class OpenVasResultTranscoder(XmlTranscoder):
         result['nvt.oid'].relate_intra('indicates', 'cvss.score')\
             .because('OpenVAS plugin [[nvt.oid]] indicates CVSS score [[cvss.score]]'),
 
+        # Relate the host IP to the port that it is apparently exposing
+        for ip in ('ipv4', 'ipv6'):
+            result['host.' + ip].relate_intra('exposes', 'port') \
+                .because(f"OpenVAS detected that host [[host.{ip}]] exposes network port [[port]]")
+
         # Add a hint to relate scan results found by the same OpenVAS plugin and
         # results that concern the same host
         result['nvt.oid'].hint_similar('found by')
