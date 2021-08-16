@@ -18,7 +18,7 @@ setup(
     author_email='dik.takken@northwave.nl',
 
     # Choose your license
-    license='PROPRIETARY',
+    license='MIT',
 
     # What does your project relate to?
     keywords='edxml openvas',
