@@ -6,7 +6,7 @@ __version__ = 1.0
 exec(open('openvas_edxml/version.py').read())
 
 setup(
-    name='edxml-openvas',
+    name='openvas-edxml',
     version=__version__,
 
     # A description of your project
