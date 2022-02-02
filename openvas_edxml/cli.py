@@ -121,7 +121,6 @@ def main():
         openvas_input = sys.stdin.buffer
 
     logger = logging.getLogger()
-    logger.addHandler(logging.StreamHandler())
 
     if args.quiet:
         logger.setLevel(logging.ERROR)
