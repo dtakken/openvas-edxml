@@ -54,7 +54,7 @@ setup(
 
     # Add entry points which will be installed as CLI utilities
     entry_points={
-        'console_scripts': ['openvas-edxml=openvas_edxml/cli:main'],
+        'console_scripts': ['openvas-edxml=openvas_edxml.cli:main'],
     },
     # List run-time dependencies here. These will be installed by pip when your
     # project is installed.
