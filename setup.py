@@ -33,6 +33,7 @@ setup(
 
         # Indicate who your project is intended for
         'Intended Audience :: Developers',
+        'Topic :: Security',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
 
