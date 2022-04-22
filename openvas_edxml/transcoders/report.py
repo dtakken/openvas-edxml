@@ -131,5 +131,4 @@ class OpenVasReportTranscoder(XmlTranscoder):
             if 'rows=' in filtering and 'rows=-1' not in filtering:
                 log.warning('This scan report may be incomplete, it has been capped to a maximum result count.\n')
 
-
         yield event
