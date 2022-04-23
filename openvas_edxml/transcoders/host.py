@@ -420,7 +420,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
         'org.openvas.scan.ssl-certificate': {'certificate': 'application/pkix-cert'}
     }
 
-    TYPE_TIMESPANS = {
+    TYPE_TIME_SPANS = {
         'org.openvas.scan.ssl-certificate': ['cert.valid.from', 'cert.valid.until']
     }
 

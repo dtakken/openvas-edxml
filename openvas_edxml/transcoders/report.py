@@ -120,7 +120,7 @@ class OpenVasReportTranscoder(XmlTranscoder):
         'org.openvas.scan': ['host.ipv4', 'host.ipv6']
     }
 
-    TYPE_TIMESPANS = {'org.openvas.scan': ('time-start', 'time-end')}
+    TYPE_TIME_SPANS = {'org.openvas.scan': ('time-start', 'time-end')}
 
     def post_process(self, event, input_element):
 
