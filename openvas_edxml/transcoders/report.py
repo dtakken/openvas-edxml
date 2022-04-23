@@ -62,14 +62,14 @@ class OpenVasReportTranscoder(XmlTranscoder):
     }
 
     TYPE_PROPERTY_CONCEPTS = {
-        'org.openvas.scan.result': {
+        'org.openvas.scan': {
             'host.ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
             'host.ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8}
         },
     }
 
     TYPE_PROPERTY_CONCEPTS_CNP = {
-        'org.openvas.scan.result': {
+        'org.openvas.scan': {
             'host.ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
             'host.ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
         }
