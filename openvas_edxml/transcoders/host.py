@@ -626,6 +626,9 @@ class OpenVasHostTranscoder(XmlTranscoder):
             # scanned host. Now, only routers remain.
             hosts.pop()
             for host in hosts:
+                if host == '* * *':
+                    # Host did not respond.
+                    continue
                 parsed = IP(host)
                 event['router.ipv4'].add(parsed)
                 event['router.ipv6'].add(parsed)
