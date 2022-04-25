@@ -463,7 +463,7 @@ class OpenVasHostTranscoder(XmlTranscoder):
             'cert.issuer.email': {GenericBrick.CONCEPT_ORGANIZATION: 9},
 
             'cert.subject.domain': {CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: 8, ComputingBrick.CONCEPT_COMPUTER: 8},
-            'cert.subject.domain-wildcard': {ComputingBrick.CONCEPT_COMPUTER: 1},
+            'cert.subject.domain-wildcard': {CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: 6},
             'cert.subject.dn': {CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: 9},
             'cert.subject.cn': {CryptoBrick.CONCEPT_PUBKEY_CERTIFICATE: 6},
             'cert.subject.country': {GenericBrick.CONCEPT_ORGANIZATION: 1},
