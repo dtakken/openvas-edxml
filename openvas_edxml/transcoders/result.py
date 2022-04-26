@@ -436,7 +436,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
         result = super().create_event_type(event_type_name, ontology)
 
         # Create inter-concept relation between host IP addresses and en OpenVAS plugin
-        # OID, indicating the the host has an OpenVAS finding associated with it.
+        # OID, indicating the host has an OpenVAS finding associated with it.
         for ip in ('ipv4', 'ipv6'):
             result['nvt.oid'].relate_inter('was detected on host', 'host.' + ip) \
                 .because(f"OpenVAS plugin [[nvt.oid]] returned a positive result while scanning host [[host.{ip}]]")
