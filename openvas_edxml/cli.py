@@ -97,8 +97,7 @@ def main():
         '--desc', '-d', help='The description of the EDXML source that will be associated with the scan data.'
     )
     arg_parser.add_argument(
-        '--file', '-f', nargs=1, help='By default OpenVAS data is read from standard input. When this option is used '
-                                      'input will be read from the file at specified path.'
+        '--file', '-f', help='Path of the OpenVAS XML report.'
     )
     arg_parser.add_argument(
         '--dump-concept-graph', help='Write PNG image to specified file showing concept relations'
@@ -114,11 +113,6 @@ def main():
         help='Use this option for OpenVAS XML data that is wrapped inside a <get_reports_response> tag.'
     )
     args = arg_parser.parse_args()
-
-    if args.file:
-        openvas_input = args.file[0]
-    else:
-        openvas_input = sys.stdin.buffer
 
     logger = logging.getLogger()
 
@@ -148,9 +142,13 @@ def main():
             graph.render(filename=args.dump_concept_graph, format='png', cleanup=True)
         return
 
+    if args.file is None:
+        print("Please provide the path to an OpenVAS XML report.")
+        exit(1)
+
     with OpenVasTranscoderMediator(sys.stdout.buffer, args.uri, args.desc, args.have_response_tag) as mediator:
         openvas_edxml.register_transcoders(mediator, args.have_response_tag)
-        mediator.parse(openvas_input)
+        mediator.parse(args.file)
         if mediator._num_input_records_processed == 0:
             raise Exception(
                 'Failed to find any matching XML elements in OpenVAS report. '
