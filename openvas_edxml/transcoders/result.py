@@ -348,10 +348,10 @@ class OpenVasResultTranscoder(XmlTranscoder):
 
         Args:
             context: lxml function context
-            strings (Union[str, List[str]): Input strings
+            strings (Union[str, List[str]]): Input strings
 
         Returns:
-          (Union[str, List[str])
+          (Union[str, List[str]])
 
         """
         out_strings = []
