@@ -23,6 +23,7 @@ class OpenVASBrick(Brick):
     OBJECT_SOLUTION_TYPE = 'org.openvas.result.solution-type'
 
     CONCEPT_FINDING = GenericBrick.CONCEPT_ACT + '.discovery.finding.openvas-finding'
+    CONCEPT_SCAN = GenericBrick.CONCEPT_ACT + '.activity.work.investigation.examination.scan.openvas-scan'
 
     # Known possible values of the QoD (Quality of Detection)
     # of an OpenVAS result.
@@ -106,6 +107,10 @@ class OpenVASBrick(Brick):
 
     @classmethod
     def generate_concepts(cls, target_ontology):
+
+        yield target_ontology.create_concept(cls.CONCEPT_SCAN) \
+            .set_display_name('OpenVAS scan') \
+            .set_description('an OpenVAS vulnerability scan')
 
         yield target_ontology.create_concept(cls.CONCEPT_FINDING) \
             .set_display_name('OpenVAS finding') \

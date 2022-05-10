@@ -251,6 +251,7 @@ class OpenVasResultTranscoder(XmlTranscoder):
     TYPE_PROPERTY_CONCEPTS = {
         'org.openvas.scan.result': {
 
+            'scan-id': {OpenVASBrick.CONCEPT_SCAN: 10},
             # The IP address of the host is an identifier of a computer. IP addresses
             # are not always unique, so we will not make them really strong identifiers.
             'host.ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
@@ -302,6 +303,11 @@ class OpenVasResultTranscoder(XmlTranscoder):
 
     TYPE_PROPERTY_ATTRIBUTES = {
         'org.openvas.scan.result': {
+            'scan-id': {
+                OpenVASBrick.CONCEPT_SCAN: [
+                    ComputingBrick.OBJECT_UUID + ':openvas.scan', 'OpenVAS scan ID'
+                ]
+            },
             'nvt.oid': {
                 OpenVASBrick.CONCEPT_FINDING: [
                     ComputingBrick.OBJECT_OID + ':openvas.plugin', 'OpenVAS detection plugin ID'
@@ -440,6 +446,10 @@ class OpenVasResultTranscoder(XmlTranscoder):
         for ip in ('ipv4', 'ipv6'):
             result['nvt.oid'].relate_inter('was detected on host', 'host.' + ip) \
                 .because(f"OpenVAS plugin [[nvt.oid]] returned a positive result while scanning host [[host.{ip}]]")
+
+        # Another inter-concept relation relates the OpenVAS result OID to the OID of the scan that produced it.
+        result['nvt.oid'].relate_inter('found by', 'scan-id')\
+            .because('OpenVAS finding [[nvt.oid]] was found by vulnerability scan [[scan-id]]'),
 
         # Relate the OpenVAS plugin OID to finding attributes
         result['nvt.oid'].relate_intra('has', 'nvt.name')\

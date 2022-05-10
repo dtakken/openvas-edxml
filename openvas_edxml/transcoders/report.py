@@ -63,6 +63,10 @@ class OpenVasReportTranscoder(XmlTranscoder):
 
     TYPE_PROPERTY_CONCEPTS = {
         'org.openvas.scan': {
+            'id': {OpenVASBrick.CONCEPT_SCAN: 10},
+            'name': {OpenVASBrick.CONCEPT_SCAN: 2},
+            'host-count': {OpenVASBrick.CONCEPT_SCAN: 0},
+            'vuln-count': {OpenVASBrick.CONCEPT_SCAN: 0},
             'host.ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
             'host.ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8}
         },
@@ -70,8 +74,29 @@ class OpenVasReportTranscoder(XmlTranscoder):
 
     TYPE_PROPERTY_CONCEPTS_CNP = {
         'org.openvas.scan': {
+            'name': {OpenVASBrick.CONCEPT_SCAN: 180},
             'host.ipv4': {ComputingBrick.CONCEPT_COMPUTER: 180},
             'host.ipv6': {ComputingBrick.CONCEPT_COMPUTER: 180},
+        }
+    }
+
+    TYPE_PROPERTY_ATTRIBUTES = {
+        'org.openvas.scan': {
+            'id': {
+                OpenVASBrick.CONCEPT_SCAN: [
+                    ComputingBrick.OBJECT_UUID + ':openvas.scan', 'OpenVAS scan ID'
+                ]
+            },
+            'host-count': {
+                OpenVASBrick.CONCEPT_SCAN: [
+                    GenericBrick.OBJECT_COUNT_BIG + ':host-count', 'scanned host count'
+                ]
+            },
+            'vuln-count': {
+                OpenVASBrick.CONCEPT_SCAN: [
+                    GenericBrick.OBJECT_COUNT_BIG + ':vuln-count', 'finding count'
+                ]
+            }
         }
     }
 
@@ -132,3 +157,22 @@ class OpenVasReportTranscoder(XmlTranscoder):
                 log.warning('This scan report may be incomplete, it has been capped to a maximum result count.\n')
 
         yield event
+
+    @classmethod
+    def create_event_type(cls, event_type_name, ontology):
+
+        result = super().create_event_type(event_type_name, ontology)
+
+        # Use intra relations to link the scan ID to other scan attributes
+        result['id'].relate_intra('has', 'name')\
+            .because('OpenVAS scan [[id]] is named [[name]]')
+        result['id'].relate_intra('scanned', 'host-count')\
+            .because('OpenVAS scan [[id]] scanned [[host-count]] hosts')
+        result['id'].relate_intra('found', 'vuln-count')\
+            .because('OpenVAS scan [[id]] yielded [[vuln-count]] findings')
+
+        # Create inter-concept relations to relate the scan to the hosts that were scanned
+        result['id'].relate_inter('scanned', 'host.ipv4')\
+            .because('OpenVAS scan [[id]] scanned host [[host.ipv4]]')
+        result['id'].relate_inter('scanned', 'host.ipv6')\
+            .because('OpenVAS scan [[id]] scanned host [[host.ipv6]]')
