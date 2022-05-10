@@ -1,4 +1,4 @@
-.PHONY: all dependencies dist pypi check test coverage coverage-report clean
+.PHONY: all dependencies dist pypi description check test coverage coverage-report clean
 
 all: dependencies dist check test clean
 
@@ -17,6 +17,9 @@ pypi: dist
 	@echo "Uploading to PyPI:"
 	twine upload dist/*
 
+description: dependencies
+	python3 -m openvas_edxml.cli -q --dump-description > transcoder.rst
+
 check:
 	@echo "Checking your code..."
 	@python3 -m flake8 --max-line-length=120 openvas_edxml/ test/ && echo "Well done. Your code is in shiny style!"
@@ -24,6 +27,10 @@ check:
 test: dependencies
 	@echo "Running tests:"
 	@python3 -m pytest test/ -W ignore::DeprecationWarning
+	# Below fails when regenerating the rst document that describes
+	# the transcoder results in changes in the Git repo. That happens when
+	# the rst document is not up to date.
+	$(MAKE) description && git diff --exit-code '*.rst'
 
 coverage: dependencies
 	@echo "Gathering coverage data:"
