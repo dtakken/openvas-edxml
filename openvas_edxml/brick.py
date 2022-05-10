@@ -1,5 +1,6 @@
 import edxml
 
+from edxml_bricks.generic import GenericBrick
 from edxml.ontology import Brick
 from edxml.ontology import DataType
 
@@ -21,7 +22,7 @@ class OpenVASBrick(Brick):
     OBJECT_INSIGHT = 'org.openvas.result.insight'
     OBJECT_SOLUTION_TYPE = 'org.openvas.result.solution-type'
 
-    CONCEPT_FINDING = 'entity.abstraction.psychological-feature.event.act.discovery.finding.openvas-finding'
+    CONCEPT_FINDING = GenericBrick.CONCEPT_ACT + '.discovery.finding.openvas-finding'
 
     # Known possible values of the QoD (Quality of Detection)
     # of an OpenVAS result.
