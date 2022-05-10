@@ -1,3 +1,5 @@
+from edxml.transcode import NullTranscoder
+
 from openvas_edxml.transcoders.error import OpenVasErrorTranscoder
 from openvas_edxml.transcoders.host import OpenVasHostTranscoder
 from openvas_edxml.transcoders.report import OpenVasReportTranscoder
@@ -21,3 +23,5 @@ def register_transcoders(mediator, have_response_tag=False):
     mediator.register(root + '/results/result', OpenVasResultTranscoder())
     mediator.register(root + '/host', OpenVasHostTranscoder())
     mediator.register(root + '/errors/error', OpenVasErrorTranscoder())
+    mediator.register(root + '/host_start', NullTranscoder())
+    mediator.register(root + '/host_end', NullTranscoder())
