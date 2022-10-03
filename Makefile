@@ -1,4 +1,4 @@
-.PHONY: all dependencies dist pypi description check test coverage coverage-report clean-dist clean
+.PHONY: all dependencies dist pypi-test pypi description check test coverage coverage-report clean-dist clean
 
 all: dependencies dist check test clean
 
@@ -11,6 +11,13 @@ dependencies:
 dist: clean-dist
 	pip3 install wheel
 	python3 setup.py sdist bdist_wheel
+
+pypi-test: dist
+	# NOTE: twine will read TWINE_USERNAME and TWINE_PASSWORD from environment
+	pip3 install twine
+	twine check dist/*
+	@echo "Uploading to PyPI (test instance):"
+	twine upload --repository testpypi dist/*
 
 pypi: dist
 	# NOTE: twine will read TWINE_USERNAME and TWINE_PASSWORD from environment
