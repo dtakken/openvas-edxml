@@ -62,14 +62,14 @@ setup(
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/technical.html#install-requires-vs-requirements-files
     install_requires=[
-        'edxml>=3.0.0.dev0',
-        'edxml-bricks-generic>=3.0.0.dev0',
-        'edxml-bricks-geography>=3.0.0.dev0',
-        'edxml-bricks-computing>=3.0.0.dev0',
-        'edxml-bricks-computing-networking>=3.0.0.dev0',
-        'edxml-bricks-computing-security>=3.0.0.dev0',
+        'edxml~=3.0',
+        'edxml-bricks-generic~=3.0',
+        'edxml-bricks-geography~=3.0',
+        'edxml-bricks-computing~=3.0',
+        'edxml-bricks-computing-networking~=3.0',
+        'edxml-bricks-computing-security~=3.0',
         'cryptography',
-        'edxml-bricks-computing-forensics>=3.0.0.dev0',
+        'edxml-bricks-computing-forensics~=3.0',
         'IPy',
         'python-dateutil'
     ]
