@@ -5,7 +5,7 @@ all: dependencies dist check test clean
 dependencies:
 	@echo "Installing dependencies:"
 	python3 -m pip install --upgrade pip setuptools wheel
-	pip3 install flake8 pytest
+	pip3 install pytest
 	pip3 install -r requirements.txt
 
 dist: clean-dist
@@ -30,6 +30,7 @@ description: dependencies
 	python3 -m openvas_edxml.cli -q --dump-description > transcoder.rst
 
 check:
+	pip3 install flake8
 	@echo "Checking your code..."
 	@python3 -m flake8 --max-line-length=120 openvas_edxml/ test/ && echo "Well done. Your code is in shiny style!"
 
