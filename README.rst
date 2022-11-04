@@ -5,7 +5,7 @@ OPENVAS EDXML TRANSCODER
 
 .. |license| image::  https://img.shields.io/badge/License-MIT-blue.svg
 .. |tests| image::    https://github.com/dtakken/openvas-edxml/workflows/tests/badge.svg
-.. |pyversion| image::  https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-blue
+.. |pyversion| image::  https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8%20%7C%203.9%20%7C%203.10-blue
 
 This is an EDXML_ transcoder that takes OpenVAS_ XML reports as input and outputs EDXML data.
 
