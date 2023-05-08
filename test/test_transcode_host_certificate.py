@@ -2,7 +2,7 @@ from os.path import dirname
 
 import pytest
 
-import edxml
+import edxml # noqa
 from edxml.transcode.xml import XmlTranscoderTestHarness
 from openvas_edxml import register_transcoders, OpenVasHostTranscoder
 

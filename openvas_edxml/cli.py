@@ -6,7 +6,7 @@ import sys
 import openvas_edxml
 
 from datetime import datetime
-from typing import Optional
+from typing import Optional # noqa
 from dateutil.parser import parse
 from edxml.transcode.xml import XmlTranscoderMediator
 
