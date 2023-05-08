@@ -27,7 +27,7 @@ def test_report(harness):
     assert result['name'] == {'task name'}
     assert result['host.ipv4'] == {'10.0.0.1', '10.0.0.2'}
     assert result['host-count'] == {'3'}
-    assert result['vuln-count'] == {'2'}
+    assert result['finding-count'] == {'2'}
     assert result['time-start'] == {'2019-01-01T12:01:01.000000Z'}
     assert result['time-end'] == {'2019-01-02T12:01:01.000000Z'}
 

@@ -22,7 +22,7 @@ class OpenVasReportTranscoder(XmlTranscoder):
             '../task/name': 'name',
             'ports/port/host': ['host.ipv4', 'host.ipv6'],
             'hosts/count': 'host-count',
-            'vulns/count': 'vuln-count',
+            'vulns/count': 'finding-count',
             'scan_start': 'time-start',
             'scan_end': 'time-end'
         }
@@ -44,7 +44,7 @@ class OpenVasReportTranscoder(XmlTranscoder):
         'org.openvas.scan':
             'On [[date_time:time-start,minute]] an OpenVAS vulnerability scan{ ([[name]])} was initiated, targeting '
             '[[host-count]] hosts. The scan{ [[empty:time-end,is incomplete]]}{ was completed in '
-            '[[duration:time-start,time-end]]} yielding [[vuln-count]] '
+            '[[duration:time-start,time-end]]} yielding [[finding-count]] '
             'findings{ and was assigned UUID [[id]]}.{ The IP addresses of the scan targets are '
             '[[merge:host.ipv4,host.ipv6]].}'
     }
@@ -56,7 +56,7 @@ class OpenVasReportTranscoder(XmlTranscoder):
             'host.ipv4': NetworkingBrick.OBJECT_HOST_IPV4,
             'host.ipv6': NetworkingBrick.OBJECT_HOST_IPV6,
             'host-count': GenericBrick.OBJECT_COUNT_BIG,
-            'vuln-count': GenericBrick.OBJECT_COUNT_BIG,
+            'finding-count': GenericBrick.OBJECT_COUNT_BIG,
             'time-start': GenericBrick.OBJECT_DATETIME,
             'time-end': GenericBrick.OBJECT_DATETIME,
         }
@@ -67,7 +67,7 @@ class OpenVasReportTranscoder(XmlTranscoder):
             'id': {OpenVASBrick.CONCEPT_SCAN: 10},
             'name': {OpenVASBrick.CONCEPT_SCAN: 2},
             'host-count': {OpenVASBrick.CONCEPT_SCAN: 0},
-            'vuln-count': {OpenVASBrick.CONCEPT_SCAN: 0},
+            'finding-count': {OpenVASBrick.CONCEPT_SCAN: 0},
             'host.ipv4': {ComputingBrick.CONCEPT_COMPUTER: 8},
             'host.ipv6': {ComputingBrick.CONCEPT_COMPUTER: 8}
         },
@@ -93,9 +93,9 @@ class OpenVasReportTranscoder(XmlTranscoder):
                     GenericBrick.OBJECT_COUNT_BIG + ':host-count', 'scanned host count'
                 ]
             },
-            'vuln-count': {
+            'finding-count': {
                 OpenVASBrick.CONCEPT_SCAN: [
-                    GenericBrick.OBJECT_COUNT_BIG + ':vuln-count', 'finding count'
+                    GenericBrick.OBJECT_COUNT_BIG + ':finding-count', 'finding count'
                 ]
             }
         }
@@ -114,7 +114,7 @@ class OpenVasReportTranscoder(XmlTranscoder):
             'id': 'OpenVAS UUID',
             'host.ipv4': 'target host (IPv4)',
             'host.ipv6': 'target host (IPv6)',
-            'vuln-count': 'vulnerability count',
+            'finding-count': 'finding count',
             'time-start': 'starting time',
             'time-end': 'completion time',
         }
@@ -129,7 +129,7 @@ class OpenVasReportTranscoder(XmlTranscoder):
             'host.ipv4': EventProperty.MERGE_ADD,
             'host.ipv6': EventProperty.MERGE_ADD,
             'host-count': EventProperty.MERGE_MAX,
-            'vuln-count': EventProperty.MERGE_MAX,
+            'finding-count': EventProperty.MERGE_MAX,
             'time-end': EventProperty.MERGE_SET
         }
     }
@@ -169,8 +169,8 @@ class OpenVasReportTranscoder(XmlTranscoder):
             .because('OpenVAS scan [[id]] is named [[name]]')
         result['id'].relate_intra('scanned', 'host-count')\
             .because('OpenVAS scan [[id]] scanned [[host-count]] hosts')
-        result['id'].relate_intra('found', 'vuln-count')\
-            .because('OpenVAS scan [[id]] yielded [[vuln-count]] findings')
+        result['id'].relate_intra('found', 'finding-count')\
+            .because('OpenVAS scan [[id]] yielded [[finding-count]] findings')
 
         # Create inter-concept relations to relate the scan to the hosts that were scanned
         result['id'].relate_inter('scanned', 'host.ipv4')\
