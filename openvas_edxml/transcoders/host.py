@@ -264,9 +264,9 @@ class OpenVasHostTranscoder(XmlTranscoder):
 
     TYPE_MANDATORY_PROPERTIES = {
         'org.openvas.scan.ssl-certificate': [
-            'scan-id', 'cert.valid.from', 'cert.valid.until', 'cert.fingerprint', 'cert.subject.dn'
+            'time', 'scan-id', 'cert.valid.from', 'cert.valid.until', 'cert.fingerprint', 'cert.subject.dn'
         ],
-        'org.openvas.scan.routers': ['scan-id']
+        'org.openvas.scan.routers': ['time', 'scan-id']
     }
 
     TYPE_PROPERTY_DESCRIPTIONS = {
