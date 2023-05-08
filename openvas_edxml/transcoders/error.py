@@ -37,13 +37,13 @@ class OpenVasErrorTranscoder(XmlTranscoder):
     }
 
     TYPE_SUMMARIES = {
-        'org.openvas.scan.error': 'OpenVAS failure while testing [[host.ipv4]][[host.ipv6]]'
+        'org.openvas.scan.error': 'OpenVAS failure while testing [[merge:host.ipv4,host.ipv6]]'
     }
 
     TYPE_STORIES = {
         'org.openvas.scan.error':
             'During OpenVAS scan [[scan-id]], which started on [[date_time:time,minute]], host '
-            '[[host.ipv4]][[host.ipv6]] was tested using a '
+            '[[merge:host.ipv4,host.ipv6]] was tested using a '
             'plugin titled [[nvt.name]] (NVT OID [[nvt.oid]]). '
             'Unfortunately, the test failed with error message "[[message]]".'
     }

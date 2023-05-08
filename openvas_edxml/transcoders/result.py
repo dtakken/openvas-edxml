@@ -129,16 +129,19 @@ class OpenVasResultTranscoder(XmlTranscoder):
     TYPE_STORIES = {
         'org.openvas.scan.result':
             'On [[date_time:time,second]], OpenVAS detected a possible security issue related to host '
-            '{[[host.ipv4]]}{[[host.ipv6]]}{, on port [[port]]}.'
+            '[[merge:host.ipv4,host.ipv6]]{, on port [[port]]}.'
             ' The issue was found by an OpenVAS plugin from the [[nvt.family]] family, titled "[[nvt.name]]".'
             '{ OpenVAS indicates a severity of [[severity]], threat level [[threat]].}'
+            '{ The detected issue involves vulnerabilities published in vulnerability databases as [[merge:cve,bid]].}'
             '{ The CVSS base score is [[cvss.score]] (base vector [[cvss.base]]).}'
             ' The problem is with [[qod.value]]% certainty applicable to this host, '
             'based on [[qod.type]].'
-            '{ The impact is described as follows:\n"[[impact]]"\n}'
-            '{ Technical details about the problem:\n"[[insight]]"\n}'
-            '{ Solution is of type([[solution-type]])"}'
-            '{\nAdditional information about the issue can be found [[url:xref,here]].}'
+            '{ The impact is described as follows: "[[impact]]"}'
+            '{ Technical details about the problem: "[[insight]]"}'
+            '{ The nature of the problem is summarized as: [[attachment:summary]]}'
+            '{ The following systems may be affected: [[attachment:affected]]}'
+            '{ The solution{ ([[solution-type]])} is described as follows: [[attachment:solution]]}'
+            '{ Additional information about the issue can be found [[url:xref,here]].}'
     }
 
     TYPE_PROPERTIES = {

@@ -114,36 +114,50 @@ class OpenVasHostTranscoder(XmlTranscoder):
     }
 
     TYPE_SUMMARIES = {
-        'org.openvas.scan.nvt': 'OpenVAS tests run on {[[host.ipv4]]}{[[host.ipv6]]}',
-        'org.openvas.scan.application-detection': 'Application detected on {[[host.ipv4]]}{[[host.ipv6]]}',
-        'org.openvas.scan.os-detection': 'Operating system detected on {[[host.ipv4]]}{[[host.ipv6]]}',
-        'org.openvas.scan.ssl-certificate': 'SSL certificate discovered on {[[host.ipv4]]}{[[host.ipv6]]}',
-        'org.openvas.scan.open-ports': 'Open TCP/IP ports detected on {[[host.ipv4]]}{[[host.ipv6]]}',
-        'org.openvas.scan.routers': 'Network router detected at {[[router.ipv4]]}{[[router.ipv6]]}',
+        'org.openvas.scan.nvt': 'OpenVAS tests run on [[merge:host.ipv4,host.ipv6]]',
+        'org.openvas.scan.application-detection': 'Application detected on [[merge:host.ipv4,host.ipv6]]',
+        'org.openvas.scan.os-detection': 'Operating system detected on [[merge:host.ipv4,host.ipv6]]',
+        'org.openvas.scan.ssl-certificate': 'SSL certificate discovered on [[merge:host.ipv4,host.ipv6]]',
+        'org.openvas.scan.open-ports': 'Open TCP/IP ports detected on [[merge:host.ipv4,host.ipv6]]',
+        'org.openvas.scan.routers': 'Network router detected at {[[merge:router.ipv4,router.ipv6]]}',
     }
 
     TYPE_STORIES = {
         'org.openvas.scan.nvt':
             'OpenVAS scan [[scan-id]], which started on [[date_time:time,minute]], performed the following tests on '
-            'host [[host.ipv4]][[host.ipv6]]: [[nvt.oid]].',
+            'host [[merge:host.ipv4,host.ipv6]]: [[nvt.oid]].',
         'org.openvas.scan.application-detection':
             'OpenVAS scan [[scan-id]], which started on [[date_time:time,minute]], detected application '
-            '[[application]] running on host [[host.ipv4]][[host.ipv6]]{ port [[port]]}.',
+            '[[application]] running on host [[merge:host.ipv4,host.ipv6]]{ port [[port]]}.',
         'org.openvas.scan.os-detection':
             'OpenVAS scan [[scan-id]], which started on [[date_time:time,minute]], detected operating system [[os]] '
-            'running on host [[host.ipv4]][[host.ipv6]].',
+            'running on host [[merge:host.ipv4,host.ipv6]].',
         'org.openvas.scan.ssl-certificate':
-            # TODO: Clarify that the certificate is used for the host(s) having any of the domain names
-            #       found in the subject of the certificate, so the host containing the certificate may have
-            #       any of these domain names.
             'OpenVAS scan [[scan-id]], which started on [[date_time:time,minute]], discovered an SSL certificate on '
-            'host [[host.ipv4]][[host.ipv6]].',
+            'host [[merge:host.ipv4,host.ipv6]]. The certificate, which has fingerprint [[cert.fingerprint]], '
+            'was issued{ by [[cert.issuer.dn]]} for the host(s) identified by subject string [[cert.subject.dn]] '
+            'and is valid from [[date_time:cert.valid.from,date]] until [[date_time:cert.valid.until,date]].'
+            '{ The following details about the subject(s) are contained in the certificate:{'
+            '{ The domain name(s): [[cert.subject.domain]].}'
+            '{ Wildcard domain names: [[cert.subject.domain-wildcard]].}'
+            '{ The subject is supposedly located in '
+            '[[merge:cert.subject.locality,cert.subject.province,cert.subject.country]].}'
+            '{ The certificate was issued for [[merge:cert.subject.organization,cert.subject.unit]].}'
+            '{ A contact e-mail address was specified: [[cert.subject.email]]}}.}'
+            '{ The following details about the issuer are contained in the '
+            '[[unless_empty:cert.issuer.dn,certificate]]: {'
+            '{ The domain name: [[cert.issuer.domain]].}'
+            '{ The issuer is supposedly located in '
+            '[[merge:cert.issuer.locality,cert.issuer.province,cert.issuer.country]].}'
+            '{ The certificate was issued by [[merge:cert.issuer.organization,cert.issuer.unit]].}'
+            '{ A contact e-mail address was specified: [[cert.issuer.email]]}}.}',
         'org.openvas.scan.open-ports':
             'OpenVAS scan [[scan-id]], which started on [[date_time:time,minute]], detected the following open '
-            'TCP/IP ports on host [[host.ipv4]][[host.ipv6]]: [[port]].',
+            'TCP/IP ports on host [[merge:host.ipv4,host.ipv6]]: [[port]].',
         'org.openvas.scan.routers':
             'OpenVAS scan [[scan-id]], which started on [[date_time:time,minute]], was executed from the scanner at '
-            '[[scanner.ipv4]][[scanner.ipv6]] which detected a network router at IP [[router.ipv4]][[router.ipv6]].',
+            '[[merge:scanner.ipv4,scanner.ipv6]] which detected a network router at IP '
+            '[[merge:router.ipv4,router.ipv6]].',
     }
 
     TYPE_PROPERTIES = {
