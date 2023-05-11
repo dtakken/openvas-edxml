@@ -375,7 +375,12 @@ class OpenVasHostTranscoder(XmlTranscoder):
         'org.openvas.scan.ssl-certificate': [
             'host.ipv4', 'host.ipv6',
             'cert.issuer.domain', 'cert.subject.domain',
-            'cert.subject.country', 'cert.issuer.country'
+            'cert.subject.country', 'cert.issuer.country',
+            'cert.subject.province', 'cert.issuer.province',
+            'cert.subject.locality', 'cert.issuer.locality',
+            'cert.subject.organization', 'cert.issuer.organization',
+            'cert.subject.unit', 'cert.issuer.unit',
+            'cert.subject.email', 'cert.issuer.email',
         ],
         'org.openvas.scan.open-ports': ['host.ipv4', 'host.ipv6'],
     }
