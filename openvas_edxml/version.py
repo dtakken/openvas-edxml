@@ -3,6 +3,6 @@
 # 2) we can import it in setup.py for the same reason
 # 3) we can import it into your module module
 #
-# Version 3.0.0.dev0:
-__version_info__ = ('3', '0', '0', 'dev0')
+# Version 3.0.0:
+__version_info__ = ('3', '0', '0')
 __version__ = '.'.join(__version_info__)
